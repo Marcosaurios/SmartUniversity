@@ -105,3 +105,5 @@ dist
 
 # Public folder
 public/build/**
+
+.DS_Store

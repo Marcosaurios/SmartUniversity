@@ -1,36 +1,88 @@
 import * as THREE from "three";
+import {GUI} from "three/examples/jsm/libs/dat.gui.module.js";
 
-import materials from "./Materials.js"; 
+import setup from "./setup.js";
+
+import Building from "./Building.js";
 
 export default class World{
 
-    constructor( _items ) {
+    constructor( _params ) {
 
-        // Items
-        this.items = _items;
+        // 
+        this.items = _params.items;
+        this.options = _params.options;
 
         this.container = new THREE.Object3D();
 
-        this.setup = {
-            aulario3: {
-                location: [0.0, 0.0, 0.0],
-                material: materials.base,
-                href: null,
-            }
-        }
-
+        this.setup = setup;
         this.setupWorld();
 
     }
 
     setupWorld() {
+
+        if(this.options.debug) {
+            this.options.gui = new GUI();
+        }
+
         this.setObjects();
         this.setLights();
     }
 
     setObjects() {
-        this.container.add(this.items.aulario9.scene);
 
+        if(this.options.debug) {
+
+            const params = {
+                posX: this.items.aulario3.scene.position.x,
+                posY: this.items.aulario3.scene.position.y,
+                posZ: this.items.aulario3.scene.position.z
+
+            }
+            
+            this.options.gui.add(params, 'posX', -100,100).onChange( (val) => {
+                this.items.aulario3.scene.position.x = val;
+            })
+            this.options.gui.add(params, 'posY', -100,100).onChange( (val) => {
+                this.items.aulario3.scene.position.y = val;
+            })
+            this.options.gui.add(params, 'posZ', -100,100).onChange( (val) => {
+                this.items.aulario3.scene.position.z = val;
+            })
+            
+        }
+
+        for( const setupObject of this.setup) {
+
+            const name = Object.keys(setupObject);
+
+            if( this.items[ name ] != undefined ) {
+                
+                const building = new Building( { setup: setupObject[name], item: this.items[ name ] } );
+
+                building.castShadow = true;
+                building.receiveShadow = true;
+
+                this.container.add(building);
+
+            }
+            else{
+                console.warn("Object " + name + " not found or loaded in items");
+            }
+        }
+
+        // Plane
+        const plane = new THREE.Mesh( 
+            new THREE.BoxBufferGeometry(50,0.1,50,10,1,10),
+            new THREE.MeshPhongMaterial({
+                color: 0x00ff00
+        }));
+    
+        plane.castShadow = true;
+        plane.receiveShadow = true;
+    
+        this.container.add(plane);
     }
 
     setLights() {

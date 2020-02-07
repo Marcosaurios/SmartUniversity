@@ -45,23 +45,12 @@ export default class THREE_App {
         this.loader.on('loadingFinished', () => {
             // TODO loading screen + animation
             console.log("Se han cargado todos los modelos.");
+            
             console.log(this.items);
-            // for( const item of this.items) {
-            //     if(item.scene instanceof THREE.Object3D){
-            //         console.log("added mesh");
-            //         this.scene.add(item.scene);
-            //     }
-            // }
-  
-            if(this.options.debug) {
-                this.options.gui = new GUI();
-            }
     
-            const world = new World( this.items );
+            const world = new World( { items: this.items, options: this.options } );
 
             this.scene.add(world.container);
-            
-
         })
 
 
@@ -169,5 +158,12 @@ export default class THREE_App {
         this.renderer.render(this.scene, this.camera);
 
         requestAnimationFrame(this.render.bind(this));
+    }
+
+    resized(width, height) {
+        this.camera.aspect = width / height
+        this.camera.updateProjectionMatrix()
+
+        this.renderer.setSize(width, height);
     }
 }

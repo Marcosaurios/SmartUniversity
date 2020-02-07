@@ -4,18 +4,21 @@
     import THREE_App from './Application/App.js';
 
     let canvasElement;
-
     let height, width;
 
+    let SmartUniversity_App = null;
     onMount(() => {
-        let size = {height, width}
-        let SmartUniversity_App = new THREE_App( { canvas: canvasElement, window: { height, width } });
-        console.log(size);
+        SmartUniversity_App = new THREE_App( { canvas: canvasElement, window: { height, width }, debug: true });        
         
     })
+
+    function handleResize() {
+        SmartUniversity_App.resized(width, height);   
+    }
+
 </script>
 
-<svelte:window bind:innerWidth={width} bind:innerHeight={height} />
+<svelte:window bind:innerWidth={width} bind:innerHeight={height} on:resize={handleResize}/>
 
 <canvas bind:this={canvasElement}></canvas>
 

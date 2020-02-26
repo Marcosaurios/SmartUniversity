@@ -6,21 +6,29 @@
     let canvasElement;
     let height, width;
 
-    let SmartUniversity_App = null;
+    let SmartUniversity_Instance = null;
     onMount(() => {
-        SmartUniversity_App = new THREE_App( { canvas: canvasElement, window: { height, width }, debug: true });        
-        
+        SmartUniversity_Instance = new THREE_App( { canvas: canvasElement, window: { height, width }, debug: true });        
+        document.body.appendChild( SmartUniversity_Instance.stats.domElement );
     })
 
+    // Window resizing
     function handleResize() {
-        SmartUniversity_App.resized(width, height);   
+        SmartUniversity_Instance.resized(width, height);   
+    }
+
+    // Mouse movement raycaster updates
+    function handleMouseMove(event) {
+        event.preventDefault();
+        SmartUniversity_Instance.mouse.x = ( event.clientX / width ) * 2 - 1;
+        SmartUniversity_Instance.mouse.y = - ( event.clientY / height ) * 2 + 1;
     }
 
 </script>
 
 <svelte:window bind:innerWidth={width} bind:innerHeight={height} on:resize={handleResize}/>
 
-<canvas bind:this={canvasElement}></canvas>
+<canvas bind:this={canvasElement} on:mousemove={handleMouseMove}></canvas>
 
 <style>
 canvas{

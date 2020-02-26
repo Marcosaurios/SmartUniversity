@@ -1,9 +1,10 @@
 import * as THREE from "three";
 import {GUI} from "three/examples/jsm/libs/dat.gui.module.js";
 
-import setup from "./setup.js";
+import Setup from "./setup.js";
 
 import Building from "./Building.js";
+import materials from "./materials";
 
 export default class World{
 
@@ -15,9 +16,12 @@ export default class World{
 
         this.container = new THREE.Object3D();
 
-        this.setup = setup;
+        this.interactiveObjects = [];
+
+        this.setup = new Setup();
         this.setupWorld();
 
+        return this;
     }
 
     setupWorld() {
@@ -26,8 +30,8 @@ export default class World{
             this.options.gui = new GUI();
         }
 
-        this.setObjects();
         this.setLights();
+        this.setObjects();
     }
 
     setObjects() {
@@ -53,16 +57,19 @@ export default class World{
             
         }
 
+
         for( const setupObject of this.setup) {
 
             const name = Object.keys(setupObject);
 
             if( this.items[ name ] != undefined ) {
                 
-                const building = new Building( { setup: setupObject[name], item: this.items[ name ] } );
+                const building = new Building( { setup: setupObject[name], item: this.items[ name ], textures: this.items.textures } );
 
                 building.castShadow = true;
                 building.receiveShadow = true;
+
+                this.interactiveObjects.push(building);
 
                 this.container.add(building);
 
@@ -74,38 +81,62 @@ export default class World{
 
         // Plane
         const plane = new THREE.Mesh( 
-            new THREE.BoxBufferGeometry(50,0.1,50,10,1,10),
+            new THREE.PlaneGeometry(50,50,10,10),
             new THREE.MeshPhongMaterial({
-                color: 0x00ff00
+                color: 0x999999,
+                depthWrite: false,
+                side: THREE.DoubleSide
         }));
+
+        plane.position.set(0,-1,0);
+        plane.rotation.x = - Math.PI / 2;
     
-        plane.castShadow = true;
+        // plane.castShadow = true;
         plane.receiveShadow = true;
     
         this.container.add(plane);
+
+
+
     }
 
     setLights() {
           // Lights
           var light = new THREE.SpotLight( 0xFFFFFF, 1);
-          light.power = 600;
-          light.position.set(-7, 6, 0);
-          light.decay = 2;
-          light.distance = 10000;
-          light.penumbra = 0.4;
-          light.angle = Math.PI/4;
+          light.power = 50;
+          light.position.set(-100,100,0);
+        //   light.decay = 2;
+          light.distance = 150;
+        //   light.penumbra = 0.4;
+        //   light.angle = Math.PI/4;
+            light.castShadow = true;
+            // light.shadow.camera.top = 180;
+            // light.shadow.camera.bottom = - 100;
+            // light.shadow.camera.left = - 120;
+            // light.shadow.camera.right = 120;
+          
+
+        //   var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
+        //   directionalLight.position.set( -70, 100, 0 );
+        // //   directionalLight.shadow.bias = 0.1;
+        // //   directionalLight.lookAt(0,0,0);
+
+        //   this.container.add(directionalLight);
           
           //Set up shadow properties for the light
-          light.castShadow = true; // default false
-          light.shadow.mapSize.width = 2048; // default
-          light.shadow.mapSize.height = 2048; // default
-          light.shadow.camera.near = 1; // default
-          light.shadow.camera.far = 21; // default
+        //   directionalLight.castShadow = true; // default false
+        //   directionalLight.shadow.camera.near = 1; // default
+        //   directionalLight.shadow.camera.far = 21; // default
+        // this.items.camera.add(light);    
   
           var pointLightHelper = new THREE.SpotLightHelper( light, 1 );
           this.container.add( pointLightHelper );
           this.container.add(light); 
   
-          // var sun = new THREE.light
+        //   var sun = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
+        //   sun.position.set(0,200,0);
+        //   this.container.add(sun);
+
+
     }
 }

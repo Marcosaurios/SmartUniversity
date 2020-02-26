@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import Stats from "stats.js";
 
 import Loader from "./Utils/Loader.js";
 import Resources from "./Utils/Resources.js";
@@ -20,7 +21,16 @@ export default class THREE_App {
         this.loader = new Loader();
         this.resources = new Resources();
 
+        // Raycasting only selected buildings
+        this.mouse = new THREE.Vector2();
+        this.INTERSECTED = undefined;
+        this.raycaster = new THREE.Raycaster();
+        this.checkInteractive = [];
+
         console.log("Resources: ", this.resources);
+
+        this.stats = new Stats;
+        this.stats.showPanel(1);
 
         this.init();
 
@@ -40,7 +50,12 @@ export default class THREE_App {
   
         this.scene.background = new THREE.Color(0.1, 0.1, 0.1);
     
+        // this.raycasterCamera = new THREE.OrthographicCamera(this.options.window.width / - 2, this.options.window.width / 2, this.options.window.height / 2, this.options.window.height / - 2, 1, 1000)
         this.camera = new THREE.PerspectiveCamera( 75, this.options.window.width / this.options.window.height, 0.1, 1000 );
+        // this.camera.add(this.raycasterCamera);
+
+
+        this.items.camera = this.camera;
 
         this.loader.on('loadingFinished', () => {
             // TODO loading screen + animation
@@ -50,80 +65,13 @@ export default class THREE_App {
     
             const world = new World( { items: this.items, options: this.options } );
 
+            this.checkInteractive = world.interactiveObjects;
+
             this.scene.add(world.container);
         })
 
 
     }
-
-
-
-
-
-    // loadResources() {
-    //     // Draco loader
-    //     var dracoLoader = new DRACOLoader();
-    //     dracoLoader.setDecoderPath("assets/decoder");
-    //     var gltfloader = new GLTFLoader().setDRACOLoader(dracoLoader);
-
-    //     // this.world.items = [];
-    //     // var loadedItems = this.world.items;
-    //     var scene = this.scene;
-    //     let that = this;
-
-    //     var txtloader = new THREE.TextureLoader();
-    //     var matcap = txtloader.load("assets/orange.png");
-
-    //     gltfloader.load("assets/aulario3_separated.glb", (gltf) => {
-    //               // Apply cartoon material
-    //         gltf.scene.traverse(o => {
-    //             if (o.isMesh) {
-    //                 console.log(o);
-    //                 // o.material = new THREE.MeshPhongMaterial({ color: 0x00ffff });
-    //                 // o.material = new THREE.MeshStandardMaterial({
-    //                 //     color: '#C84',
-    //                 //     side: THREE.DoubleSide,
-    //                 //     roughness: 0.8,
-    //                 //     metalness: 0,
-    //                 //   });
-    //                 //o.material = new THREE.ShadowMaterial({color: 0x00ffff})
-    //                 o.material = new THREE.MeshPhysicalMaterial( {
-    //                     color: 0xffff00,
-    //                     metalness: 0,
-    //                     roughness: 0.5,
-    //                     clearcoat: 0.7,
-    //                     clearcoatRoughness: 1.0,
-    //                     reflectivity: .5,
-    //                     // envMap: ( index % 2 ) == 1 ? hdrCubeRenderTarget.texture : null
-    //                 } );
-    //                 o.receiveShadow = true;
-    //                 o.castShadow = true;
-    //             }
-                
-    //         });
-    //         gltf.scene.translateZ(18);
-    //         scene.add(gltf.scene);
-
-    //     }, (prog) => {
-    //         console.log("Progress: ", prog);
-    //     }, (err) => {
-    //         console.warn("Error: ", error);
-    //     });
-
-    //      //Create a plane that receives shadows (but does not cast them)
-    //     var planeGeometry = new THREE.PlaneBufferGeometry(80, 80, 128, 128);
-    //     planeGeometry.rotateX(-Math.PI/2)
-    //     planeGeometry.translate(0,-3,-10);
-    //     var planeMaterial = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
-    //     var plane = new THREE.Mesh(planeGeometry, planeMaterial);
-    //     plane.castShadow = true;
-    //     plane.receiveShadow = true;
-    //     this.scene.add(plane);
-
-
-    // }
-
-
 
     setControls() {
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
@@ -141,22 +89,71 @@ export default class THREE_App {
             antialias: true
         })
         this.renderer.setPixelRatio(2)
-        this.renderer.physicallyCorrectLights = true
+        // this.renderer.physicallyCorrectLights = true
+
         // this.renderer.gammaFactor = 2.2
         // this.renderer.gammaOutPut = true
+        
+        // this.renderer.toneMapping = THREE.LinearToneMapping;
         // this.renderer.toneMappingExposure = Math.pow(0.7, 5.0);
-        this.renderer.toneMapping = THREE.LinearToneMapping;
-        this.renderer.toneMappingExposure = 1.0;
-        this.renderer.outputEncoding = THREE.sRGBEncoding;
+        // this.renderer.toneMappingExposure = 1.0;
+        // this.renderer.outputEncoding = THREE.sRGBEncoding;
         this.renderer.setSize(this.options.window.width, this.options.window.height);
         this.renderer.shadowMap.enabled = true;
-        this.renderer.shadowMap.type = THREE.BasicShadowMap;
+        // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     }
 
     render() {
+        this.stats.begin();
+
         this.controls.update();
+
+        // Raycaster
+        this.raycaster.setFromCamera( this.mouse, this.camera);
+        var intersects = this.raycaster.intersectObjects( this.checkInteractive, true );
+        // console.log("INTERSECTIONS: ");
+        // console.log(intersects);
+
+        if ( intersects.length > 0 ) {
+
+            if ( this.INTERSECTED != intersects[ 0 ].object ) {
+                // si es un objecto distinto al seleccionado
+                if ( this.INTERSECTED ) {
+                    this.INTERSECTED.material.emissive.setHex( this.INTERSECTED.currentHex );
+                    // for(let i=0; i<this.INTERSECTED.parent.children.length; i++) {
+                    //     this.INTERSECTED.parent.children[i].material.emissive.setHex( this.INTERSECTED.currentHex[i] );
+                    // }
+                } 
+
+                this.INTERSECTED = intersects[ 0 ].object;
+                this.INTERSECTED.currentHex = [];
+                // for(let i=0; i<this.INTERSECTED.parent.children.length; i++) {
+                //     // saving original materials
+                //     this.INTERSECTED.currentHex[i] = this.INTERSECTED.parent.children[i].material.emissive.getHex();
+                //     // and apply new color
+                //     this.INTERSECTED.parent.children[i].material.emissive.setHex( 0xff0000 );
+                // }
+                this.INTERSECTED.material.emissive.setHex( 0xff0000 );
+
+            }
+
+        } else {
+
+            if ( this.INTERSECTED ) {
+                this.INTERSECTED.material.emissive.setHex( this.INTERSECTED.currentHex );
+                // applying original colors
+                // for(let i=0; i<this.INTERSECTED.parent.children.length; i++) {
+                //     this.INTERSECTED.parent.children[i].material.emissive.setHex( this.INTERSECTED.currentHex[i] );
+                // }
+            }
+            this.INTERSECTED = null;
+
+        }
+
         this.renderer.render(this.scene, this.camera);
 
+        this.stats.end();
+        
         requestAnimationFrame(this.render.bind(this));
     }
 

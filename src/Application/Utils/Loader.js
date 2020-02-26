@@ -15,6 +15,7 @@ export default class Loader extends EventEmitter{
         this.loadedItems = 0;
 
         this.items = {};
+        this.items.textures = {};
 
         this.loaders = [];
 
@@ -96,7 +97,14 @@ export default class Loader extends EventEmitter{
 
         // Loaded
         console.log("Loaded: ", item.name);
-        this.items[item.name] = data;
+
+        if(item.type == 'png' || item.type == 'jpg') {
+            this.items.textures[item.name] = data;
+        }
+        else{
+            this.items[item.name] = data;
+        }
+
 
         this.emit('fileFinished', name);
         

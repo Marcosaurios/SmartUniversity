@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "sirv-cli": "^0.4.4",
+    "stats.js": "^0.17.0",
     "three": "^0.113.2"
   }
 }

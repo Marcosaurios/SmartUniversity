@@ -1,0 +1,14 @@
+{
+  "version": 3,
+  "file": "bundle.css",
+  "sources": [
+    "../../App.svelte",
+    "../../SmartUniversity.svelte"
+  ],
+  "sourcesContent": [
+    "<script>\n\timport SmartUniversity from \"./SmartUniversity.svelte\";\n</script>\n\n\n<SmartUniversity/>\n\n\n<style>\n:global(body) {\n\tmargin: 0; padding: 0;\n}\n</style>",
+    "<script>\n    import {onMount} from 'svelte';\n\n    import THREE_App from './Application/App.js';\n\n    let canvasElement;\n    let height, width;\n\n    let SmartUniversity_App = null;\n    onMount(() => {\n        SmartUniversity_App = new THREE_App( { canvas: canvasElement, window: { height, width }, debug: true });        \n        \n    })\n\n    function handleResize() {\n        SmartUniversity_App.resized(width, height);   \n    }\n\n</script>\n\n<svelte:window bind:innerWidth={width} bind:innerHeight={height} on:resize={handleResize}/>\n\n<canvas bind:this={canvasElement}></canvas>\n\n<style>\ncanvas{\n    width: 100%;\n    height: 100%;\n}\n</style>"
+  ],
+  "names": [],
+  "mappings": "AASQ,IAAI,AAAE,CAAC,AACd,MAAM,CAAE,CAAC,CAAE,OAAO,CAAE,CAAC,AACtB,CAAC;ACcD,qBAAM,CAAC,AACH,KAAK,CAAE,IAAI,CACX,MAAM,CAAE,IAAI,AAChB,CAAC"
+}

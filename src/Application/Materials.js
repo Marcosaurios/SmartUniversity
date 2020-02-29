@@ -1,9 +1,42 @@
 import * as THREE from "three";
 
+export default function loadMaterials( textureItems ){
 
-export default function(){
-    
     const materials = {
+
+        matcapOrange: new THREE.MeshMatcapMaterial( {
+
+            // color: 0x00ff00,
+            matcap: textureItems['matcapOrange']
+        }),
+
+        hoverInvisible: new THREE.MeshBasicMaterial({
+            color: 0x2194ce,
+            visible: false,
+            transparent: true,
+            opacity: 0.3
+        }),
+
+        // hoverInvisible: new THREE.MeshBasicMaterial({
+        //     color: 0x2194ce,
+        //     transparent: true,
+        //     opacity: 0.4,
+        // }),
+
+        window: new THREE.MeshPhongMaterial( {
+            color: 0xcce9f0,
+            // toneMapped: true,
+            blending: THREE.CustomBlending,
+            blendSrc: THREE.OneMinusSrcColorFactor,
+            transparent: true,
+            opacity: 0.04
+        }),
+
+        wall: new THREE.MeshPhongMaterial( {
+            color: 0xfc8803,
+            toneMapped: true,
+        }),
+
         concrete: new THREE.MeshToonMaterial( {
                 color: 0xd9d9d9,
                 map: null,
@@ -33,6 +66,7 @@ export default function(){
         floor: null
     }
 
-
     return materials;
+
+
 }

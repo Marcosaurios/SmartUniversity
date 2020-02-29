@@ -12,7 +12,11 @@ export default class Building {
         console.log("ME LLEGA ESTO A BUILDING");
             console.log(data);
 
+        // 3D container: every mesh belongs to this building
         this.container = new THREE.Object3D();
+
+        // 3D wrapper: intersection mesh wrapping the whole building an allowing it to be interactive
+        this.wrapper = new THREE.Object3D();
 
         this.materials = [];
 
@@ -20,7 +24,8 @@ export default class Building {
         this.loadMaterials();
         this.loadMesh();
 
-        return this.container;
+        console.log('devuelvo');
+        return this;
     }
 
     loadMaterials() {
@@ -28,7 +33,7 @@ export default class Building {
         // 1 material per mesh children
         for( let [index, child] of this.scene.children.entries() ) {
             
-            if(this.setup.materials[ child.name ]) {
+            if(this.setup.materials[ child.name ] /*&& child.name != "Aulario3_wrapper"*/) {
 
                 // Set material
                 this.scene.children[ index ].material = this.setup.materials[ child.name ];
@@ -59,19 +64,15 @@ export default class Building {
 
     loadMesh() {
         
-        // console.log(this.scene.children[1]);
-        let second = this.scene.clone();
-        second.translateX(20);
-
-        this.container.add(second);
-        
         this.container.add(this.scene);
-
-
 
         this.container.translateX( this.setup.location[0]);
         this.container.translateY( this.setup.location[1]);
         this.container.translateZ( this.setup.location[2]);
+
+        this.wrapper.name = this.container.children[0].children[0].name;
+        this.wrapper.add( this.container.children[0].children[0] );
+        // console.log('load mesh');
 
     }
 }

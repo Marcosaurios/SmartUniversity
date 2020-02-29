@@ -4,7 +4,7 @@ import {GUI} from "three/examples/jsm/libs/dat.gui.module.js";
 import Setup from "./setup.js";
 
 import Building from "./Building.js";
-import materials from "./materials";
+// import materials from "./materials";
 
 export default class World{
 
@@ -12,13 +12,15 @@ export default class World{
 
         // 
         this.items = _params.items;
+        console.log("WORLD HAS");
+        console.log(this.items.textures);
         this.options = _params.options;
 
         this.container = new THREE.Object3D();
 
         this.interactiveObjects = [];
 
-        this.setup = new Setup();
+        this.setup = new Setup( this.items.textures );
         this.setupWorld();
 
         return this;
@@ -66,12 +68,14 @@ export default class World{
                 
                 const building = new Building( { setup: setupObject[name], item: this.items[ name ], textures: this.items.textures } );
 
-                building.castShadow = true;
-                building.receiveShadow = true;
+                // building.castShadow = true;
+                // building.receiveShadow = true;
 
-                this.interactiveObjects.push(building);
+                this.interactiveObjects.push(building.wrapper.children[0]);
 
-                this.container.add(building);
+                
+                this.container.add(building.wrapper);
+                this.container.add(building.container);
 
             }
             else{

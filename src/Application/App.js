@@ -50,21 +50,19 @@ export default class THREE_App {
   
         this.scene.background = new THREE.Color(0.1, 0.1, 0.1);
     
-        // this.raycasterCamera = new THREE.OrthographicCamera(this.options.window.width / - 2, this.options.window.width / 2, this.options.window.height / 2, this.options.window.height / - 2, 1, 1000)
         this.camera = new THREE.PerspectiveCamera( 75, this.options.window.width / this.options.window.height, 0.1, 1000 );
-        // this.camera.add(this.raycasterCamera);
-
+        
 
         this.items.camera = this.camera;
 
         this.loader.on('loadingFinished', () => {
             // TODO loading screen + animation
-            console.log("Se han cargado todos los modelos.");
-            
+            console.log("Se han cargado todos los modelos: ");
             console.log(this.items);
     
             const world = new World( { items: this.items, options: this.options } );
 
+            // Outside reference to objects which we want to raycast
             this.checkInteractive = world.interactiveObjects;
 
             this.scene.add(world.container);
@@ -94,10 +92,14 @@ export default class THREE_App {
         // this.renderer.gammaFactor = 2.2
         // this.renderer.gammaOutPut = true
         
-        // this.renderer.toneMapping = THREE.LinearToneMapping;
+        this.renderer.toneMapping = THREE.LinearToneMapping;
         // this.renderer.toneMappingExposure = Math.pow(0.7, 5.0);
-        // this.renderer.toneMappingExposure = 1.0;
-        // this.renderer.outputEncoding = THREE.sRGBEncoding;
+        this.renderer.toneMappingExposure = 1.0;
+        this.renderer.outputEncoding = THREE.sRGBEncoding;
+        // 
+        // renderer.toneMappingExposure = 1.0;
+        
+
         this.renderer.setSize(this.options.window.width, this.options.window.height);
         this.renderer.shadowMap.enabled = true;
         // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -110,7 +112,7 @@ export default class THREE_App {
 
         // Raycaster
         this.raycaster.setFromCamera( this.mouse, this.camera);
-        var intersects = this.raycaster.intersectObjects( this.checkInteractive, true );
+        var intersects = this.raycaster.intersectObjects( this.checkInteractive, false );
         // console.log("INTERSECTIONS: ");
         // console.log(intersects);
 
@@ -119,32 +121,26 @@ export default class THREE_App {
             if ( this.INTERSECTED != intersects[ 0 ].object ) {
                 // si es un objecto distinto al seleccionado
                 if ( this.INTERSECTED ) {
-                    this.INTERSECTED.material.emissive.setHex( this.INTERSECTED.currentHex );
-                    // for(let i=0; i<this.INTERSECTED.parent.children.length; i++) {
-                    //     this.INTERSECTED.parent.children[i].material.emissive.setHex( this.INTERSECTED.currentHex[i] );
-                    // }
+                    // this.INTERSECTED.material.color.setHex( this.INTERSECTED.currentHex );
+                    this.INTERSECTED.material.setValues({ visible: 0 });
+
                 } 
 
                 this.INTERSECTED = intersects[ 0 ].object;
-                this.INTERSECTED.currentHex = [];
-                // for(let i=0; i<this.INTERSECTED.parent.children.length; i++) {
-                //     // saving original materials
-                //     this.INTERSECTED.currentHex[i] = this.INTERSECTED.parent.children[i].material.emissive.getHex();
-                //     // and apply new color
-                //     this.INTERSECTED.parent.children[i].material.emissive.setHex( 0xff0000 );
-                // }
-                this.INTERSECTED.material.emissive.setHex( 0xff0000 );
+                // this.INTERSECTED.currentHex = this.INTERSECTED.material.color.getHex();
 
+                // this.INTERSECTED.material.color.setHex( 0xff0000 );
+                this.INTERSECTED.material.setValues({ visible: 1 });
             }
 
         } else {
 
             if ( this.INTERSECTED ) {
-                this.INTERSECTED.material.emissive.setHex( this.INTERSECTED.currentHex );
+                this.INTERSECTED.material.setValues({ visible: 0 });
+
+                // this.INTERSECTED.material.color.setHex( this.INTERSECTED.currentHex );
                 // applying original colors
-                // for(let i=0; i<this.INTERSECTED.parent.children.length; i++) {
-                //     this.INTERSECTED.parent.children[i].material.emissive.setHex( this.INTERSECTED.currentHex[i] );
-                // }
+    
             }
             this.INTERSECTED = null;
 

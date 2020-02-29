@@ -22,6 +22,8 @@
         event.preventDefault();
         SmartUniversity_Instance.mouse.x = ( event.clientX / width ) * 2 - 1;
         SmartUniversity_Instance.mouse.y = - ( event.clientY / height ) * 2 + 1;
+
+        // console.log(SmartUniversity_Instance.mouse.x , SmartUniversity_Instance.mouse.y )
     }
 
 </script>

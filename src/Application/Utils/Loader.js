@@ -110,6 +110,8 @@ export default class Loader extends EventEmitter{
         
         if( this.loadingItems == this.loadedItems) {
             this.emit('loadingFinished');
+
+            // Update materials with textures
         }
     }
 }

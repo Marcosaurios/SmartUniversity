@@ -4,7 +4,7 @@ import {GUI} from "three/examples/jsm/libs/dat.gui.module.js";
 import Setup from "./setup.js";
 
 import Building from "./Building.js";
-// import materials from "./materials";
+// import loadMaterials from "./materials";
 
 export default class World{
 
@@ -12,8 +12,8 @@ export default class World{
 
         // 
         this.items = _params.items;
-        console.log("WORLD HAS");
-        console.log(this.items.textures);
+        // console.log("WORLD HAS");
+        // console.log(this.items.textures);
         this.options = _params.options;
 
         this.container = new THREE.Object3D();
@@ -28,7 +28,7 @@ export default class World{
 
     setupWorld() {
 
-        if(this.options.debug) {
+        if(this.options.DEBUG) {
             this.options.gui = new GUI();
         }
 
@@ -37,28 +37,6 @@ export default class World{
     }
 
     setObjects() {
-
-        if(this.options.debug) {
-
-            const params = {
-                posX: this.items.aulario3.scene.position.x,
-                posY: this.items.aulario3.scene.position.y,
-                posZ: this.items.aulario3.scene.position.z
-
-            }
-            
-            this.options.gui.add(params, 'posX', -100,100).onChange( (val) => {
-                this.items.aulario3.scene.position.x = val;
-            })
-            this.options.gui.add(params, 'posY', -100,100).onChange( (val) => {
-                this.items.aulario3.scene.position.y = val;
-            })
-            this.options.gui.add(params, 'posZ', -100,100).onChange( (val) => {
-                this.items.aulario3.scene.position.z = val;
-            })
-            
-        }
-
 
         for( const setupObject of this.setup) {
 
@@ -83,20 +61,40 @@ export default class World{
             }
         }
 
+        console.log(this.items.textures);
         // Plane
+        const mat = new THREE.MeshBasicMaterial( {map: this.items.textures['UA'] ,opacity: 0.8, transparent: true });
         const plane = new THREE.Mesh( 
-            new THREE.PlaneGeometry(50,50,10,10),
-            new THREE.MeshPhongMaterial({
-                color: 0x999999,
-                depthWrite: false,
-                side: THREE.DoubleSide
-        }));
+            new THREE.PlaneGeometry(1680,889,10,10), mat);
 
         plane.position.set(0,-1,0);
         plane.rotation.x = - Math.PI / 2;
     
         // plane.castShadow = true;
-        plane.receiveShadow = true;
+        // plane.receiveShadow = true;
+
+       
+        if(this.options.DEBUG) {
+            var buildingFolder = this.options.gui.addFolder('Building');
+
+            const params = {
+                posX: this.items.aulario3.scene.position.x,
+                posY: this.items.aulario3.scene.position.y,
+                posZ: this.items.aulario3.scene.position.z
+
+            }
+            
+            buildingFolder.add(params, 'posX', -1000,1000).onChange( (val) => {
+                this.items.aulario3.scene.position.x = val;
+            })
+            buildingFolder.add(params, 'posY', -1000,1000).onChange( (val) => {
+                this.items.aulario3.scene.position.y = val;
+            })
+            buildingFolder.add(params, 'posZ', -1000,1000).onChange( (val) => {
+                this.items.aulario3.scene.position.z = val;
+            })
+            
+        }
     
         this.container.add(plane);
 
@@ -105,37 +103,38 @@ export default class World{
     }
 
     setLights() {
-          // Lights
-          var light = new THREE.SpotLight( 0xFFFFFF, 1);
-          light.power = 50;
-          light.position.set(-100,100,0);
-        //   light.decay = 2;
-          light.distance = 150;
-        //   light.penumbra = 0.4;
-        //   light.angle = Math.PI/4;
-            light.castShadow = true;
-            // light.shadow.camera.top = 180;
-            // light.shadow.camera.bottom = - 100;
-            // light.shadow.camera.left = - 120;
-            // light.shadow.camera.right = 120;
-          
+        // Lights
+        var light = new THREE.PointLight( 0xFFFFFF, 1, 100);
+        light.position.set(0,0,0);
+        light.intensity = 0.22;
+        light.distance = 0;
+        light.power = 3;
+        light.decay = 0;
 
-        //   var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
-        //   directionalLight.position.set( -70, 100, 0 );
-        // //   directionalLight.shadow.bias = 0.1;
-        // //   directionalLight.lookAt(0,0,0);
+        if(this.options.DEBUG) {
+            var lighting = this.options.gui.addFolder('Lighting');
+            
+            lighting.add(light, 'distance', 0, 200).onChange( function(val) {
+                light.distance = val;
+            });
+            lighting.add(light, 'power', 0, 100).onChange( function(val) {
+                light.power = val;
+            });
+            lighting.add(light, 'decay', 0, 50).onChange( function(val) {
+                light.decay = val;
+            });
+            lighting.add(light, 'intensity', 0, 50).onChange( function(val) {
+                light.intensity = val;
+            });
 
-        //   this.container.add(directionalLight);
-          
-          //Set up shadow properties for the light
-        //   directionalLight.castShadow = true; // default false
-        //   directionalLight.shadow.camera.near = 1; // default
-        //   directionalLight.shadow.camera.far = 21; // default
-        // this.items.camera.add(light);    
-  
-          var pointLightHelper = new THREE.SpotLightHelper( light, 1 );
-          this.container.add( pointLightHelper );
-          this.container.add(light); 
+        }
+        
+        var pointLightHelper = new THREE.PointLightHelper( light, 1 );
+        this.items.camera.add(light);
+        this.container.add(this.items.camera)
+
+        //   this.container.add( pointLightHelper );
+        //   this.container.add(light); 
   
         //   var sun = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
         //   sun.position.set(0,200,0);

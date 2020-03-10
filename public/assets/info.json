@@ -1,0 +1,15 @@
+{
+    
+    "Aulario3":  {
+        "light": "5",
+        "wifi_connections": "1000",
+        "temperature": "23"
+    },
+    "Aulario2": {
+        "light": "5",
+        "wifi_connections": "1000",
+        "temperature": "23"
+    }
+    
+
+}

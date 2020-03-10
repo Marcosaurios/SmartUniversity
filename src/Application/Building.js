@@ -9,13 +9,11 @@ export default class Building {
         this.scene = data.item.scene;
         this.textures = data.textures;
 
-        console.log("ME LLEGA ESTO A BUILDING");
-            console.log(data);
 
         // 3D container: every mesh belongs to this building
         this.container = new THREE.Object3D();
 
-        // 3D wrapper: intersection mesh wrapping the whole building an allowing it to be interactive
+        // 3D wrapper: intersection mesh wrapping the whole building and allowing it to be interactive
         this.wrapper = new THREE.Object3D();
 
         this.materials = [];
@@ -24,7 +22,6 @@ export default class Building {
         this.loadMaterials();
         this.loadMesh();
 
-        console.log('devuelvo');
         return this;
     }
 
@@ -33,19 +30,10 @@ export default class Building {
         // 1 material per mesh children
         for( let [index, child] of this.scene.children.entries() ) {
             
-            if(this.setup.materials[ child.name ] /*&& child.name != "Aulario3_wrapper"*/) {
+            if(this.setup.materials[ child.name ]) {
 
                 // Set material
                 this.scene.children[ index ].material = this.setup.materials[ child.name ];
-                
-                // testing
-                // const img = this.textures["moon"];
-                // img.wrapS = img.wrapT = THREE.RepeatWrapping;
-                // img.encoding = THREE.sRGBEncoding;
-                // img.anisotropy = 16;
-
-                // this.scene.children[ index ].material.map = img;
-                // this.scene.children[ index ].material.bumpMap = img;
                     
             }
             else{
@@ -57,22 +45,37 @@ export default class Building {
 
     loadTextures() {
 
-        this.setup.textures.forEach( (textureName) => {
-            console.log(textureName);
-        })
+        // this.setup.textures.forEach( (textureName) => {
+        //     console.log(textureName);
+        // })
     }
 
     loadMesh() {
-        
-        this.container.add(this.scene);
 
+        // Do custom things for each building (defined in setup) as cloning meshes already placed
+        // let geometry = this.setup.action( this.scene );
+        // this.container.add( geometry );
+
+        this.container.add(this.scene);
+        
+
+        // Place container
         this.container.translateX( this.setup.location[0]);
         this.container.translateY( this.setup.location[1]);
         this.container.translateZ( this.setup.location[2]);
+        this.container.rotateX( this.setup.rotation[0]);
+        this.container.rotateY( this.setup.rotation[1]);
+        this.container.rotateZ( this.setup.rotation[2]);
+        // And its wrapper
+        this.wrapper.translateX( this.setup.location[0]);
+        this.wrapper.translateY( this.setup.location[1]);
+        this.wrapper.translateZ( this.setup.location[2]);
+        this.wrapper.rotateX( this.setup.rotation[0]);
+        this.wrapper.rotateY( this.setup.rotation[1]);
+        this.wrapper.rotateZ( this.setup.rotation[2]);
 
         this.wrapper.name = this.container.children[0].children[0].name;
         this.wrapper.add( this.container.children[0].children[0] );
-        // console.log('load mesh');
 
     }
 }

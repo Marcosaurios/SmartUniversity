@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { eventstart, eventend, eventmove, eventcancel } from '@composi/gestures';
 
 import Loader from "./Utils/Loader.js";
 import Resources from "./Utils/Resources.js";
@@ -17,7 +18,13 @@ export default class THREE_App {
      * options = { canvas, window}
      */
     constructor(_options) {
+
         this.options = _options;
+
+        console.log(this.options.doc.defaultView);
+        // Width and height from Window
+        this.width = this.options.doc.defaultView.outerWidth;
+        this.height = this.options.doc.defaultView.outerHeight;
         
         this.loader = new Loader();
         this.resources = new Resources();
@@ -66,14 +73,16 @@ export default class THREE_App {
         }
         /* ----------------------------- */
 
-
         this.init();
 
         this.setRenderer();
         this.setControls();
+        this.setCamera();
         
-        this.render()
+        this.render();
 
+        // Load events and set initial app size
+        this.setInteractiveEvents();
     }
 
     init() {
@@ -84,11 +93,12 @@ export default class THREE_App {
         this.scene = new THREE.Scene();
   
         this.scene.background = new THREE.Color(0.1, 0.1, 0.1);
-    
-        this.camera = new THREE.PerspectiveCamera( 75, this.options.window.width / this.options.window.height, 0.1, 1000 );
-        
-        this.items.camera = this.camera;
 
+        // console.log("initial SIZE: " + this.width + " x " + this.height);
+        // console.log("aspect " + this.width / this.height);
+    
+        this.camera = new THREE.PerspectiveCamera( 40, this.width / this.height, .1, 2400 );
+        
         this.loader.on('loadingFinished', () => {
             // TODO loading screen + animation
             console.log("Se han cargado todos los modelos: ");
@@ -103,15 +113,104 @@ export default class THREE_App {
         });
 
 
+
+    }
+
+    setInteractiveEvents(){
+
+        // Update canvas size
+        let body = this.options.doc.getElementsByTagName('body')[0];
+
+        // tmp div to get REAL SIZES
+        let div = this.options.doc.createElement('div');
+        div.style.width = '100vw'
+        div.style.height = '100vh'
+        div.style.position = 'absolute'
+        div.style.top = 0
+        div.style.left = 0
+        div.style.pointerEvents = 'none'
+
+        // Sizes
+        this.options.canvas.style.width = '100vw';
+        this.options.canvas.style.height = '100vh';
+
+
+        // Mousemove
+        this.options.canvas.addEventListener('mousemove', e => {
+            event.preventDefault();
+            this.mouse.x = ( e.clientX / this.viewportWidth ) * 2 - 1;
+            this.mouse.y = - ( e.clientY / this.viewportHeight ) * 2 + 1;
+        })
+
+        let resize = () => {
+
+            body.appendChild(div);
+    
+            this.viewportWidth = div.offsetWidth;
+            this.viewportHeight = div.offsetHeight;
+    
+            body.removeChild(div);
+    
+            this.options.canvas.style.width = this.viewportWidth;
+            this.options.canvas.style.height = this.viewportHeight;
+    
+            console.log("re SIZE: " + this.viewportWidth + " x " + this.viewportHeight);
+            // console.log("aspect " + this.viewportWidth / this.viewportHeight);
+    
+            // Keep same render and camera aspect
+            // (first render was took at max width and height, so we don't modify to reescale the entire render, we only crop the canvas size)
+            this.renderer.setSize(this.viewportWidth, this.viewportHeight);
+            
+            this.camera.aspect = this.viewportWidth / this.viewportHeight;
+            this.camera.updateProjectionMatrix();
+        }
+
+        this.options.doc.defaultView.addEventListener('resize', resize );
+
+        resize();
+    }
+
+    setCamera() {
+
+        this.camera.zoom = 2;
+
+        // Helpers
+        // let pos000 = new THREE.BoxGeometry(2,2,2,1,1,1);
+        // pos000.scale(2,2,2);
+        // this.scene.add(pos000);
+
+        this.camera.position.x = -30;
+        this.camera.position.y = 80;
+        this.camera.position.z = 80;
+        
+        this.camera.lookAt(0,0,0);
+
+        if(this.options.DEBUG) {
+
+        }
+
+        this.items.camera = this.camera;
     }
 
     setControls() {
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+        // Control keys
+        this.controls.mouseButtons = {
+            LEFT: THREE.MOUSE.PAN,
+            MIDDLE: THREE.MOUSE.PAN,
+            RIGHT: THREE.MOUSE.ROTATE
+        }
+        this.controls.touches = {
+            ONE: THREE.TOUCH.PAN,
+            TWO: THREE.TOUCH.DOLLY_ROTATE
+        }
+        this.controls.zoomSpeed = 2;
+        // this.controls.maxZoom = 300;
         this.controls.enableDamping = true;
         this.controls.dampingFactor = 0.1;
         this.controls.screenSpacePanning = false;
-        this.controls.minDistance = 5;
-        this.controls.maxDistance = 500;
+        this.controls.minDistance = 10;
+        this.controls.maxDistance = 1700;
         this.controls.maxPolarAngle = Math.PI / 2;
     }
 
@@ -134,7 +233,7 @@ export default class THREE_App {
         this.renderer.toneMappingExposure = 1.0;
         
 
-        this.renderer.setSize(this.options.window.width, this.options.window.height);
+        this.renderer.setSize(this.viewportWidth, this.viewportHeight);
         this.renderer.shadowMap.enabled = true;
         
         // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
@@ -142,54 +241,17 @@ export default class THREE_App {
     }
 
     render() {
-        this.stats.begin();
+
+        this.options.DEBUG ? this.stats.begin() : 0;
 
         this.controls.update();
 
-        // Raycaster
-        this.raycaster.setFromCamera( this.mouse, this.camera);
-        var intersects = this.raycaster.intersectObjects( this.checkInteractive, false );
-        // console.log("INTERSECTIONS: ");
-        // console.log(intersects);
-        // console.log(this.SELECTED);
-
-        if ( intersects.length > 0 ) {
-
-            if ( this.INTERSECTED != intersects[ 0 ].object ) {
-                // si es un objecto distinto al seleccionado
-                if ( this.INTERSECTED ) {
-                    // this.INTERSECTED.material.color.setHex( this.INTERSECTED.currentHex );
-                    this.INTERSECTED.material.setValues({ visible: 0 });
-
-                } 
-
-                this.INTERSECTED = intersects[ 0 ].object;
-                // this.INTERSECTED.currentHex = this.INTERSECTED.material.color.getHex();
-
-                // this.INTERSECTED.material.color.setHex( 0xff0000 );
-                this.INTERSECTED.material.setValues({ visible: 1 });
-                this.SELECTED = this.INTERSECTED.name;
-            }
-
-        } else {
-
-            if ( this.INTERSECTED ) {
-                this.INTERSECTED.material.setValues({ visible: 0 });
-
-                // this.INTERSECTED.material.color.setHex( this.INTERSECTED.currentHex );
-                // applying original colors
-    
-            }
-            this.INTERSECTED = null;
-            this.SELECTED = null;
-
-        }
+        this.calculateIntersections();
 
         this.renderer.render(this.scene, this.camera);
 
-        this.stats.end();
-
         if(this.options.DEBUG) {
+            
             /* ------------------------------ */
             var i	= 0;
             this.msTexts[i++].textContent = "== Memory =====";
@@ -203,19 +265,53 @@ export default class THREE_App {
             this.msTexts[i++].textContent = "Faces: "	+ this.renderer.info.render.faces;
             this.msTexts[i++].textContent = "Points: "	+ this.renderer.info.render.points;
             /* ------------------------------ */
+            this.stats.end();
         }
 
         requestAnimationFrame(this.render.bind(this));
     }
 
-    resized(width, height) {
-        this.camera.aspect = width / height
-        this.camera.updateProjectionMatrix()
+    calculateIntersections() {
 
-        this.renderer.setSize(width, height);
+        
+        // Raycaster
+        this.raycaster.setFromCamera( this.mouse, this.camera);
+        
+        var intersects = this.raycaster.intersectObjects( this.checkInteractive, false );
+
+        if ( intersects.length ) {
+            this.options.canvas.classList.add('has-pointer');
+
+            if ( this.INTERSECTED ) {
+                this.INTERSECTED.material.color.setHex( this.INTERSECTED.currentHex );
+                // this.INTERSECTED.material.setValues({ visible: 1 });
+
+            } 
+
+            this.INTERSECTED = intersects[ 0 ].object;
+            this.INTERSECTED.currentHex = this.INTERSECTED.material.color.getHex();
+
+            // ON HOVER!!
+            // this.INTERSECTED.material.color.setHex( 0xff0000 );
+            this.INTERSECTED.material.color.setHex( 0x56e1fc );
+            this.SELECTED = this.INTERSECTED.name;
+
+            // console.log(object);
+        
+        } else {
+
+            if ( this.INTERSECTED ) {
+
+                this.INTERSECTED.material.color.setHex( this.INTERSECTED.currentHex );
+                // applying original colors
+    
+            }
+            this.INTERSECTED = null;
+            this.SELECTED = null;
+            this.options.canvas.classList.remove('has-pointer');
+
+
+        }
     }
 
-    buildingSelected() {
-        return this.SELECTED;
-    }
 }

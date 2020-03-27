@@ -13,6 +13,7 @@ export default function( textureItems ) {
                 location: [347, 0.0, 237],
                 rotation: UA_rotation,
                 materials: {
+                    Aulario3: materials.window,
                     Aulario3_wrapper: materials.hoverInvisible,
                     Au3_1_base: materials.concrete,
                     Au3_1_window: materials.window,

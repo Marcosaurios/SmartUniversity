@@ -16,6 +16,7 @@
     "svelte": "^3.0.0"
   },
   "dependencies": {
+    "@composi/gestures": "^1.0.9",
     "sirv-cli": "^0.4.4",
     "stats.js": "^0.17.0",
     "three": "^0.113.2"

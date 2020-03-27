@@ -17,14 +17,10 @@ export default function loadMaterials( textureItems ){
             color: 0xD8E6FF,
             toneMapped: true,
             transparent: true,
-            opacity: 0.7,
-            roughness: 0.02,
-            metalness: 0
+            opacity: 0.7
         }),
         iron: new THREE.MeshPhongMaterial( {
             color: 0x585858,
-            roughness: 0.6,
-            metalness: 0.7
         }),
 
         vent: new THREE.MeshPhongMaterial( {

@@ -49,10 +49,12 @@ export default class World{
                 // building.castShadow = true;
                 // building.receiveShadow = true;
 
-                this.interactiveObjects.push(building.wrapper.children[0]);
+                console.log(building);
+
+                this.interactiveObjects.push(building.container.children[0].children[0]);
 
                 
-                this.container.add(building.wrapper);
+                // this.container.add(building.wrapper);
                 this.container.add(building.container);
 
             }

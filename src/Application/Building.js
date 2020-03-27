@@ -14,7 +14,7 @@ export default class Building {
         this.container = new THREE.Object3D();
 
         // 3D wrapper: intersection mesh wrapping the whole building and allowing it to be interactive
-        this.wrapper = new THREE.Object3D();
+        // this.wrapper = new THREE.Object3D();
 
         this.materials = [];
 
@@ -56,6 +56,7 @@ export default class Building {
         // let geometry = this.setup.action( this.scene );
         // this.container.add( geometry );
 
+        // this.container.name = "AULARIO";
         this.container.add(this.scene);
         
 
@@ -67,15 +68,15 @@ export default class Building {
         this.container.rotateY( this.setup.rotation[1]);
         this.container.rotateZ( this.setup.rotation[2]);
         // And its wrapper
-        this.wrapper.translateX( this.setup.location[0]);
-        this.wrapper.translateY( this.setup.location[1]);
-        this.wrapper.translateZ( this.setup.location[2]);
-        this.wrapper.rotateX( this.setup.rotation[0]);
-        this.wrapper.rotateY( this.setup.rotation[1]);
-        this.wrapper.rotateZ( this.setup.rotation[2]);
+        // this.wrapper.translateX( this.setup.location[0]);
+        // this.wrapper.translateY( this.setup.location[1]);
+        // this.wrapper.translateZ( this.setup.location[2]);
+        // this.wrapper.rotateX( this.setup.rotation[0]);
+        // this.wrapper.rotateY( this.setup.rotation[1]);
+        // this.wrapper.rotateZ( this.setup.rotation[2]);
 
-        this.wrapper.name = this.container.children[0].children[0].name;
-        this.wrapper.add( this.container.children[0].children[0] );
+        // this.wrapper.name = this.container.children[0].children[0].name;
+        // this.wrapper.add( this.container.children[0].children[0] );
 
     }
 }

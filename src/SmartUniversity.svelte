@@ -13,11 +13,14 @@
     let height, width;
     let SmartUniversity_Instance = null;
     let selected = null;
+
+    let popup;
     
-    onMount(() => {
+    onMount(async () => {
 
         SmartUniversity_Instance = new THREE_App( { canvas: canvasElement, window: { height, width }, doc: document , DEBUG }); 
         
+        popup.refreshData();
         
         DEBUG ? document.body.appendChild( SmartUniversity_Instance.stats.domElement ) : 0;
         DEBUG ? document.body.appendChild( SmartUniversity_Instance.renderstats ) : 0;
@@ -31,7 +34,7 @@
         SmartUniversity_Instance.calculateIntersections();
         selected = SmartUniversity_Instance.SELECTED;
 
-        console.log("Svelte selected ", selected);
+        // console.log("Svelte selected ", selected);
     }
 
     function touched(event) {
@@ -41,19 +44,8 @@
         SmartUniversity_Instance.calculateIntersections();
         selected = SmartUniversity_Instance.SELECTED;
 
-        console.log("Svelte selected ", selected);
+        // console.log("Svelte selected ", selected);
     }
-
-    // Mouse movement raycaster updates
-    // function handleMouseMove(event) {
-    //     event.preventDefault();
-    //     SmartUniversity_Instance.mouse.x = ( event.clientX / width ) * 2 - 1;
-    //     SmartUniversity_Instance.mouse.y = - ( event.clientY / height ) * 2 + 1;
-    // }
-
-    // function resize(e) {
-    //     console.log("Svelte resize ", e);
-    // }
 
 </script>
 
@@ -77,7 +69,7 @@
 
 <svelte:window bind:outerWidth={width} bind:outerHeight={height} />
 
-<Popup content={ selected }/>
+<Popup content={ selected } bind:this={popup}/>
 
 <div>
     <canvas 

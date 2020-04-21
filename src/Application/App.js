@@ -6,8 +6,10 @@ import Loader from "./Utils/Loader.js";
 import Resources from "./Utils/Resources.js";
 import World from "./World.js";
 
+
 // Debug
 import Stats from "stats.js";
+import {GUI} from "three/examples/jsm/libs/dat.gui.module.js";
 
 /*
 * Wrapper class for threejs app
@@ -98,6 +100,13 @@ export default class THREE_App {
         // console.log("aspect " + this.width / this.height);
     
         this.camera = new THREE.PerspectiveCamera( 40, this.width / this.height, .1, 2400 );
+
+        if(this.options.DEBUG) {
+            var axesHelper = new THREE.AxesHelper( 50 );
+            this.scene.add( axesHelper );
+
+            this.options.gui = new GUI();
+        }
         
         this.loader.on('loadingFinished', () => {
             // TODO loading screen + animation
@@ -154,7 +163,7 @@ export default class THREE_App {
             this.options.canvas.style.width = this.viewportWidth;
             this.options.canvas.style.height = this.viewportHeight;
     
-            console.log("re SIZE: " + this.viewportWidth + " x " + this.viewportHeight);
+            // console.log("re SIZE: " + this.viewportWidth + " x " + this.viewportHeight);
             // console.log("aspect " + this.viewportWidth / this.viewportHeight);
     
             // Keep same render and camera aspect
@@ -179,14 +188,30 @@ export default class THREE_App {
         // pos000.scale(2,2,2);
         // this.scene.add(pos000);
 
-        this.camera.position.x = -30;
-        this.camera.position.y = 80;
-        this.camera.position.z = 80;
+        this.camera.position.setZ(931);
+        this.camera.position.setY(733);
+        this.camera.position.setX(-1186);
         
         this.camera.lookAt(0,0,0);
 
         if(this.options.DEBUG) {
+            var buildingFolder = this.options.gui.addFolder('Camera');
 
+            const params = {
+                posX: this.camera.position.x,
+                posY: this.camera.position.y,
+                posZ: this.camera.position.z,
+            }
+            
+            buildingFolder.add(params, 'posX', -3000,3000).onChange( (val) => {
+                this.camera.position.setX(val);
+            })
+            buildingFolder.add(params, 'posY', -3000,3000).onChange( (val) => {
+                this.camera.position.setY(val);
+            })
+            buildingFolder.add(params, 'posZ', -3000,3000).onChange( (val) => {
+                this.camera.position.setZ(val);
+            })
         }
 
         this.items.camera = this.camera;
@@ -217,7 +242,7 @@ export default class THREE_App {
     setRenderer() {
         this.renderer = new THREE.WebGLRenderer({
             canvas: this.options.canvas,
-            antialias: true
+            antialias: false
         })
         this.renderer.setPixelRatio(2)
         // this.renderer.physicallyCorrectLights = true
@@ -293,7 +318,10 @@ export default class THREE_App {
 
             // ON HOVER!!
             // this.INTERSECTED.material.color.setHex( 0xff0000 );
-            this.INTERSECTED.material.color.setHex( 0x56e1fc );
+            // this.INTERSECTED.material.color.setHex( 0x56e1fc );
+            this.INTERSECTED.material.color.setHex( 0xbbf3fd );
+            this.INTERSECTED.material.setValues({opacity: 1});
+            
             this.SELECTED = this.INTERSECTED.name;
 
             // console.log(object);
@@ -303,6 +331,8 @@ export default class THREE_App {
             if ( this.INTERSECTED ) {
 
                 this.INTERSECTED.material.color.setHex( this.INTERSECTED.currentHex );
+                this.INTERSECTED.material.setValues({opacity: 0.75});
+
                 // applying original colors
     
             }

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import {GUI} from "three/examples/jsm/libs/dat.gui.module.js";
+// import {GUI} from "three/examples/jsm/libs/dat.gui.module.js";
 
 import Setup from "./setup.js";
 
@@ -15,6 +15,7 @@ export default class World{
         // console.log("WORLD HAS");
         // console.log(this.items.textures);
         this.options = _params.options;
+        // this.camera = _params.camera;
 
         this.container = new THREE.Object3D();
 
@@ -27,10 +28,6 @@ export default class World{
     }
 
     setupWorld() {
-
-        if(this.options.DEBUG) {
-            this.options.gui = new GUI();
-        }
 
         this.setLights();
         this.setObjects();
@@ -63,13 +60,12 @@ export default class World{
             }
         }
 
-        console.log(this.items.textures);
         // Plane
-        const mat = new THREE.MeshBasicMaterial( {map: this.items.textures['UA'] ,opacity: 0.8, transparent: true });
+        const mat = new THREE.MeshBasicMaterial( {map: this.items.textures['UA'], opacity: 0.8, transparent: true });
         const plane = new THREE.Mesh( 
-            new THREE.PlaneGeometry(1680,889,10,10), mat);
+            new THREE.PlaneGeometry(1600, 1600, 10,10), mat);
 
-        plane.position.set(0,-1,0);
+        plane.position.set(0,-0.05,0);
         plane.rotation.x = - Math.PI / 2;
     
         // plane.castShadow = true;
@@ -77,23 +73,22 @@ export default class World{
 
        
         if(this.options.DEBUG) {
-            var buildingFolder = this.options.gui.addFolder('Building');
+            var buildingFolder = this.options.gui.addFolder('Buildings');
 
             const params = {
-                posX: this.items.aulario3.scene.position.x,
-                posY: this.items.aulario3.scene.position.y,
-                posZ: this.items.aulario3.scene.position.z
-
+                posX: this.items.BUA.scene.position.x,
+                posY: this.items.BUA.scene.position.y,
+                posZ: this.items.BUA.scene.position.z,
             }
             
             buildingFolder.add(params, 'posX', -1000,1000).onChange( (val) => {
-                this.items.aulario3.scene.position.x = val;
+                this.items.BUA.scene.position.x = val;
             })
             buildingFolder.add(params, 'posY', -1000,1000).onChange( (val) => {
-                this.items.aulario3.scene.position.y = val;
+                this.items.BUA.scene.position.y = val;
             })
             buildingFolder.add(params, 'posZ', -1000,1000).onChange( (val) => {
-                this.items.aulario3.scene.position.z = val;
+                this.items.BUA.scene.position.z = val;
             })
             
         }

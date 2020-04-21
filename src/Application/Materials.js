@@ -2,31 +2,27 @@ import * as THREE from "three";
 
 export default function loadMaterials( textureItems ){
 
+    // todo
+        /*
+            Different material per mesh (different material variable, same values and properties)
+        */
+
     const materials = {
-        hoverInvisible: new THREE.MeshBasicMaterial({
-            color: 0x2194ce,
-            visible: false,
-            transparent: true,
-            opacity: 0.3
-        }),
-        concrete: new THREE.MeshPhongMaterial( {
-            color: 0xa1a1a1,
-            toneMapped: true,
-        }),
         window: new THREE.MeshPhongMaterial( {
             color: 0xD8E6FF,
-            toneMapped: true,
+            // toneMapped: true,
             transparent: true,
             opacity: 0.7
         }),
-        iron: new THREE.MeshPhongMaterial( {
-            color: 0x585858,
+        mat1: new THREE.MeshMatcapMaterial( {
+            matcap: textureItems.concrete,
         }),
-
-        vent: new THREE.MeshPhongMaterial( {
-            color: 0xE7E7E7,
-            toneMapped: true,
+        mat2: new THREE.MeshMatcapMaterial( {
+            matcap: textureItems.concrete,
         }),
+        mat3: new THREE.MeshMatcapMaterial( {
+            matcap: textureItems.concrete,
+        })
     }
 
     return materials;

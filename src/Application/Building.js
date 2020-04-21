@@ -30,7 +30,9 @@ export default class Building {
         // 1 material per mesh children
         for( let [index, child] of this.scene.children.entries() ) {
             
+            // to set different material to each part of mesh (diferent mesh, same object)
             if(this.setup.materials[ child.name ]) {
+                console.log("aplicando hijos");
 
                 // Set material
                 this.scene.children[ index ].material = this.setup.materials[ child.name ];
@@ -53,6 +55,7 @@ export default class Building {
     loadMesh() {
 
         // Do custom things for each building (defined in setup) as cloning meshes already placed
+        // ----->>> cloning won't instanciate vertices, only duplicate position => and DUPLICATE DRAW CALLS
         // let geometry = this.setup.action( this.scene );
         // this.container.add( geometry );
 
@@ -64,9 +67,9 @@ export default class Building {
         this.container.translateX( this.setup.location[0]);
         this.container.translateY( this.setup.location[1]);
         this.container.translateZ( this.setup.location[2]);
-        this.container.rotateX( this.setup.rotation[0]);
-        this.container.rotateY( this.setup.rotation[1]);
-        this.container.rotateZ( this.setup.rotation[2]);
+        // this.container.rotateX( this.setup.rotation[0]);
+        // this.container.rotateY( this.setup.rotation[1]);
+        // this.container.rotateZ( this.setup.rotation[2]);
         // And its wrapper
         // this.wrapper.translateX( this.setup.location[0]);
         // this.wrapper.translateY( this.setup.location[1]);

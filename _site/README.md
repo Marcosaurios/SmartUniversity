@@ -1,2 +1,0 @@
-# SmartUniversity
-ThreeJS + Svelte project.

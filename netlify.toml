@@ -1,0 +1,6 @@
+# Contexts
+[context.production]
+command = "npm run build"
+
+[context.test]
+command = "npm run dev"

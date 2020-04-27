@@ -1,5 +1,5 @@
 
-import loadMaterials from "./materials.js";
+import loadMaterials from "./Materials.js";
 
 export default function( textureItems ) {
 

@@ -7,7 +7,8 @@
 
     import THREE_App from './Application/App.js';
 
-    const DEBUG = false;
+     
+    const DEBUG = process.env.prod != "prod";
 
     let canvasElement;
     let height, width;
@@ -70,7 +71,7 @@
 <svelte:window bind:outerWidth={width} bind:outerHeight={height} />
 
 <Popup content={ selected } bind:this={popup}/>
-
+{ process.env.prod }
 <div>
     <canvas 
         bind:this={canvasElement}

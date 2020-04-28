@@ -3,8 +3,10 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
+import replace from '@rollup/plugin-replace';
 
 const production = !process.env.ROLLUP_WATCH;
+const NODE_ENV = process.env.NODE_ENV;
 
 export default {
 	input: 'src/main.js',
@@ -23,6 +25,15 @@ export default {
 			css: css => {
 				css.write('public/build/bundle.css');
 			}
+		}),
+
+		replace({
+			process: JSON.stringify({        
+				env: {          
+				  prod: NODE_ENV,          
+				  //API_URL : process.env.API_URL  //only using API_URL        
+				}      
+			}),
 		}),
 
 		// If you have external dependencies installed from

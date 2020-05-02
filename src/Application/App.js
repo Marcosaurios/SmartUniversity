@@ -111,11 +111,8 @@ export default class THREE_App {
         }
   
         this.scene.background = new THREE.Color(0.1, 0.1, 0.1);
-
-        // console.log("initial SIZE: " + this.width + " x " + this.height);
-        // console.log("aspect " + this.width / this.height);
     
-        this.camera = new THREE.PerspectiveCamera( 40, this.width / this.height, .1, 2400 );
+        this.setCamera();
 
         this.loader.on('loadingFinished', () => {
             // TODO loading screen + animation
@@ -190,6 +187,8 @@ export default class THREE_App {
 
     setCamera() {
 
+        this.camera = new THREE.PerspectiveCamera( 40, this.width / this.height, 1, 2400 );
+
         this.camera.zoom = 2;
 
         this.camera.position.setZ(931);
@@ -249,7 +248,7 @@ export default class THREE_App {
             
             this.renderer = new THREE.WebGLRenderer({
                 canvas: this.options.canvas,
-                antialias: false
+                antialias: true
             })
             this.renderer.setPixelRatio(2)
             this.renderer.setSize(this.viewportWidth, this.viewportHeight);

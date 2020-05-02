@@ -12,16 +12,17 @@ export default class World{
 
         // 
         this.items = _params.items;
-        // console.log("WORLD HAS");
-        // console.log(this.items.textures);
         this.options = _params.options;
-        // this.camera = _params.camera;
 
         this.container = new THREE.Object3D();
 
         this.interactiveObjects = [];
 
-        this.setup = new Setup( this.items.textures );
+        console.log("Items in APP:");
+        console.log(this.items);
+
+        this.setup = new Setup( this.options, this.items.textures );
+
         this.setupWorld();
 
         return this;
@@ -31,6 +32,8 @@ export default class World{
 
         this.setLights();
         this.setObjects();
+
+
     }
 
     setObjects() {
@@ -42,11 +45,22 @@ export default class World{
             if( this.items[ name ] != undefined ) {
                 
                 const building = new Building( { setup: setupObject[name], item: this.items[ name ], textures: this.items.textures } );
-
+                building.container.name = name;
                 // building.castShadow = true;
                 // building.receiveShadow = true;
 
-                console.log(building);
+                // debugger;
+                let buildingObj = building.container.children[0].children[0];
+                let geo = buildingObj.geometry;
+                
+                console.log(buildingObj.geometry.attributes);
+
+                if(geo.attributes.uv){
+                    geo.addAttribute('uv2', new THREE.BufferAttribute( geo.attributes.uv.array, 2 ));
+                }
+                
+                
+                //setupObject[name].action();
 
                 this.interactiveObjects.push(building.container.children[0].children[0]);
 
@@ -63,7 +77,8 @@ export default class World{
         // Plane
         const mat = new THREE.MeshBasicMaterial( {map: this.items.textures['UA'], opacity: 0.8, transparent: true });
         const plane = new THREE.Mesh( 
-            new THREE.PlaneGeometry(1600, 1600, 10,10), mat);
+            new THREE.PlaneGeometry(1788, 1788, 1,1), mat);
+        plane.name = "UA base plane";
 
         plane.position.set(0,-0.05,0);
         plane.rotation.x = - Math.PI / 2;
@@ -73,7 +88,7 @@ export default class World{
 
        
         if(this.options.DEBUG) {
-            var buildingFolder = this.options.gui.addFolder('Buildings');
+            var buildingFolder = this.options.debugScene.addFolder('Buildings');
 
             const params = {
                 posX: this.items.BUA.scene.position.x,
@@ -100,34 +115,51 @@ export default class World{
     }
 
     setLights() {
+
+        var ambient = new THREE.AmbientLight(0xffffff, 2.56);
+        ambient.name = "Ambient light";
+        ambient.position.set(388, 20, -429);
+        this.container.add(ambient);
+
+        // var directional = new THREE.DirectionalLight(0xffffff, 1);
+        // directional.name = "Directional light"
+        // directional.position.set(30, 20, -252);
+        // this.container.add(directional);
         // Lights
-        var light = new THREE.PointLight( 0xFFFFFF, 1, 100);
-        light.position.set(0,0,0);
-        light.intensity = 0.22;
-        light.distance = 0;
-        light.power = 3;
-        light.decay = 0;
+        // var light = new THREE.PointLight( 0xFFFFFF, 1, 100);
+        // var light = new THREE.AmbientLight(0xffffff, 1); 
+        // var light = new THREE.DirectionalLight(0xffffff, 3);
+        // light.position.set(0,70,0);
+        // light.target
+        // light.distance = 0;
+        // light.power = 3;
+        // light.decay = 0;
+
+        // test
+
+        // var ambient = new THREE.AmbientLight(0x333333);
+        // ambient.position.set( light.position );
 
         if(this.options.DEBUG) {
-            var lighting = this.options.gui.addFolder('Lighting');
+            var lighting = this.options.debugScene.addFolder('Lighting');
             
-            lighting.add(light, 'distance', 0, 200).onChange( function(val) {
-                light.distance = val;
-            });
-            lighting.add(light, 'power', 0, 100).onChange( function(val) {
-                light.power = val;
-            });
-            lighting.add(light, 'decay', 0, 50).onChange( function(val) {
-                light.decay = val;
-            });
-            lighting.add(light, 'intensity', 0, 50).onChange( function(val) {
-                light.intensity = val;
-            });
+            // lighting.add(light, 'distance', 0, 200).onChange( function(val) {
+            //     light.distance = val;
+            // });
+            // lighting.add(light, 'power', 0, 100).onChange( function(val) {
+            //     light.power = val;
+            // });
+            // lighting.add(light, 'decay', 0, 50).onChange( function(val) {
+            //     light.decay = val;
+            // });
+            // lighting.add(light, 'intensity', 0, 50).onChange( function(val) {
+            //     light.intensity = val;
+            // });
 
         }
         
-        var pointLightHelper = new THREE.PointLightHelper( light, 1 );
-        this.items.camera.add(light);
+        // var pointLightHelper = new THREE.PointLightHelper( light, 1 );
+        // this.items.camera.add(light);
         this.container.add(this.items.camera)
 
         //   this.container.add( pointLightHelper );

@@ -23,7 +23,7 @@ export default class THREE_App {
 
         this.options = _options;
 
-        console.log(this.options.doc.defaultView);
+        // Window access: // console.log(this.options.doc.defaultView);
         // Width and height from Window
         this.width = this.options.doc.defaultView.outerWidth;
         this.height = this.options.doc.defaultView.outerHeight;
@@ -40,10 +40,15 @@ export default class THREE_App {
         
         console.log("Resources: ", this.resources);
         
-        /* ----------------------------- */
         // Debug
-        // console.log(this.options);
         if(this.options.DEBUG) {
+            
+            // Create folder
+            this.options.gui = new GUI();
+            this.options.debugScene = this.options.gui.addFolder('Scene');
+
+            // Stats
+            /* ----------------------------- */
             this.stats = new Stats;
             this.stats.showPanel(1);      
 
@@ -75,6 +80,7 @@ export default class THREE_App {
         }
         /* ----------------------------- */
 
+
         this.init();
 
         this.setRenderer();
@@ -93,6 +99,15 @@ export default class THREE_App {
         this.items = this.loader.loadResources(this.resources);
 
         this.scene = new THREE.Scene();
+        
+        if(this.options.DEBUG){
+            // Export variables to window for WebGL inspector plugin
+            window.scene = this.scene;
+            window.THREE = THREE;
+
+            var axesHelper = new THREE.AxesHelper( 50 );
+            this.scene.add( axesHelper );
+        }
   
         this.scene.background = new THREE.Color(0.1, 0.1, 0.1);
 
@@ -101,17 +116,10 @@ export default class THREE_App {
     
         this.camera = new THREE.PerspectiveCamera( 40, this.width / this.height, .1, 2400 );
 
-        if(this.options.DEBUG) {
-            var axesHelper = new THREE.AxesHelper( 50 );
-            this.scene.add( axesHelper );
-
-            this.options.gui = new GUI();
-        }
-        
         this.loader.on('loadingFinished', () => {
             // TODO loading screen + animation
-            console.log("Se han cargado todos los modelos: ");
-            console.log(this.items);
+            // console.log("Se han cargado todos los modelos: ");
+            // console.log(this.items);
     
             const world = new World( { items: this.items, options: this.options } );
 
@@ -183,11 +191,6 @@ export default class THREE_App {
 
         this.camera.zoom = 2;
 
-        // Helpers
-        // let pos000 = new THREE.BoxGeometry(2,2,2,1,1,1);
-        // pos000.scale(2,2,2);
-        // this.scene.add(pos000);
-
         this.camera.position.setZ(931);
         this.camera.position.setY(733);
         this.camera.position.setX(-1186);
@@ -195,7 +198,7 @@ export default class THREE_App {
         this.camera.lookAt(0,0,0);
 
         if(this.options.DEBUG) {
-            var buildingFolder = this.options.gui.addFolder('Camera');
+            var buildingFolder = this.options.debugScene.addFolder('Camera');
 
             const params = {
                 posX: this.camera.position.x,
@@ -240,29 +243,115 @@ export default class THREE_App {
     }
 
     setRenderer() {
-        this.renderer = new THREE.WebGLRenderer({
-            canvas: this.options.canvas,
-            antialias: false
-        })
-        this.renderer.setPixelRatio(2)
-        // this.renderer.physicallyCorrectLights = true
-
-        this.renderer.gammaFactor = 2.2
-        this.renderer.gammaOutPut = true
         
-        this.renderer.toneMapping = THREE.LinearToneMapping;
+        let createRenderer = () => {
+            
+            this.renderer = new THREE.WebGLRenderer({
+                canvas: this.options.canvas,
+                antialias: false
+            })
+            this.renderer.setPixelRatio(2)
+            this.renderer.setSize(this.viewportWidth, this.viewportHeight);
+            this.renderer.physicallyCorrectLights = true
+            this.renderer.outputEncoding = THREE.sRGBEncoding;
+            this.renderer.shadowMap.enabled = true;
+        }
+
+        createRenderer();
+        
+        
+    // this.renderer.physicallyCorrectLights = true
+        // this.renderer.gammaOutPut = true
+        // this.renderer.gammaFactor = 2.2
+        // this.renderer.toneMapping = THREE.LinearToneMapping;
         // this.renderer.toneMappingExposure = Math.pow(0.7, 5.0);
-        this.renderer.toneMappingExposure = 1.0;
-        this.renderer.outputEncoding = THREE.sRGBEncoding;
-        // 
-        this.renderer.toneMappingExposure = 1.0;
-        
-
-        this.renderer.setSize(this.viewportWidth, this.viewportHeight);
-        this.renderer.shadowMap.enabled = true;
-        
+        // this.renderer.toneMappingExposure = 1.0;
+    //this.renderer.outputEncoding = THREE.sRGBEncoding;
+        // this.renderer.toneMappingExposure = 1.0;
+    //this.renderer.shadowMap.enabled = true;
         // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+        
+     
         this.lastTime = Date.now();
+
+        if(this.options.DEBUG) {
+            var renderFolder = this.options.debugScene.addFolder('Render');
+
+            const params = {
+                gammaFactor: this.renderer.gammaFactor,
+                gammaOutPut: true,
+                toneMapping: this.renderer.toneMapping,
+                toneMappingExposure: this.renderer.toneMappingExposure,
+                toneMappingWhitePoint: this.renderer.toneMappingWhitePoint,
+                outputEncoding: THREE.sRGBEncoding,
+                physicallyCorrectLights: true,
+                // this.renderer.toneMappingExposure = Math.pow(0.7, 5.0);
+                // this.renderer.toneMappingExposure = 1.0;
+            }
+
+            const encodings = {
+                "LinearEncoding": THREE.LinearEncoding,
+                "sRGBEncoding": THREE.sRGBEncoding,
+                "GammaEncoding": THREE.GammaEncoding,
+                "RGBEEncoding": THREE.RGBEEncoding,
+                "LogLuvEncoding": THREE.LogLuvEncoding,
+                "RGBM7Encoding": THREE.RGBM7Encoding,
+                "RGBM16Encoding": THREE.RGBM16Encoding,
+                "RGBDEncoding": THREE.RGBDEncoding,
+            }
+
+            const mappings = {
+                "LinearToneMapping": THREE.LinearToneMapping,
+                "ReinhardToneMapping": THREE.ReinhardToneMapping,
+                "Uncharted2ToneMapping": THREE.Uncharted2ToneMapping,
+                "CineonToneMapping": THREE.CineonToneMapping,
+                "ACESFilmicToneMapping": THREE.ACESFilmicToneMapping
+            }
+            
+            renderFolder.add(params, 'gammaFactor').onChange( (val) => {
+                this.renderer.dispose();
+                this.renderer = null;
+                createRenderer();
+                this.renderer.gammaFactor = val;
+            })
+            renderFolder.add(params, 'gammaOutPut').onChange( (val) => {
+                this.renderer.dispose();
+                this.renderer = null;
+                createRenderer();
+                this.renderer.gammaOutPut = val;
+            })
+            renderFolder.add(params, 'toneMapping', Object.keys(mappings)).onChange( (val) => {
+                this.renderer.dispose();
+                this.renderer = null;
+                createRenderer();
+                this.renderer.toneMapping = mappings[val];
+            })
+            renderFolder.add(params, 'toneMappingExposure').onChange( (val) => {
+                this.renderer.dispose();
+                this.renderer = null;
+                createRenderer();
+                this.renderer.toneMappingExposure = val;
+            })
+            renderFolder.add(params, 'toneMappingWhitePoint').onChange( (val) => {
+                this.renderer.dispose();
+                this.renderer = null;
+                createRenderer();
+                this.renderer.toneMappingWhitePoint = val;
+            })
+            renderFolder.add(params, 'outputEncoding', Object.keys(encodings)).onChange( (val) => {
+                this.renderer.dispose();
+                this.renderer = null;
+                createRenderer();
+                this.renderer.outputEncoding = encodings[val];
+            })
+            renderFolder.add(params, 'physicallyCorrectLights').onChange((val)=> {
+                this.renderer.dispose();
+                this.renderer = null;
+                createRenderer();
+                this.renderer.physicallyCorrectLights = val;
+            })
+        }
+
     }
 
     render() {
@@ -322,7 +411,7 @@ export default class THREE_App {
             this.INTERSECTED.material.color.setHex( 0xbbf3fd );
             this.INTERSECTED.material.setValues({opacity: 1});
             
-            this.SELECTED = this.INTERSECTED.name;
+            this.SELECTED = this.INTERSECTED;
 
             // console.log(object);
         
@@ -342,6 +431,10 @@ export default class THREE_App {
 
 
         }
+    }
+
+    getSelected(){
+        return this.SELECTED ? this.SELECTED.name : null;
     }
 
 }

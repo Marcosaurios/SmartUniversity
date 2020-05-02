@@ -2,10 +2,21 @@ import * as THREE from "three";
 
 export default function loadMaterials( textureItems ){
 
-    // todo
-        /*
-            Different material per mesh (different material variable, same values and properties)
-        */
+    /*
+        Inits materials and possible textures
+    */
+
+    textureItems.UA.encoding = THREE.sRGBEncoding;
+    //
+    textureItems.Au3_AO.encoding = THREE.sRGBEncoding;
+    textureItems.Au3_AO.flipY = false;
+
+    textureItems.BUA_AO.encoding = THREE.sRGBEncoding;
+    textureItems.BUA_AO.flipY = false;
+
+    textureItems.Au2_AO.encoding = THREE.sRGBEncoding;
+    textureItems.Au2_AO.flipY = false;
+
 
     const materials = {
         window: new THREE.MeshPhongMaterial( {
@@ -14,16 +25,23 @@ export default function loadMaterials( textureItems ){
             transparent: true,
             opacity: 0.7
         }),
-        mat1: new THREE.MeshMatcapMaterial( {
-            matcap: textureItems.concrete,
+        aulario3: new THREE.MeshPhongMaterial( {
+            // matcap: textureItems.concrete,
+            color: 0xffffff,
+            aoMap: textureItems.Au3_AO
         }),
-        mat2: new THREE.MeshMatcapMaterial( {
-            matcap: textureItems.concrete,
+        aulario2: new THREE.MeshLambertMaterial( { 
+            color: 0xffffff,
+            aoMap: textureItems.Au2_AO
         }),
-        mat3: new THREE.MeshMatcapMaterial( {
-            matcap: textureItems.concrete,
+        mat3: new THREE.MeshPhongMaterial( {
+            color: 0xffffff,
+            aoMap: textureItems.BUA_AO,
         })
     }
+
+    // Add AO to each material
+
 
     return materials;
 

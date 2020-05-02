@@ -33,7 +33,7 @@
         SmartUniversity_Instance.mouse.y = - ( event.clientY  / SmartUniversity_Instance.viewportHeight ) * 2 + 1;
 
         SmartUniversity_Instance.calculateIntersections();
-        selected = SmartUniversity_Instance.SELECTED;
+        selected = SmartUniversity_Instance.getSelected();
 
         // console.log("Svelte selected ", selected);
     }
@@ -77,5 +77,6 @@
         bind:this={canvasElement}
         on:click={ clicked }
         on:touchstart={ touched }
+        id="app"
     ></canvas>
 </div>

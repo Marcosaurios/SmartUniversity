@@ -8,16 +8,16 @@ export default class Building {
         this.setup = data.setup;
         this.scene = data.item.scene;
         this.textures = data.textures;
-
-
+        
+        
         // 3D container: every mesh belongs to this building
         this.container = new THREE.Object3D();
-
+        
         // 3D wrapper: intersection mesh wrapping the whole building and allowing it to be interactive
         // this.wrapper = new THREE.Object3D();
-
+        
         this.materials = [];
-
+        
         this.loadTextures();
         this.loadMaterials();
         this.loadMesh();

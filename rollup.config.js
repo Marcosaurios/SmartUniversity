@@ -30,8 +30,7 @@ export default {
 		replace({
 			process: JSON.stringify({        
 				env: {          
-				  prod: NODE_ENV,          
-				  //API_URL : process.env.API_URL  //only using API_URL        
+				  prod: NODE_ENV,      
 				}      
 			}),
 		}),

@@ -42,6 +42,7 @@ export default class THREE_App {
         
         // Debug
         if(this.options.DEBUG) {
+            // Set netlify cookie
             
             // Create folder
             this.options.gui = new GUI();

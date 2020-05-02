@@ -86,7 +86,7 @@ export default class THREE_App {
 
         this.setRenderer();
         this.setControls();
-        this.setCamera();
+        // this.setCamera();
         
         this.render();
 

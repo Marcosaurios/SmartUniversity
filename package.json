@@ -6,7 +6,7 @@
     "dev": "NODE_ENV=test rollup -c",
     "local": "NODE_ENV=test rollup -c -w",
     "test": "NODE_ENV=prod rollup -c -w",
-    "start": "sirv public"
+    "start": "HOST=0.0.0.0 sirv public"
   },
   "devDependencies": {
     "@iconify/icons-mdi": "^1.0.105",

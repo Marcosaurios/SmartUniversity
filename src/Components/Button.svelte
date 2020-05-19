@@ -1,8 +1,28 @@
 <script>
+    import { createEventDispatcher } from 'svelte';
+    import {onMount} from 'svelte';
+
+    // Props
+    export let id = null;
     export let primary = false;
     export let secondary = false;
     export let listItem = false;
     export let active = false;
+
+    const dispatch = createEventDispatcher();
+    // let button;
+
+    function addEvent(node){
+        if(node.id == "lang"){
+            // Only emit event if button is language button
+            node.addEventListener("touchend", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dispatch("touched", true );
+            });   
+        }
+    }
+
 </script>
 
 <style>
@@ -47,14 +67,8 @@
 
 
 </style>
-<!-- 
-<button 
-    class="btn" class:primary class:secondary class:listItem
-    on:mouseenter={enter} on:mouseleave={leave}>
-        <slot></slot>
-</button>
--->
-<button 
-    class="btn" class:primary class:listItem class:active>
+
+<button use:addEvent id="{id}"
+    class="btn" class:primary class:secondary class:listItem class:active>
         <slot></slot>
 </button>

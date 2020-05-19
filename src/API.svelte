@@ -1,7 +1,11 @@
 <script context="module">
+    /*
+        Wrapper for fetching items from SmartUniversity API
+    */
     // get electricity
     const apikey = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwZXJzb25hbCI6IjEwNzgyOSIsImlhdCI6MTU4NTMwMzA4MywiZXhwIjoxNjE2ODM5MDgzLCJpc3MiOiJTbWFydFVBIEFwcGxpY2F0aW9uIn0.Tou_1Wc3qz5PboTMdiDgAeRKcBH9TzX8hJh9gxfaJsY";
     
+    // Interactive buildings
     // BUA, EPS1, EPS2, EPS3, AUL2, AUL3, DER, GERBER
     export const buildings = [
         "Biblioteca General", "Politécnica 1", "Politécnica 2", "Politécnica 3-Acometida 2", "Aulario 2", "Aulario 3", "Derecho", "German Bernacer"];
@@ -52,6 +56,7 @@
 
     async function getWifi() {
         try{
+            // Wifi Down
             let response = await fetch(`https://smartua.dtic.ua.es:8080/apikey/${apikey}/sensor/model/WIFI_DOWN/structure/mapa_basico/date/2019-10-26-11-00-00/period/15`,
             {
                 method: 'GET',
@@ -68,7 +73,7 @@
                 
             });
 
-            //
+            // Wifi Up
 
             response = await fetch(`https://smartua.dtic.ua.es:8080/apikey/${apikey}/sensor/model/WIFI_UP/structure/mapa_basico/date/2019-10-26-11-00-00/period/15`,
             {
@@ -135,9 +140,34 @@
         }
     }
 
+    async function getDescription() {
+        try{
+            let response = await fetch('/assets/descriptions.json',
+            {
+                method: 'GET',
+                mode: 'cors'
+            });
+
+            let parsed = await response.json();
+            
+            for(let i=0; i<parsed.length; i++){
+                let exist = buildings.indexOf(parsed[i].name);
+
+                data[buildings[exist]].description = {
+                    eng: parsed[i].eng,
+                    esp: parsed[i].esp
+                };
+            }
+            // console.log(data);
+        }
+        catch(e){
+
+        }
+    }
+
 
     export async function getData(){
-        await Promise.all([getElectricity(), getWifi(), getTemperature()]);
+        await Promise.all([getElectricity(), getWifi(), getTemperature(), getDescription()]);
 
         // for (var property in data) {
         //     if (data.hasOwnProperty(property)) {

@@ -6,7 +6,6 @@ export default function( options, textureItems ) {
     // Load materials
     const materials = loadMaterials( textureItems );
     
-
     if(options.DEBUG){
         var mtlFolder = options.debugScene.addFolder('Materials');
 
@@ -71,6 +70,7 @@ export default function( options, textureItems ) {
                 materials: {
                     Aulario3: materials.aulario3,
                 },
+                interactive: true,
                 rotation: UA_rotation,          // ???
                 textures: [ "moon" ],           // ???
                 action: function( geometry ) {
@@ -86,6 +86,7 @@ export default function( options, textureItems ) {
                 // location: [30, .5, -252],
                 location: [0,0,0],
                 rotation: [0,0,0],
+                interactive: true,
                 materials: {
                     Aulario2: materials.aulario2
                 },
@@ -96,10 +97,71 @@ export default function( options, textureItems ) {
             BUA: {
                 location: [0,0,0],
                 rotation: [0,0,0],
+                interactive: true,
                 materials: {
-                    BUA: materials.mat3
+                    BUA: materials.BUA
                 },
                 action: function(mesh){}
+            }
+        },
+        {
+            derecho: {
+                location: [0,0,0],
+                rotation: [0,0,0],
+                materials: {
+                    Derecho: materials.derecho
+                },
+                interactive: true,
+            }
+        },
+        {
+            eps1: {
+                location: [0,0,0],
+                rotation: [0,0,0],
+                materials: {
+                    EPS1: materials.eps1
+                },
+                interactive: true,
+            }
+        },
+        {
+            eps2: {
+                location: [0,0,0],
+                rotation: [0,0,0],
+                materials: {
+                    EPS2: materials.eps2
+                },
+                interactive: true,
+            }
+        },
+        {
+            eps3: {
+                location: [0,0,0],
+                rotation: [0,0,0],
+                materials: {
+                    EPS3: materials.eps3
+                },
+                interactive: true,
+            }
+        },
+        {
+            gerbernacer: {
+                location: [0,0,0],
+                rotation: [0,0,0],
+                materials: {
+                    GerBernacer: materials.gerbernacer
+                },
+                interactive: true,
+            }
+        },
+        {
+            resto: {
+                location: [0,0,0],
+                rotation: [0,0,0],
+                materials: {
+                    Rest: materials.default
+                },
+                interactive: false,
             }
         }
     ];

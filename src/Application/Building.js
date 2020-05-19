@@ -15,6 +15,8 @@ export default class Building {
         
         // 3D wrapper: intersection mesh wrapping the whole building and allowing it to be interactive
         // this.wrapper = new THREE.Object3D();
+
+        this.interactive = this.setup.interactive;
         
         this.materials = [];
         
@@ -32,14 +34,16 @@ export default class Building {
             
             // to set different material to each part of mesh (diferent mesh, same object)
             if(this.setup.materials[ child.name ]) {
-                console.log("aplicando hijos");
+                // console.log("aplicando hijos");
 
                 // Set material
                 this.scene.children[ index ].material = this.setup.materials[ child.name ];
                     
             }
             else{
-                console.warn("material for " + child.name + " doesn't exist.");
+
+                // this.scene.children[index].material = this.setup.materials.default
+                console.warn("material for " + child.name + " doesn't exist. Assigned default");
             }
         }
 
@@ -64,9 +68,9 @@ export default class Building {
         
 
         // Place container
-        this.container.translateX( this.setup.location[0]);
-        this.container.translateY( this.setup.location[1]);
-        this.container.translateZ( this.setup.location[2]);
+        // this.container.translateX( this.setup.location[0]);
+        // this.container.translateY( this.setup.location[1]);
+        // this.container.translateZ( this.setup.location[2]);
         // this.container.rotateX( this.setup.rotation[0]);
         // this.container.rotateY( this.setup.rotation[1]);
         // this.container.rotateZ( this.setup.rotation[2]);

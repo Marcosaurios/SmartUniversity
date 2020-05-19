@@ -2,9 +2,11 @@
 <script>
     import {onMount} from 'svelte';
     import Popup from './Popup.svelte';
+    import Menu from './Menu.svelte';
 
+    // 3rd party libs
     import { eventstart, eventend, eventmove, eventcancel } from '@composi/gestures';
-
+ 
     import THREE_App from './Application/App.js';
 
      
@@ -43,7 +45,7 @@
         SmartUniversity_Instance.mouse.y = - ( event.touches[0].clientY  / SmartUniversity_Instance.viewportHeight ) * 2 + 1;
 
         SmartUniversity_Instance.calculateIntersections();
-        selected = SmartUniversity_Instance.SELECTED;
+        selected = SmartUniversity_Instance.getSelected();
 
         // console.log("Svelte selected ", selected);
     }
@@ -66,12 +68,15 @@
         width: 100vw;
         height: 100vh;
     }
+
 </style>
 
 <svelte:window bind:outerWidth={width} bind:outerHeight={height} />
 
 <Popup content={ selected } bind:this={popup}/>
-{ process.env.prod }
+
+<Menu></Menu>
+
 <div>
     <canvas 
         bind:this={canvasElement}

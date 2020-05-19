@@ -86,7 +86,6 @@ export default class THREE_App {
 
         this.setRenderer();
         this.setControls();
-        // this.setCamera();
         
         this.render();
 
@@ -187,7 +186,7 @@ export default class THREE_App {
 
     setCamera() {
 
-        this.camera = new THREE.PerspectiveCamera( 40, this.width / this.height, 1, 2400 );
+        this.camera = new THREE.PerspectiveCamera( 40, this.width / this.height, 1, 4400 );
 
         this.camera.zoom = 2;
 
@@ -238,8 +237,24 @@ export default class THREE_App {
         this.controls.dampingFactor = 0.1;
         this.controls.screenSpacePanning = false;
         this.controls.minDistance = 10;
-        this.controls.maxDistance = 1700;
+        this.controls.maxDistance = 3000;
         this.controls.maxPolarAngle = Math.PI / 2;
+
+        // Controls limits
+        let value = 300;
+        var minPan = new THREE.Vector3( - value, -value, -value );
+		var maxPan = new THREE.Vector3( value, value, value );
+		var _v = new THREE.Vector3();
+    
+        let _controls = this.controls;
+        let _camera = this.camera;
+        this.controls.addEventListener("change", function() {
+            _v.copy(_controls.target);
+            _controls.target.clamp(minPan, maxPan);
+            _v.sub(_controls.target);
+            _camera.position.sub(_v);
+        })
+
     }
 
     setRenderer() {

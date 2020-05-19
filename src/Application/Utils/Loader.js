@@ -96,7 +96,7 @@ export default class Loader extends EventEmitter{
         this.loadedItems++;
 
         // Loaded
-        console.log("Loaded: ", item.name);
+        // console.log("Loaded: ", item.name);
 
         if(item.type == 'png' || item.type == 'jpg') {
             this.items.textures[item.name] = data;

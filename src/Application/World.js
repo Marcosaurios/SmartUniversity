@@ -45,6 +45,9 @@ export default class World{
             if( this.items[ name ] != undefined ) {
                 
                 const building = new Building( { setup: setupObject[name], item: this.items[ name ], textures: this.items.textures } );
+                
+                console.log(name);
+                
                 building.container.name = name;
                 // building.castShadow = true;
                 // building.receiveShadow = true;
@@ -53,7 +56,8 @@ export default class World{
                 let buildingObj = building.container.children[0].children[0];
                 let geo = buildingObj.geometry;
                 
-                console.log(buildingObj.geometry.attributes);
+                // Checking geo information (AO, normals)
+                //console.log(buildingObj.geometry.attributes);
 
                 if(geo.attributes.uv){
                     geo.addAttribute('uv2', new THREE.BufferAttribute( geo.attributes.uv.array, 2 ));
@@ -61,8 +65,7 @@ export default class World{
                 
                 
                 //setupObject[name].action();
-
-                this.interactiveObjects.push(building.container.children[0].children[0]);
+                building.interactive ? this.interactiveObjects.push(building.container.children[0].children[0]) : 0;
 
                 
                 // this.container.add(building.wrapper);
@@ -121,10 +124,10 @@ export default class World{
         ambient.position.set(388, 20, -429);
         this.container.add(ambient);
 
-        // var directional = new THREE.DirectionalLight(0xffffff, 1);
-        // directional.name = "Directional light"
-        // directional.position.set(30, 20, -252);
-        // this.container.add(directional);
+        var directional = new THREE.DirectionalLight(0x434343, 3);
+        directional.name = "Directional light"
+        directional.position.set(0, 1.46, 4);
+        this.container.add(directional);
         // Lights
         // var light = new THREE.PointLight( 0xFFFFFF, 1, 100);
         // var light = new THREE.AmbientLight(0xffffff, 1); 

@@ -8,6 +8,7 @@ export default function loadMaterials( textureItems ){
 
     textureItems.UA.encoding = THREE.sRGBEncoding;
     //
+        /*
     textureItems.Au3_AO.encoding = THREE.sRGBEncoding;
     textureItems.Au3_AO.flipY = false;
 
@@ -16,7 +17,7 @@ export default function loadMaterials( textureItems ){
 
     textureItems.Au2_AO.encoding = THREE.sRGBEncoding;
     textureItems.Au2_AO.flipY = false;
-
+        */
 
     const materials = {
         window: new THREE.MeshPhongMaterial( {
@@ -28,15 +29,39 @@ export default function loadMaterials( textureItems ){
         aulario3: new THREE.MeshPhongMaterial( {
             // matcap: textureItems.concrete,
             color: 0xffffff,
-            aoMap: textureItems.Au3_AO
+            // aoMap: textureItems.Au3_AO
         }),
-        aulario2: new THREE.MeshLambertMaterial( { 
+        aulario2: new THREE.MeshPhongMaterial( { 
             color: 0xffffff,
-            aoMap: textureItems.Au2_AO
+            // aoMap: textureItems.Au2_AO
         }),
-        mat3: new THREE.MeshPhongMaterial( {
+        eps1: new THREE.MeshPhongMaterial( {
             color: 0xffffff,
-            aoMap: textureItems.BUA_AO,
+            // aoMap: textureItems.BUA_AO,
+        }),
+        eps2: new THREE.MeshPhongMaterial( {
+            color: 0xffffff,
+            // aoMap: textureItems.BUA_AO,
+        }),
+        eps3: new THREE.MeshPhongMaterial( {
+            color: 0xffffff,
+            // aoMap: textureItems.BUA_AO,
+        }),
+        derecho: new THREE.MeshPhongMaterial( {
+            color: 0xffffff,
+            // aoMap: textureItems.BUA_AO,
+        }),
+        BUA: new THREE.MeshPhongMaterial( {
+            color: 0xffffff,
+            // aoMap: textureItems.BUA_AO,
+        }),        
+        gerbernacer: new THREE.MeshPhongMaterial( {
+            color: 0xffffff,
+            // aoMap: textureItems.BUA_AO,
+        }),
+        default: new THREE.MeshPhongMaterial({
+            color: 0x929292,
+            side: THREE.DoubleSide
         })
     }
 

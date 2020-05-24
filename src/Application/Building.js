@@ -24,7 +24,16 @@ export default class Building {
         this.loadMaterials();
         this.loadMesh();
 
+        this.setBillboard();
+
         return this;
+    }
+
+    setBillboard(){
+        const pos = this.scene.children[0].position;
+        
+        
+     
     }
 
     loadMaterials() {

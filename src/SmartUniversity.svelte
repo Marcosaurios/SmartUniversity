@@ -12,11 +12,13 @@
      
     const DEBUG = process.env.prod != "prod";
 
+    // ThreeJS APP
     let canvasElement;
     let height, width;
     let SmartUniversity_Instance = null;
     let selected = null;
 
+    // TODO subscribe to popup events -> on update, call SmartUniversity update values of building stats
     let popup;
     
     onMount(async () => {

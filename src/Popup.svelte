@@ -19,6 +19,7 @@
 
     setInterval(async () => {
         // TODO check headers
+        // emit event
         data = await getData(); console.log(data);
         console.log("UPDATED DATA");
     }, 900000); // 15 mins update

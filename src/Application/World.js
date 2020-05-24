@@ -12,6 +12,7 @@ export default class World{
 
         // 
         this.items = _params.items;
+        this.items.billboards = [];
         this.options = _params.options;
 
         this.container = new THREE.Object3D();
@@ -32,7 +33,6 @@ export default class World{
 
         this.setLights();
         this.setObjects();
-
 
     }
 
@@ -63,13 +63,19 @@ export default class World{
                     geo.addAttribute('uv2', new THREE.BufferAttribute( geo.attributes.uv.array, 2 ));
                 }
                 
-                
+                if(building.interactive){
+                    this.interactiveObjects.push(building.container.children[0].children[0]);
+                    
+                    // Create billboards
+                    this.setBillboard(building.container);
+                }
                 //setupObject[name].action();
-                building.interactive ? this.interactiveObjects.push(building.container.children[0].children[0]) : 0;
 
                 
                 // this.container.add(building.wrapper);
                 this.container.add(building.container);
+
+
 
             }
             else{
@@ -115,6 +121,41 @@ export default class World{
 
 
 
+    }
+
+    setBillboard( container ) {
+        // Billboard field size
+        const squareSize = 700;
+
+        // console.log(container);
+        let pos = container.children[0].children[0].position;
+                    
+        const ctx = document.createElement('canvas').getContext('2d');
+        ctx.canvas.width = squareSize * 4;
+        ctx.canvas.height = squareSize;
+
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(0,0,ctx.canvas.width, ctx.canvas.height);
+
+        const texture = new THREE.CanvasTexture(ctx.canvas);
+
+        const labelMat = new THREE.SpriteMaterial({
+            map: texture,
+            transparent: true,
+        
+        })
+
+        const label = new THREE.Sprite(labelMat);
+
+        container.add(label);
+        label.position.y = pos.y + 80;
+        label.position.x = pos.x;
+        label.position.z = pos.z;
+
+        label.scale.x = ctx.canvas.width * 0.01;
+        label.scale.y = ctx.canvas.height * 0.01;
+
+        this.items.billboards.push(label);
     }
 
     setLights() {

@@ -1,15 +1,17 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { eventstart, eventend, eventmove, eventcancel } from '@composi/gestures';
 
 import Loader from "./Utils/Loader.js";
 import Resources from "./Utils/Resources.js";
 import World from "./World.js";
 
+import TWEEN from "@tweenjs/tween.js";
+
 
 // Debug
 import Stats from "stats.js";
 import {GUI} from "three/examples/jsm/libs/dat.gui.module.js";
+// import { Vector3 } from "three";
 
 /*
 * Wrapper class for threejs app
@@ -123,6 +125,8 @@ export default class THREE_App {
             // Outside reference to objects which we want to raycast
             this.checkInteractive = world.interactiveObjects;
 
+            
+
             this.scene.add(world.container);
         });
 
@@ -131,6 +135,8 @@ export default class THREE_App {
     }
 
     setInteractiveEvents(){
+
+        this.camera.target = new THREE.Vector3(0,0,0);
 
         // Update canvas size
         let body = this.options.doc.getElementsByTagName('body')[0];
@@ -182,6 +188,109 @@ export default class THREE_App {
         this.options.doc.defaultView.addEventListener('resize', resize );
 
         resize();
+
+        // On Scroll - resizing billboards (when zooming)
+        let resizeBillboards = () => {
+            // TO FIX AND THINK
+            console.log("e");
+        }
+        this.options.doc.defaultView.addEventListener('wheel', resizeBillboards, false );
+
+        let cameraRotation = () => {
+
+            let out = this;
+            
+            // User in popup
+            if(this.SELECTED){
+                // Save previous
+                this.camera.previousPosition = this.camera.position.clone();
+                this.controls.previousTarget = this.controls.target.clone()
+
+                // Update controls
+                this.controls.target = this.SELECTED.position.clone(); // Focus autorotate on selected object
+                this.controls.autoRotate = true;
+
+
+
+                this.camera.target = this.SELECTED.position.clone();
+                
+                // Ease camera position to selected + offset
+                let tween = new TWEEN.Tween( this.camera.position )
+                .to( {
+                    x: this.SELECTED.position.x + 500,
+                    y: this.SELECTED.position.y + 500,
+                    z: this.SELECTED.position.z + 200
+                } )
+                .easing( TWEEN.Easing.Linear.None ).onUpdate( function () {
+            
+                    out.camera.lookAt( out.camera.target );
+            
+                } )
+                .onComplete( function () {
+            
+                    out.camera.lookAt( out.camera.target );
+
+                    out.status = 1;
+
+                    console.log("to selected finished", out.status);
+
+                    out.controls.enabled = false;
+        
+
+                } )
+                .start();
+                
+            }
+            else if(this.status == 1){
+                // do normal status
+                // out.controls.enabled = true;             
+
+                
+                // Ease camera position to previous 
+                //  AND ease controls target to previous
+                let restoreCamPos = new TWEEN.Tween( this.camera.position )
+                .to( {
+                    x: this.camera.previousPosition.x,
+                    y: this.camera.previousPosition.y,
+                    z: this.camera.previousPosition.z
+                } )
+                .easing( TWEEN.Easing.Linear.None ).onUpdate( function () {
+            
+                    out.camera.lookAt( out.camera.target );
+            
+                } )
+                .onStart( function () {
+                    new TWEEN.Tween( out.controls.target ).to({
+                        x: out.controls.previousTarget.x,
+                        y: out.controls.previousTarget.y,
+                        z: out.controls.previousTarget.z,
+                    })
+                    .onComplete( function (){
+                        out.controls.autoRotate = false;
+                        out.controls.enabled = true;
+                            // out.controls.target = out.controls.previousTarget.clone();
+                        
+                    }).start();
+                })
+                .onComplete( function () {
+                    console.log("finish");
+                    
+                    out.camera.lookAt( out.camera.target );
+                    // out.controls.enablePan = true;                
+                    // out.controls.enableKeys = true;                
+                    // out.controls.enableZoom = true;   
+                    
+                    out.status = 0;
+                } )
+                .start();
+
+
+            }
+        }
+
+        this.options.canvas.addEventListener('click', cameraRotation, false );
+        this.options.canvas.addEventListener('touchstart', cameraRotation, false );
+
     }
 
     setCamera() {
@@ -217,10 +326,12 @@ export default class THREE_App {
         }
 
         this.items.camera = this.camera;
+
     }
 
     setControls() {
         this.controls = new OrbitControls(this.camera, this.renderer.domElement);
+
         // Control keys
         this.controls.mouseButtons = {
             LEFT: THREE.MOUSE.PAN,
@@ -232,13 +343,14 @@ export default class THREE_App {
             TWO: THREE.TOUCH.DOLLY_ROTATE
         }
         this.controls.zoomSpeed = 2;
-        // this.controls.maxZoom = 300;
+        this.controls.maxZoom = 300;
         this.controls.enableDamping = true;
         this.controls.dampingFactor = 0.1;
         this.controls.screenSpacePanning = false;
         this.controls.minDistance = 10;
         this.controls.maxDistance = 3000;
-        this.controls.maxPolarAngle = Math.PI / 2;
+        // this.controls.maxPolarAngle = Math.PI / 4; // 90 deg limit
+        // this.controls.maxPolarAngle = 0.37 * Math.PI;   // 66 deg limit
 
         // Controls limits
         let value = 300;
@@ -370,9 +482,13 @@ export default class THREE_App {
     }
 
     render() {
+        // console.log(this.camera.target);
+
 
         this.options.DEBUG ? this.stats.begin() : 0;
 
+        this.options.zoomValue = this.controls.target.distanceTo( this.controls.object.position )
+        TWEEN.update(); 
         this.controls.update();
 
         this.calculateIntersections();
@@ -417,6 +533,7 @@ export default class THREE_App {
 
             } 
 
+            // console.log(intersects[0]);
             this.INTERSECTED = intersects[ 0 ].object;
             this.INTERSECTED.currentHex = this.INTERSECTED.material.color.getHex();
 
@@ -427,6 +544,7 @@ export default class THREE_App {
             this.INTERSECTED.material.setValues({opacity: 1});
             
             this.SELECTED = this.INTERSECTED;
+
 
             // console.log(object);
         

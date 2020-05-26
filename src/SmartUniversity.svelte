@@ -39,7 +39,7 @@
         SmartUniversity_Instance.calculateIntersections();
         selected = SmartUniversity_Instance.getSelected();
 
-        // console.log("Svelte selected ", selected);
+        console.log("Svelte selected ", selected);
     }
 
     function touched(event) {
@@ -49,7 +49,7 @@
         SmartUniversity_Instance.calculateIntersections();
         selected = SmartUniversity_Instance.getSelected();
 
-        // console.log("Svelte selected ", selected);
+        console.log("Svelte selected ", selected);
     }
 
 </script>

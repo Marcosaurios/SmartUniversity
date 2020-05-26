@@ -201,25 +201,25 @@ export default class THREE_App {
             let out = this;
             
             // User in popup
-            if(this.SELECTED){
+            if(this.SELECTED && this.status != 1){
                 // Save previous
                 this.camera.previousPosition = this.camera.position.clone();
-                this.controls.previousTarget = this.controls.target.clone()
+                this.controls.previousTarget = this.controls.target.clone();
 
                 // Update controls
                 this.controls.target = this.SELECTED.position.clone(); // Focus autorotate on selected object
                 this.controls.autoRotate = true;
 
-
-
                 this.camera.target = this.SELECTED.position.clone();
+                
+                let offset = this.camera.position.clone().normalize().multiplyScalar(1000);
                 
                 // Ease camera position to selected + offset
                 let tween = new TWEEN.Tween( this.camera.position )
                 .to( {
-                    x: this.SELECTED.position.x + 500,
-                    y: this.SELECTED.position.y + 500,
-                    z: this.SELECTED.position.z + 200
+                    x: this.SELECTED.position.x + offset.x,
+                    y: this.SELECTED.position.y + offset.y,
+                    z: this.SELECTED.position.z + offset.z
                 } )
                 .easing( TWEEN.Easing.Linear.None ).onUpdate( function () {
             
@@ -228,7 +228,7 @@ export default class THREE_App {
                 } )
                 .onComplete( function () {
             
-                    out.camera.lookAt( out.camera.target );
+                    // out.camera.lookAt( out.camera.target );
 
                     out.status = 1;
 
@@ -243,7 +243,9 @@ export default class THREE_App {
             }
             else if(this.status == 1){
                 // do normal status
-                // out.controls.enabled = true;             
+                // out.controls.enabled = true;    
+                
+                this.SELECTED = null;
 
                 
                 // Ease camera position to previous 
@@ -312,6 +314,10 @@ export default class THREE_App {
                 posX: this.camera.position.x,
                 posY: this.camera.position.y,
                 posZ: this.camera.position.z,
+                rotationX: this.camera.rotation.x,
+                rotationY: this.camera.rotation.y,
+                rotationZ: this.camera.rotation.z,
+                
             }
             
             buildingFolder.add(params, 'posX', -3000,3000).onChange( (val) => {
@@ -322,6 +328,15 @@ export default class THREE_App {
             })
             buildingFolder.add(params, 'posZ', -3000,3000).onChange( (val) => {
                 this.camera.position.setZ(val);
+            })
+            buildingFolder.add(params, 'rotationX', -3000,3000).onChange( (val) => {
+                this.camera.rotateX(val);
+            })
+            buildingFolder.add(params, 'rotationY', -3000,3000).onChange( (val) => {
+                this.camera.rotateY(val);
+            })
+            buildingFolder.add(params, 'rotationZ', -3000,3000).onChange( (val) => {
+                this.camera.rotateZ(val);
             })
         }
 
@@ -543,7 +558,12 @@ export default class THREE_App {
             this.INTERSECTED.material.color.setHex( 0xbbf3fd );
             this.INTERSECTED.material.setValues({opacity: 1});
             
-            this.SELECTED = this.INTERSECTED;
+            if(this.status != 1){
+                this.SELECTED = this.INTERSECTED;
+            }
+            else{
+                this.SELECTED = null;
+            }
 
 
             // console.log(object);

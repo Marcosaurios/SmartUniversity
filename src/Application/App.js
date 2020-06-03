@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
+import EventEmitter from "./Utils/EventEmitter";
 import Loader from "./Utils/Loader.js";
 import Resources from "./Utils/Resources.js";
 import World from "./World.js";
@@ -16,12 +17,14 @@ import {GUI} from "three/examples/jsm/libs/dat.gui.module.js";
 /*
 * Wrapper class for threejs app
 */
-export default class THREE_App {
+export default class THREE_App extends EventEmitter{
     
     /**
      * options = { canvas, window}
      */
     constructor(_options) {
+        // Event emitter
+        super();
 
         this.options = _options;
 
@@ -89,7 +92,12 @@ export default class THREE_App {
         this.setRenderer();
         this.setControls();
         
-        this.render();
+        if(this.options.DEBUG){
+            this.debugRender();
+        }
+        else{
+            this.render();
+        }
 
         // Load events and set initial app size
         this.setInteractiveEvents();
@@ -99,6 +107,22 @@ export default class THREE_App {
 
         // Load items (in manager)
         this.items = this.loader.loadResources(this.resources);
+
+        this.loadingPromise = new Promise( (resolve, reject) => {
+            
+            this.loader.on('loadingFinished', () => {
+                return resolve('Loaded');
+            });
+
+        });
+
+        this.loader.on('fileFinished', (value) => {
+            // Emit % to Svelte
+            this.emit('progress', Math.floor(value) );
+            // console.log("this is");
+            // console.log(this);
+        })
+
 
         this.scene = new THREE.Scene();
         
@@ -117,6 +141,7 @@ export default class THREE_App {
 
         this.loader.on('loadingFinished', () => {
             // TODO loading screen + animation
+            this.loaded = true;
             // console.log("Se han cargado todos los modelos: ");
             // console.log(this.items);
     
@@ -129,9 +154,10 @@ export default class THREE_App {
 
             this.scene.add(world.container);
         });
+    }
 
-
-
+    getAllLoadedItems() {
+        return this.loadingPromise;
     }
 
     setInteractiveEvents(){
@@ -317,7 +343,6 @@ export default class THREE_App {
                 rotationX: this.camera.rotation.x,
                 rotationY: this.camera.rotation.y,
                 rotationZ: this.camera.rotation.z,
-                
             }
             
             buildingFolder.add(params, 'posX', -3000,3000).onChange( (val) => {
@@ -496,14 +521,27 @@ export default class THREE_App {
 
     }
 
-    render() {
-        // console.log(this.camera.target);
+    // Update render if debug -> one; else another render
+    render(){
+        // this.options.zoomValue = this.controls.target.distanceTo( this.controls.object.position )
+        TWEEN.update(); 
+        
+        this.controls.update();
 
+        this.calculateIntersections();
+
+        this.renderer.render(this.scene, this.camera);
+
+        requestAnimationFrame(this.render.bind(this));
+    }
+
+    debugRender() {
 
         this.options.DEBUG ? this.stats.begin() : 0;
 
-        this.options.zoomValue = this.controls.target.distanceTo( this.controls.object.position )
+        // this.options.zoomValue = this.controls.target.distanceTo( this.controls.object.position )
         TWEEN.update(); 
+        
         this.controls.update();
 
         this.calculateIntersections();
@@ -528,7 +566,7 @@ export default class THREE_App {
             this.stats.end();
         }
 
-        requestAnimationFrame(this.render.bind(this));
+        requestAnimationFrame(this.debugRender.bind(this));
     }
 
     calculateIntersections() {
@@ -568,26 +606,29 @@ export default class THREE_App {
 
             // console.log(object);
         
-        } else {
-
-            if ( this.INTERSECTED ) {
+        } else if ( this.INTERSECTED ) {
 
                 this.INTERSECTED.material.color.setHex( this.INTERSECTED.currentHex );
                 this.INTERSECTED.material.setValues({opacity: 0.75});
 
                 // applying original colors
     
-            }
+            // }
+            
             this.INTERSECTED = null;
             this.SELECTED = null;
             this.options.canvas.classList.remove('has-pointer');
-
-
+            
         }
     }
 
     getSelected(){
         return this.SELECTED ? this.SELECTED.name : null;
+    }
+
+    updateBillboards(status){
+        // todo
+        // world.updateBillboards(status);
     }
 
 }

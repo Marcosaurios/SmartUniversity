@@ -28,24 +28,12 @@
     })
 
     function handleTouch(event){
-        // console.log("dentro boton");
         hovered = true;
-        // console.log(...Button);
-        // debugger
-            // if(div.contains(event.detail.e.target)){
-            //     console.log("Inside box");
-            //     hovered = true;
-            // }
-            // else{
-            //     console.log("outside box");
-            //     hovered = false;
-            // }
     }
     
     function trigger(e){
-        // console.log("triggered");
-                        e.preventDefault();
-                e.stopPropagation();
+        e.preventDefault();
+        e.stopPropagation();
         hovered = !hovered;
     }
 
@@ -71,6 +59,7 @@
         display: flex;
         flex-direction: column;
         align-items: flex-end;
+        height: 46.78px;
     }
 
     ul {
@@ -98,7 +87,7 @@
 
 </style>
 
-<div class="center">
+<div class="overlay center">
     <div bind:this={div} on:mouseenter={trigger} on:mouseleave={trigger}>
         <Button id="lang" on:touched={handleTouch}>
             <Icon icon={webIcon} style="font-size: 2em"/>

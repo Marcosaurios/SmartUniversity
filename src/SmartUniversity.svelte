@@ -3,9 +3,6 @@
     import {onMount} from 'svelte';
     import Popup from './Popup.svelte';
     import Menu from './Menu.svelte';
-
-    // 3rd party libs
-    import { eventstart, eventend, eventmove, eventcancel } from '@composi/gestures';
  
     import THREE_App from './Application/App.js';
 
@@ -20,10 +17,21 @@
 
     // TODO subscribe to popup events -> on update, call SmartUniversity update values of building stats
     let popup;
+
+    let promise;
+    let progress = 0;
+
     
     onMount(async () => {
 
         SmartUniversity_Instance = new THREE_App( { canvas: canvasElement, window: { height, width }, doc: document , DEBUG }); 
+
+        promise = SmartUniversity_Instance.getAllLoadedItems();
+
+        SmartUniversity_Instance.on('progress', (value) => {
+            // loading %
+            progress = value;
+        })
         
         popup.refreshData();
         
@@ -71,14 +79,27 @@
         height: 100vh;
     }
 
+    p{
+        color: aliceblue;
+    }
+
+    .loading {
+        position: relative;
+        z-index: 1;
+    }
 </style>
 
 <svelte:window bind:outerWidth={width} bind:outerHeight={height} />
 
+
+{#await promise}
+	<p class="overlay">{progress}</p>
+{:then value}
+    <Menu></Menu>
+{/await}
+
 <Popup content={ selected } bind:this={popup}/>
-
-<Menu></Menu>
-
+   
 <div>
     <canvas 
         bind:this={canvasElement}
@@ -87,3 +108,4 @@
         id="app"
     ></canvas>
 </div>
+

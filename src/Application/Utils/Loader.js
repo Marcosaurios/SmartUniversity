@@ -63,6 +63,8 @@ export default class Loader extends EventEmitter{
                     )
             }
         })
+
+        this.destroyDraco = function(){ dracoLoader.dispose() };
     }
 
     loadResources( array ){
@@ -106,12 +108,17 @@ export default class Loader extends EventEmitter{
         }
 
 
-        this.emit('fileFinished', name);
+        this.emit('fileFinished', this.loadedItems/this.loadingItems*100);
+        // this.emit('fileFinished', name);
         
         if( this.loadingItems == this.loadedItems) {
-            this.emit('loadingFinished');
+            
+            // setTimeout(() => {
+                this.emit('loadingFinished');
+            // }, 4000);
 
             // Update materials with textures
+            this.destroyDraco();
         }
     }
 }

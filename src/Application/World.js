@@ -1,10 +1,11 @@
 import * as THREE from "three";
 // import {GUI} from "three/examples/jsm/libs/dat.gui.module.js";
 
-import Setup from "./setup.js";
+import { loadSetup, getIconAsImage } from "./setup.js";
 
 import Building from "./Building.js";
 // import loadMaterials from "./materials";
+
 
 export default class World{
 
@@ -22,7 +23,7 @@ export default class World{
         console.log("Items in APP:");
         console.log(this.items);
 
-        this.setup = new Setup( this.options, this.items.textures );
+        this.setup = loadSetup( this.options, this.items.textures );
 
         this.setupWorld();
 
@@ -123,19 +124,34 @@ export default class World{
 
     }
 
-    setBillboard( container ) {
+    async setBillboard( container ) {
         // Billboard field size
         const squareSize = 700;
+        const OFFSET = 100;
+        const value = OFFSET+squareSize+OFFSET;
 
-        // console.log(container);
         let pos = container.children[0].children[0].position;
                     
+        // create billboard
         const ctx = document.createElement('canvas').getContext('2d');
-        ctx.canvas.width = squareSize * 4;
-        ctx.canvas.height = squareSize;
+        ctx.canvas.width = (OFFSET+squareSize+OFFSET) * 4;
+        ctx.canvas.height = squareSize+OFFSET*2;
 
-        ctx.fillStyle = 'blue';
+        // fill
+        ctx.fillStyle = 'rgba(64, 64, 64, 1)';
         ctx.fillRect(0,0,ctx.canvas.width, ctx.canvas.height);
+
+        let energy_img = await getIconAsImage("ENERGY", "#ffff00");
+        ctx.drawImage(energy_img, value*0+OFFSET, OFFSET, squareSize, squareSize);
+
+        let weather_img = await getIconAsImage("WEATHER", "#ffff00");
+        ctx.drawImage(weather_img, value*1+OFFSET, OFFSET, squareSize, squareSize);
+
+        let wifidown_img = await getIconAsImage("WIFIDOWN", "#ffff00");
+        ctx.drawImage(wifidown_img, value*2+OFFSET, OFFSET, squareSize, squareSize);
+
+        let wifiup_img = await getIconAsImage("WIFIUP", "#ffff00");
+        ctx.drawImage(wifiup_img, value*3+OFFSET, OFFSET, squareSize, squareSize);
 
         const texture = new THREE.CanvasTexture(ctx.canvas);
 
@@ -152,10 +168,21 @@ export default class World{
         label.position.x = pos.x;
         label.position.z = pos.z;
 
-        label.scale.x = ctx.canvas.width * 0.01;
-        label.scale.y = ctx.canvas.height * 0.01;
+        label.scale.x = ctx.canvas.width * 0.01 * 2;
+        label.scale.y = ctx.canvas.height * 0.01 * 2;
+        // scale 1 min 2 max last value;
 
         this.items.billboards.push(label);
+    }
+
+    updateBillboardsStatus(status) {
+        for(let i=0; i<this.items.billboards.length; i++) {
+            // todo
+        }
+    }
+
+    updateBillboardsScale(){
+
     }
 
     setLights() {

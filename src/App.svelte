@@ -1,8 +1,10 @@
 <!-- Main component -->
 
-<!-- <svelte:head>
-	<script src='assets/threex.rendererstats.js'></script>
-</svelte:head> -->
+<svelte:head>
+	<!-- <link rel="stylesheet" href="assets/normalize.css"> -->
+	<!-- <script src='assets/threex.rendererstats.js'></script> -->
+	<!-- TODO SEO -->
+</svelte:head>
 
 <script>
 	import SmartUniversity from "./SmartUniversity.svelte";
@@ -39,6 +41,12 @@
 	:global(p){ font-size: 1.5em; }
 
 	:global(p.small){ font-size: 1em; }
+
+	:global(.overlay) {
+		position: absolute;
+		z-index: 1;
+		height: 0px;
+	}
 
 
 </style>

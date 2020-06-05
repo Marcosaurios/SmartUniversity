@@ -15,13 +15,13 @@ export default class Resources {
             {name: "gerbernacer", path: "assets/models/simples/gerbernacer.glb", type: "draco"},
             {name: "resto", path: "assets/models/simples/resto.glb", type: "draco"},
             // Textures
-            {name: "UA", path: "assets/sigua_original.jpg", type: "jpg"},
+            {name: "UA", path: "assets/sigua_mod.jpg", type: "jpg"},
+            // {name: "Au3_AO", path: "assets/Au3_AO.png", type: "png"},
+            // {name: "Au2_AO", path: "assets/Au2_AO.png", type: "png"},
+            // {name: "BUA_AO", path: "assets/BUA_AO.png", type: "png"},
+            
+            
             // {name: "UA", path: "assets/siguawms.jpg", type: "jpg"},
-            {name: "Au3_AO", path: "assets/Au3_AO.png", type: "png"},
-            {name: "Au2_AO", path: "assets/Au2_AO.png", type: "png"},
-            {name: "BUA_AO", path: "assets/BUA_AO.png", type: "png"},
-
-
 
             // {name: "concrete", path: "assets/concrete.png", type: "png"},
             // {name: "orange", path: "assets/orange.png", type: "png"},

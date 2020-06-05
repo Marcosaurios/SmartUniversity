@@ -1,4 +1,10 @@
+<script>
 
+export let building = {};
+
+console.log(building);
+
+</script>
 
 <div><p>full</p></div>
 

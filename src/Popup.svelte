@@ -3,34 +3,40 @@
     import Card from "./Components/Card.svelte";
     import Status from "./Components/Status.svelte";
 
+    import { buildings_status } from './Stores/stores.js';
+
     import API, {getData, buildings} from "./API.svelte";
 
     // For building selected check (raycasting)
     export let content;
 
+    export async function refreshData() {
+        data = await getData();
+        // debugger
+        buildings_status.set(data);
+    }
+    
+    // 3D models name (in same order as API.svelte)
+    const buildings3D = ["BUA", "EPS1", "EPS2", "EPS3", "Aulario2", "Aulario3", "Derecho", "GerBernacer"];
+
     let visible = false;
     let data = {};
     let building = {};
 
-    export async function refreshData() {
-        data = await getData();
-        console.log(data);
-    }
-
     setInterval(async () => {
+        refreshData();
         // TODO check headers
-        // emit event
-        data = await getData(); console.log(data);
-        console.log("UPDATED DATA");
+        // todo when refresh, emit event for smartuniversity update values in 3d
     }, 900000); // 15 mins update
 
-    // 
-    const buildings3D = ["BUA", "EPS1", "EPS2", "EPS3", "Aulario2", "Aulario3", "Derecho", "GerBernacer"];
+
     $:{
         if(content){
             console.log("content is", content);
             let index = buildings3D.indexOf(content);
             building = data[buildings[index]];
+
+            console.log(building);
 
             visible = true;
         }
@@ -43,7 +49,7 @@
 
 <Card {visible}>
     <h2>{building.name}</h2>
-    <Status></Status>
+    <Status building></Status>
     <p>{building.description}</p>
 </Card>    
 
@@ -51,7 +57,6 @@
     h2{
         text-align: center;
     }
-
 </style>
 
 

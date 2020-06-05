@@ -1,8 +1,12 @@
 
 <script>
     import {onMount} from 'svelte';
+    import { fade } from "svelte/transition";
+
     import Popup from './Popup.svelte';
     import Menu from './Menu.svelte';
+    import Loading from './Components/Loading.svelte';
+    import Help from './Help.svelte';
  
     import THREE_App from './Application/App.js';
 
@@ -12,29 +16,30 @@
     // ThreeJS APP
     let canvasElement;
     let height, width;
-    let SmartUniversity_Instance = null;
+    let SmartUniversity_Instance = new THREE_App();
     let selected = null;
 
     // TODO subscribe to popup events -> on update, call SmartUniversity update values of building stats
     let popup;
 
-    let promise;
+    let promise = SmartUniversity_Instance.getAllLoadedItems();
     let progress = 0;
+
+    SmartUniversity_Instance.on('progress', (value) => {
+        // loading %
+        progress = value;
+    })
 
     
     onMount(async () => {
 
-        SmartUniversity_Instance = new THREE_App( { canvas: canvasElement, window: { height, width }, doc: document , DEBUG }); 
 
-        promise = SmartUniversity_Instance.getAllLoadedItems();
+        console.log("canvas:", canvasElement);
+        SmartUniversity_Instance.init({ canvas: canvasElement, window: { height, width }, doc: document , DEBUG }); 
 
-        SmartUniversity_Instance.on('progress', (value) => {
-            // loading %
-            progress = value;
-        })
-        
         popup.refreshData();
         
+        // debug 
         DEBUG ? document.body.appendChild( SmartUniversity_Instance.stats.domElement ) : 0;
         DEBUG ? document.body.appendChild( SmartUniversity_Instance.renderstats ) : 0;
 
@@ -62,6 +67,27 @@
 
 </script>
 
+<svelte:window bind:outerWidth={width} bind:outerHeight={height} />
+
+<Popup content={ selected } bind:this={popup}/>
+
+{#await promise}
+    <Loading {progress}></Loading>
+{:then value}
+    <Menu></Menu>
+    <Help></Help>
+{/await}
+
+<div transition:fade>
+    <canvas 
+        bind:this={canvasElement}
+        on:click={ clicked }
+        on:touchstart={ touched }
+        id="app"
+        in:fade
+    ></canvas>
+</div>
+
 <style>
     div {
         width: 100%;
@@ -83,29 +109,11 @@
         color: aliceblue;
     }
 
-    .loading {
-        position: relative;
-        z-index: 1;
-    }
 </style>
 
-<svelte:window bind:outerWidth={width} bind:outerHeight={height} />
 
 
-{#await promise}
-	<p class="overlay">{progress}</p>
-{:then value}
-    <Menu></Menu>
-{/await}
 
-<Popup content={ selected } bind:this={popup}/>
    
-<div>
-    <canvas 
-        bind:this={canvasElement}
-        on:click={ clicked }
-        on:touchstart={ touched }
-        id="app"
-    ></canvas>
-</div>
+
 

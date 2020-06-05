@@ -8,10 +8,22 @@
     // Interactive buildings
     // BUA, EPS1, EPS2, EPS3, AUL2, AUL3, DER, GERBER
     export const buildings = [
-        "Biblioteca General", "Politécnica 1", "Politécnica 2", "Politécnica 3-Acometida 2", "Aulario 2", "Aulario 3", "Derecho", "German Bernacer"];
+        "Biblioteca General", "Politécnica 1", "Politécnica 2", "Politécnica 3-Acometida 2", "Aulario 2"     , "Aulario 3"     , "Derecho"      , "German Bernacer"];
 
     const sondas = [ 
-        "", "", "SONDAUA06_EPS2", "SONDA04_EPSIII", "SONDAUA19_AUL2", "SONDAUA21_AUL3", "SONDAUA22_DER", "SONDAUA20_GERBER"];
+        ""                  ,""              , "SONDAUA06_EPS2", "SONDA04_EPSIII"          , "SONDAUA19_AUL2", "SONDAUA21_AUL3", "SONDAUA22_DER", "SONDAUA20_GERBER"];
+
+    const STATUS_GREEN = '6DF099';
+    const STATUS_YELLOW = 'EFEE6B';
+    const STATUS_RED = 'EF6B6B';
+
+    const WIFI_TOP = 4.5;
+    const WIFI_MED = 2;
+    const ENERGIA_TOP = 8;
+    const ENERGIA_MED = 4; // kw
+    const TEMP_TOP = 30; //ºC
+    const TEMP_MED = 10;
+    const TEMP_BOT = 0;
 
     // Buildings data
     let data = {};
@@ -36,6 +48,8 @@
                 let exists = buildings.indexOf(x._id.alias);
                 if(exists!=-1) {
                     data[buildings[exists]].energia_activa = x.ENERGIA_ACTIVA;
+                    // let status = (x.ENERGIA_ACTIVA )
+                    // data[buildings[exists]].energia_status = status
                 }
             })
             
@@ -169,16 +183,88 @@
     export async function getData(){
         await Promise.all([getElectricity(), getWifi(), getTemperature(), getDescription()]);
 
-        // for (var property in data) {
-        //     if (data.hasOwnProperty(property)) {
-        //         // Do things here
-        //         data[property].wifi_down ? data[property].wifi_down += " mb/s" : data[property].wifi_down = "Offline";
-        //         data[property].wifi_up ? data[property].wifi_up += " mb/s" : data[property].wifi_up = "Offline";
-        //         data[property].energia_activa ? data[property].energia_activa += " Kw" : data[property].energia_activa = "Offline";
-        //         data[property].temperature ? data[property].temperature += " ºC" : data[property].temperature = "Offline";
-        //         // console.log(property);
-        //     }
-        // }
+        for (var building in data) {
+            if (data.hasOwnProperty(building)) {
+
+                let wifid = data[building].wifi_down;
+                let wifiu = data[building].wifi_up;
+                let energia = data[building].energia_activa;
+                let temp = data[building].temperature;
+
+                // Do things here
+                if(wifid){
+                    if(wifid > WIFI_TOP) {
+                        data[building].wifi_down_status = STATUS_GREEN;
+                    }
+                    else if(wifid > WIFI_MED){
+                        data[building].wifi_down_status = STATUS_YELLOW;
+                    }
+                    else{
+                        data[building].wifi_down_status = STATUS_RED;
+                    }
+                }
+                else{
+                    data[building].wifi_down = "Offline";
+                    data[building].wifi_down_status = STATUS_RED;
+
+                }
+
+                if(wifiu){
+                    if(wifiu > WIFI_TOP) {
+                        data[building].wifi_up_status = STATUS_GREEN;
+                    }
+                    else if(wifiu > WIFI_MED){
+                        data[building].wifi_up_status = STATUS_YELLOW;
+                    }
+                    else{
+                        data[building].wifi_up_status = STATUS_RED;
+                    }
+                }
+                else{
+                    data[building].wifi_up = "Offline";
+                    data[building].wifi_UP_status = STATUS_RED;
+                }
+
+                if(energia){
+                    if(energia > ENERGIA_TOP) {
+                        data[building].energia_activa_status = STATUS_GREEN;
+                    }
+                    else if(energia > ENERGIA_MED){
+                        data[building].energia_activa_status = STATUS_YELLOW;
+                    }
+                    else{
+                        data[building].energia_activa_status = STATUS_RED;
+                    }
+                }
+                else{
+                    data[building].energia_activa = "Offline";
+                    data[building].energia_activa_status = STATUS_RED;
+                }
+
+                if(temp){
+                    if(temp > TEMP_TOP || temp < TEMP_BOT) {
+                        data[building].temperature_status = STATUS_GREEN;
+                    }
+                    else if(temp > TEMP_MED){
+                        data[building].temperature_status = STATUS_YELLOW;
+                    }
+                    else{
+                        data[building].temperature_status = STATUS_RED;
+                    }
+                }
+                else{
+                    data[building].temperature = "Offline";
+                    data[building].temperature_status = STATUS_RED;
+
+                }
+
+                // data[building].wifi_down ? data[building].wifi_down += " mb/s" : data[building].wifi_down = "Offline";
+                // data[building].wifi_up ? data[building].wifi_up += " mb/s" : data[building].wifi_up = "Offline";
+                // data[building].energia_activa ? data[building].energia_activa += " Kw" : data[building].energia_activa = "Offline";
+                // data[building].temperature ? data[building].temperature += " ºC" : data[building].temperature = "Offline";
+                // console.log("Cleaned building ", building);
+            }
+        }
         
         return data;
     }

@@ -22,16 +22,9 @@ export default class THREE_App extends EventEmitter{
     /**
      * options = { canvas, window}
      */
-    constructor(_options) {
+    constructor() {
         // Event emitter
         super();
-
-        this.options = _options;
-
-        // Window access: // console.log(this.options.doc.defaultView);
-        // Width and height from Window
-        this.width = this.options.doc.defaultView.outerWidth;
-        this.height = this.options.doc.defaultView.outerHeight;
         
         this.loader = new Loader();
         this.resources = new Resources();
@@ -44,9 +37,51 @@ export default class THREE_App extends EventEmitter{
         this.checkInteractive = [];
         
         console.log("Resources: ", this.resources);
-        
-        // Debug
-        if(this.options.DEBUG) {
+
+        // Load items (in manager)
+        this.items = this.loader.loadResources(this.resources);
+        this.loadingPromise = new Promise( (resolve, reject) => {
+            
+            this.loader.on('loadingFinished', () => {
+                return resolve('Loaded');
+            });
+
+        });
+
+    }
+
+    init(_options) {
+
+        // todo save canvas in init function -> updates reference to new canvas in document?
+        this.options = _options;
+
+        // Window access: // console.log(this.options.doc.defaultView);
+        // Width and height from Window
+        this.width = this.options.doc.defaultView.outerWidth;
+        this.height = this.options.doc.defaultView.outerHeight;
+
+        this.loader.on('fileFinished', (value) => {
+            // Emit % to Svelte
+            this.emit('progress', Math.floor(value) );
+            // console.log("this is");
+            // console.log(this);
+        })
+
+        this.loader.on('loadingFinished', () => {
+            // TODO loading screen + animation
+            const world = new World( { items: this.items, options: this.options } );
+
+            // Outside reference to objects which we want to raycast
+            this.checkInteractive = world.interactiveObjects;
+
+            this.scene.add(world.container);
+        });
+
+        this.scene = new THREE.Scene();
+
+        this.scene.background = new THREE.Color(0.1, 0.1, 0.1);
+
+        if(this.options.DEBUG){
             // Set netlify cookie
             
             // Create folder
@@ -83,12 +118,16 @@ export default class THREE_App extends EventEmitter{
             }
 
             this.renderstats = container;
+
+            // Export variables to window for WebGL inspector plugin
+            window.scene = this.scene;
+            window.THREE = THREE;
+
+            var axesHelper = new THREE.AxesHelper( 50 );
+            this.scene.add( axesHelper );
         }
-        /* ----------------------------- */
-
-
-        this.init();
-
+    
+        this.setCamera();
         this.setRenderer();
         this.setControls();
         
@@ -101,59 +140,6 @@ export default class THREE_App extends EventEmitter{
 
         // Load events and set initial app size
         this.setInteractiveEvents();
-    }
-
-    init() {
-
-        // Load items (in manager)
-        this.items = this.loader.loadResources(this.resources);
-
-        this.loadingPromise = new Promise( (resolve, reject) => {
-            
-            this.loader.on('loadingFinished', () => {
-                return resolve('Loaded');
-            });
-
-        });
-
-        this.loader.on('fileFinished', (value) => {
-            // Emit % to Svelte
-            this.emit('progress', Math.floor(value) );
-            // console.log("this is");
-            // console.log(this);
-        })
-
-
-        this.scene = new THREE.Scene();
-        
-        if(this.options.DEBUG){
-            // Export variables to window for WebGL inspector plugin
-            window.scene = this.scene;
-            window.THREE = THREE;
-
-            var axesHelper = new THREE.AxesHelper( 50 );
-            this.scene.add( axesHelper );
-        }
-  
-        this.scene.background = new THREE.Color(0.1, 0.1, 0.1);
-    
-        this.setCamera();
-
-        this.loader.on('loadingFinished', () => {
-            // TODO loading screen + animation
-            this.loaded = true;
-            // console.log("Se han cargado todos los modelos: ");
-            // console.log(this.items);
-    
-            const world = new World( { items: this.items, options: this.options } );
-
-            // Outside reference to objects which we want to raycast
-            this.checkInteractive = world.interactiveObjects;
-
-            
-
-            this.scene.add(world.container);
-        });
     }
 
     getAllLoadedItems() {

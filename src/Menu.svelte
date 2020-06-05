@@ -1,6 +1,7 @@
 <script>
     import {onMount} from 'svelte';
     import { slide } from "svelte/transition";
+    import { help_toggle } from "./Stores/stores.js";
 
     import Icon from '@iconify/svelte';
     import webIcon from '@iconify/icons-mdi/web';
@@ -38,9 +39,11 @@
     }
 
     function updateLanguage(lang){
-        hovered = false;
+        // hovered = false;
+        console.log(lang);
         // TODO: separate language to component 
     }
+
 </script>
 
 <style>
@@ -93,12 +96,12 @@
             <Icon icon={webIcon} style="font-size: 2em"/>
         </Button>
         <ul class:visible="{hovered}" in:slide out:slide>
-            <li><Button listItem active="{language=="eng"}" on:click={updateLanguage("eng")}>English</Button></li>
-            <li><Button listItem active="{language=="esp"}" on:click={updateLanguage("esp")}>Español</Button></li>
+            <li><Button listItem active="{language=="eng"}" on:click={ () => updateLanguage("eng") }>English</Button></li>
+            <li><Button listItem active="{language=="esp"}" on:click={ () => updateLanguage("esp") }>Español</Button></li>
         </ul>
     </div>
     <div>
-        <Button>
+        <Button on:click={ () => help_toggle.set(true)}>
             <Icon icon={helpCircleOutline} style="font-size: 2em"/>
         </Button>
     </div>

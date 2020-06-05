@@ -68,7 +68,8 @@
 
 </style>
 
-<button use:addEvent id="{id}"
+<button use:addEvent on:click={ () => dispatch('click')}
+    id="{id}"
     class="btn" class:primary class:secondary class:listItem class:active>
         <slot></slot>
 </button>

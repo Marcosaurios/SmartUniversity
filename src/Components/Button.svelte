@@ -68,7 +68,7 @@
 
 </style>
 
-<button use:addEvent on:click={ () => dispatch('click')}
+<button use:addEvent on:click={ () => dispatch('click')} on:touchend={ () => dispatch('click')}
     id="{id}"
     class="btn" class:primary class:secondary class:listItem class:active>
         <slot></slot>

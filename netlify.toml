@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Production contexts
 [context.production]
 command = "npm run build"
@@ -6,3 +7,11 @@ environment = { NODE_ENV = "prod" }
 [context.test]
 command = "npm run dev"
 environment = { NODE_ENV = "test" }
+=======
+# Contexts
+[context.production]
+command = "npm run build"
+
+[context.test]
+command = "npm run dev"
+>>>>>>> master

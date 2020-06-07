@@ -421,8 +421,8 @@ export default class THREE_App extends EventEmitter{
         this.controls.screenSpacePanning = false;
         this.controls.minDistance = 10;
         this.controls.maxDistance = 3000;
-        this.controls.maxPolarAngle = Math.PI / 4; // 90 deg limit
-        // this.controls.maxPolarAngle = 0.37 * Math.PI;   // 66 deg limit
+        // this.controls.maxPolarAngle = Math.PI / 4; // 90 deg limit
+        this.controls.maxPolarAngle = 0.37 * Math.PI;   // 66 deg limit
 
         // Controls limits
         let value = 300;

@@ -4,14 +4,16 @@ import { writable } from 'svelte/store';
 export const help_toggle = writable(
     false,
     function start(){
-        console.log("first one subscribed");
+        // console.log("first one subscribed");
     },
     function stop(){
-        console.log("last one subscribed");
+        // console.log("last one subscribed");
     }
 );
 
 // Buildings status
 export const buildings_status = writable({value: null});
 
+// Settings
+export const settings_toggle = writable(false);
     

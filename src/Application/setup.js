@@ -97,27 +97,30 @@ export function loadSetup( options, textureItems ) {
     // ?? not needed by the moment const UA_rotation = [ 0.0, - 60 * Math.PI/180 -10 * Math.PI/180, 0.0];
     const UA_rotation = [0,0,0];
 
+    // BUA, EPS1, EPS2, EPS3, AUL2, AUL3, DER, GERBER
     const setup = [
+        // { 
+        //     como_se_guarda_en_items: {
+        //         // location: [326, .5, -357],
+        //         location : [0,0,0],
+        //         materials: {
+        //             nombre_Blender: materials.aulario3,
+        //         },
+        //         interactive: true,
+        //     }
+        // },
         { 
-            aulario3: {
+            "Aulario 3": {
                 // location: [326, .5, -357],
                 location : [0,0,0],
                 materials: {
                     Aulario3: materials.aulario3,
                 },
                 interactive: true,
-                rotation: UA_rotation,          // ???
-                textures: [ "moon" ],           // ???
-                action: function( geometry ) {
-                    // let uv = 
-                    // custom stuff for each mesh individually (?)
-                    console.log("Doing things only in setup for aulario3");
-                    console.log(mesh);
-                }
             }
         },
         {
-            aulario2: {
+            "Aulario 2": {
                 // location: [30, .5, -252],
                 location: [0,0,0],
                 rotation: [0,0,0],
@@ -129,7 +132,7 @@ export function loadSetup( options, textureItems ) {
             }
         },
         {
-            BUA: {
+            "Biblioteca General": {
                 location: [0,0,0],
                 rotation: [0,0,0],
                 interactive: true,
@@ -140,7 +143,7 @@ export function loadSetup( options, textureItems ) {
             }
         },
         {
-            derecho: {
+            "Derecho": {
                 location: [0,0,0],
                 rotation: [0,0,0],
                 materials: {
@@ -150,7 +153,7 @@ export function loadSetup( options, textureItems ) {
             }
         },
         {
-            eps1: {
+            "Politécnica 1": {
                 location: [0,0,0],
                 rotation: [0,0,0],
                 materials: {
@@ -160,7 +163,7 @@ export function loadSetup( options, textureItems ) {
             }
         },
         {
-            eps2: {
+            "Politécnica 2": {
                 location: [0,0,0],
                 rotation: [0,0,0],
                 materials: {
@@ -170,7 +173,7 @@ export function loadSetup( options, textureItems ) {
             }
         },
         {
-            eps3: {
+            "Politécnica 3-Acometida 2": {
                 location: [0,0,0],
                 rotation: [0,0,0],
                 materials: {
@@ -180,7 +183,7 @@ export function loadSetup( options, textureItems ) {
             }
         },
         {
-            gerbernacer: {
+            "German Bernacer": {
                 location: [0,0,0],
                 rotation: [0,0,0],
                 materials: {
@@ -194,7 +197,7 @@ export function loadSetup( options, textureItems ) {
                 location: [0,0,0],
                 rotation: [0,0,0],
                 materials: {
-                    Rest: materials.default
+                    Resto: materials.default
                 },
                 interactive: false,
             }
@@ -212,6 +215,8 @@ export async function getIconAsImage(icon, status) {
         }
         else{
             let svg_path = CONSTANTS[icon](status);
+
+            // debugger
     
             let img = new Image();
             let svg = new Blob([svg_path], {type: "image/svg+xml;charset=utf-8"});

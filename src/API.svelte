@@ -13,17 +13,17 @@
     const sondas = [ 
         ""                  ,""              , "SONDAUA06_EPS2", "SONDA04_EPSIII"          , "SONDAUA19_AUL2", "SONDAUA21_AUL3", "SONDAUA22_DER", "SONDAUA20_GERBER"];
 
-    const STATUS_GREEN = '6DF099';
-    const STATUS_YELLOW = 'EFEE6B';
-    const STATUS_RED = 'EF6B6B';
+    const STATUS_GREEN = '#6DF099';
+    const STATUS_YELLOW = '#EFEE6B';
+    const STATUS_RED = '#EF6B6B';
 
-    const WIFI_TOP = 4.5;
-    const WIFI_MED = 2;
-    const ENERGIA_TOP = 8;
-    const ENERGIA_MED = 4; // kw
-    const TEMP_TOP = 30; //ºC
-    const TEMP_MED = 10;
-    const TEMP_BOT = 0;
+    let WIFI_TOP = 4.5;
+    let WIFI_MED = 2;
+    let ENERGIA_TOP = 8;
+    let ENERGIA_MED = 4; // kw
+    let TEMP_TOP = 30; //ºC
+    let TEMP_MED = 10;
+    let TEMP_BOT = 0;
 
     // Buildings data
     let data = {};
@@ -222,7 +222,7 @@
                 }
                 else{
                     data[building].wifi_up = "Offline";
-                    data[building].wifi_UP_status = STATUS_RED;
+                    data[building].wifi_up_status = STATUS_RED;
                 }
 
                 if(energia){

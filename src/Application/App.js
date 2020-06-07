@@ -5,6 +5,7 @@ import EventEmitter from "./Utils/EventEmitter";
 import Loader from "./Utils/Loader.js";
 import Resources from "./Utils/Resources.js";
 import World from "./World.js";
+import { Sky } from './Sky.js';
 
 import TWEEN from "@tweenjs/tween.js";
 
@@ -71,10 +72,16 @@ export default class THREE_App extends EventEmitter{
             // TODO loading screen + animation
             const world = new World( { items: this.items, options: this.options } );
 
+            // world.on('ready', () => {
+            // })
+            world.updateBillboardsStatus(this.options.status);
+            
             // Outside reference to objects which we want to raycast
             this.checkInteractive = world.interactiveObjects;
 
             this.scene.add(world.container);
+
+            this.world = world;
         });
 
         this.scene = new THREE.Scene();
@@ -126,6 +133,8 @@ export default class THREE_App extends EventEmitter{
             var axesHelper = new THREE.AxesHelper( 50 );
             this.scene.add( axesHelper );
         }
+
+        this.loadSky();
     
         this.setCamera();
         this.setRenderer();
@@ -140,6 +149,43 @@ export default class THREE_App extends EventEmitter{
 
         // Load events and set initial app size
         this.setInteractiveEvents();
+    }
+
+    loadSky() {
+        const sky = new Sky();
+        sky.scale.setScalar( 450000 );
+
+        this.scene.add(sky);
+
+        // Add Sun Helper
+        const sunSphere = new THREE.Mesh(
+            new THREE.SphereBufferGeometry( 20000, 16, 8 ),
+            new THREE.MeshBasicMaterial( { color: 0xffffff } )
+        );
+        sunSphere.position.y = - 700000;
+        sunSphere.visible = false;
+        this.scene.add( sunSphere );
+
+        let distance = 400000;
+
+        var uniforms = sky.material.uniforms;
+        uniforms[ "turbidity" ].value = 3.2;
+        uniforms[ "rayleigh" ].value = 0.2689;
+        uniforms[ "mieCoefficient" ].value = 0.004;
+        uniforms[ "mieDirectionalG" ].value = 0.0;
+        uniforms[ "luminance" ].value = 1.14;
+
+        var theta = Math.PI * ( 0.0874 - 0.5 );
+        var phi = 2 * Math.PI * ( 0.1064 - 0.5 );
+
+        sunSphere.position.x = distance * Math.cos( phi );
+        sunSphere.position.y = distance * Math.sin( phi ) * Math.sin( theta );
+        sunSphere.position.z = distance * Math.sin( phi ) * Math.cos( theta );
+
+        sunSphere.visible = false;
+
+        uniforms[ "sunPosition" ].value.copy( sunSphere.position );
+
     }
 
     getAllLoadedItems() {
@@ -375,7 +421,7 @@ export default class THREE_App extends EventEmitter{
         this.controls.screenSpacePanning = false;
         this.controls.minDistance = 10;
         this.controls.maxDistance = 3000;
-        // this.controls.maxPolarAngle = Math.PI / 4; // 90 deg limit
+        this.controls.maxPolarAngle = Math.PI / 4; // 90 deg limit
         // this.controls.maxPolarAngle = 0.37 * Math.PI;   // 66 deg limit
 
         // Controls limits
@@ -612,9 +658,8 @@ export default class THREE_App extends EventEmitter{
         return this.SELECTED ? this.SELECTED.name : null;
     }
 
-    updateBillboards(status){
-        // todo
-        // world.updateBillboards(status);
+    updateStatus(status){
+        this.world.updateBillboardsStatus(status);
     }
 
 }

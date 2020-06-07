@@ -1,12 +1,18 @@
 
 <script>
+    // Svelte 
     import {onMount} from 'svelte';
     import { fade } from "svelte/transition";
 
+    // Components
+    import Loading from './Components/Loading.svelte';
     import Popup from './Popup.svelte';
     import Menu from './Menu.svelte';
-    import Loading from './Components/Loading.svelte';
     import Help from './Help.svelte';
+    import Settings from './Settings.svelte';
+
+    // Stores
+    import { buildings_status } from './Stores/stores.js';
  
     import THREE_App from './Application/App.js';
 
@@ -32,12 +38,21 @@
 
     
     onMount(async () => {
+        
+        await popup.refreshData();
+        
+        await SmartUniversity_Instance.init({ canvas: canvasElement, window: { height, width }, doc: document , DEBUG, status: $buildings_status }); 
 
+        // SmartUniversity_Instance.updateStatus($buildings_status);
 
-        console.log("canvas:", canvasElement);
-        SmartUniversity_Instance.init({ canvas: canvasElement, window: { height, width }, doc: document , DEBUG }); 
+        setInterval(async () => {
+            popup.refreshData();
+            SmartUniversity_Instance.updateStatus($buildings_status);
+            // TODO check headers
+            // todo when refresh, emit event for smartuniversity update values in 3d
+        }, 3600*10); // 15 mins update
+        // }, 900000); // 15 mins update
 
-        popup.refreshData();
         
         // debug 
         DEBUG ? document.body.appendChild( SmartUniversity_Instance.stats.domElement ) : 0;
@@ -76,6 +91,7 @@
 {:then value}
     <Menu></Menu>
     <Help></Help>
+    <Settings></Settings>
 {/await}
 
 <div transition:fade>

@@ -4,21 +4,22 @@ import * as THREE from "three";
 import { loadSetup, getIconAsImage } from "./setup.js";
 
 import Building from "./Building.js";
+import EventEmitter from "./Utils/EventEmitter.js";
 // import loadMaterials from "./materials";
 
 
-export default class World{
+export default class World extends EventEmitter{
 
     constructor( _params ) {
-
+        super();
         // 
         this.items = _params.items;
-        this.items.billboards = [];
         this.options = _params.options;
 
         this.container = new THREE.Object3D();
 
         this.interactiveObjects = [];
+        this.buildings = [];
 
         console.log("Items in APP:");
         console.log(this.items);
@@ -45,39 +46,41 @@ export default class World{
 
             if( this.items[ name ] != undefined ) {
                 
-                const building = new Building( { setup: setupObject[name], item: this.items[ name ], textures: this.items.textures } );
+                const building = new Building( { setup: setupObject[name], item: this.items[ name ], textures: this.items.textures, status: [
+                    "#ffff00",
+                    "#ffff00",
+                    "#ffff00",
+                    "#ffff00", 
+                ] } );
                 
-                console.log(name);
+                // console.log(name);
                 
                 building.container.name = name;
+                // debugger
                 // building.castShadow = true;
                 // building.receiveShadow = true;
 
                 // debugger;
-                let buildingObj = building.container.children[0].children[0];
-                let geo = buildingObj.geometry;
-                
-                // Checking geo information (AO, normals)
-                //console.log(buildingObj.geometry.attributes);
-
-                if(geo.attributes.uv){
-                    geo.addAttribute('uv2', new THREE.BufferAttribute( geo.attributes.uv.array, 2 ));
-                }
+                // TODO CHECK building.mesh = building.obj DO IN BUILDING
+                // let buildingObj = building.container.children[0].children[0];
+                // let geo = buildingObj.geometry;
+                // // Checking geo information (AO, normals)
+                // if(geo.attributes.uv){
+                //     geo.addAttribute('uv2', new THREE.BufferAttribute( geo.attributes.uv.array, 2 ));
+                // }
                 
                 if(building.interactive){
-                    this.interactiveObjects.push(building.container.children[0].children[0]);
-                    
+                    // console.log("billboarding building ", building.container.name);
+                    this.interactiveObjects.push(building.mesh);
+                    this.buildings.push(building);
+
+                    building.setBillboard();
+
                     // Create billboards
-                    this.setBillboard(building.container);
+                    // this.setBillboard(building.container);
                 }
-                //setupObject[name].action();
 
-                
-                // this.container.add(building.wrapper);
                 this.container.add(building.container);
-
-
-
             }
             else{
                 console.warn("Object " + name + " not found or loaded in items");
@@ -101,84 +104,104 @@ export default class World{
             var buildingFolder = this.options.debugScene.addFolder('Buildings');
 
             const params = {
-                posX: this.items.BUA.scene.position.x,
-                posY: this.items.BUA.scene.position.y,
-                posZ: this.items.BUA.scene.position.z,
+                posX: this.items["Biblioteca General"].scene.position.x,
+                posY: this.items["Biblioteca General"].scene.position.y,
+                posZ: this.items["Biblioteca General"].scene.position.z,
             }
             
             buildingFolder.add(params, 'posX', -1000,1000).onChange( (val) => {
-                this.items.BUA.scene.position.x = val;
+                this.items["Biblioteca General"].scene.position.x = val;
             })
             buildingFolder.add(params, 'posY', -1000,1000).onChange( (val) => {
-                this.items.BUA.scene.position.y = val;
+                this.items["Biblioteca General"].scene.position.y = val;
             })
             buildingFolder.add(params, 'posZ', -1000,1000).onChange( (val) => {
-                this.items.BUA.scene.position.z = val;
+                this.items["Biblioteca General"].scene.position.z = val;
             })
             
         }
     
         this.container.add(plane);
 
-
-
     }
 
-    async setBillboard( container ) {
-        // Billboard field size
-        const squareSize = 700;
-        const OFFSET = 100;
-        const value = OFFSET+squareSize+OFFSET;
-
-        let pos = container.children[0].children[0].position;
-                    
-        // create billboard
-        const ctx = document.createElement('canvas').getContext('2d');
-        ctx.canvas.width = (OFFSET+squareSize+OFFSET) * 4;
-        ctx.canvas.height = squareSize+OFFSET*2;
-
-        // fill
-        ctx.fillStyle = 'rgba(64, 64, 64, 1)';
-        ctx.fillRect(0,0,ctx.canvas.width, ctx.canvas.height);
-
-        let energy_img = await getIconAsImage("ENERGY", "#ffff00");
-        ctx.drawImage(energy_img, value*0+OFFSET, OFFSET, squareSize, squareSize);
-
-        let weather_img = await getIconAsImage("WEATHER", "#ffff00");
-        ctx.drawImage(weather_img, value*1+OFFSET, OFFSET, squareSize, squareSize);
-
-        let wifidown_img = await getIconAsImage("WIFIDOWN", "#ffff00");
-        ctx.drawImage(wifidown_img, value*2+OFFSET, OFFSET, squareSize, squareSize);
-
-        let wifiup_img = await getIconAsImage("WIFIUP", "#ffff00");
-        ctx.drawImage(wifiup_img, value*3+OFFSET, OFFSET, squareSize, squareSize);
-
-        const texture = new THREE.CanvasTexture(ctx.canvas);
-
-        const labelMat = new THREE.SpriteMaterial({
-            map: texture,
-            transparent: true,
+    async setBillboard( container, status = [
+            "#ffff00",
+            "#ffff00",
+            "#ffff00",
+            "#ffff00", 
+        ]){
         
-        })
-
-        const label = new THREE.Sprite(labelMat);
-
-        container.add(label);
-        label.position.y = pos.y + 80;
-        label.position.x = pos.x;
-        label.position.z = pos.z;
-
-        label.scale.x = ctx.canvas.width * 0.01 * 2;
-        label.scale.y = ctx.canvas.height * 0.01 * 2;
-        // scale 1 min 2 max last value;
-
-        this.items.billboards.push(label);
     }
 
     updateBillboardsStatus(status) {
-        for(let i=0; i<this.items.billboards.length; i++) {
-            // todo
+        for(let i=0; i<this.buildings.length; i++){
+            let name = this.buildings[i].container.name;
+
+            // debugger
+            // todo update in building
+            this.buildings[i].deleteBillboard();
+            this.buildings[i].setBillboard([
+                status[name].energia_activa_status,
+                status[name].temperature_status,
+                status[name].wifi_down_status,
+                status[name].wifi_up_status,
+            ]);
+            // console.log( this.buildings[i].updateBillboard(status) );
         }
+        /*if(status){
+
+        }
+        else{
+            // empty
+        }
+        console.log(status);
+        console.log("billboars", this.items.billboards);
+
+        for(let billboardEl=0; billboardEl<this.items.billboards.length; billboardEl++){
+            let building = this.items.billboards[billboardEl];
+            if( status[building.name] ){
+                // delete label, texture and mesh
+                let label = this.items.billboards[billboardEl];
+
+                console.log("inspect",this.items.billboards[billboardEl]);
+
+                let object = this.container.getObjectByName(building.name);
+
+                console.log(this.container);
+                this.container.remove(label);
+                // label.material.dispose();
+                console.log(this.container);
+
+                // create new label
+                let container = {
+                    name: building.name,
+                    children: [
+                        {
+                            children: [
+                                {
+                                    position: {
+                                        x: building.position.x,
+                                        y: building.position.y,
+                                        z: building.position.z
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+
+                console.log("Existe ", status[building.name]);
+            }
+            else{
+                // rojo
+                console.log("No Existe ");
+        
+            }
+            
+        }
+       
+        */
     }
 
     updateBillboardsScale(){

@@ -23,13 +23,6 @@
     let data = {};
     let building = {};
 
-    setInterval(async () => {
-        refreshData();
-        // TODO check headers
-        // todo when refresh, emit event for smartuniversity update values in 3d
-    }, 900000); // 15 mins update
-
-
     $:{
         if(content){
             console.log("content is", content);

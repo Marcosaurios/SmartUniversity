@@ -1,5 +1,4 @@
 <script>
-
 import {fade} from 'svelte/transition';
     
 import {setCookie} from './Components/setCookie.svelte';

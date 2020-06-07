@@ -1,11 +1,12 @@
 <script>
     import {onMount} from 'svelte';
     import { slide } from "svelte/transition";
-    import { help_toggle } from "./Stores/stores.js";
+    import { help_toggle, settings_toggle } from "./Stores/stores.js";
 
     import Icon from '@iconify/svelte';
     import webIcon from '@iconify/icons-mdi/web';
     import helpCircleOutline from '@iconify/icons-mdi/help-circle-outline';
+    import cogOutline from '@iconify/icons-mdi/cog-outline';
 
     import Button from "./Components/Button.svelte";
     
@@ -13,7 +14,6 @@
 
     let div;
     let hovered = false;
-    $: console.log("hovered", hovered);
 
     onMount( ()=> {
         window.addEventListener("touchend", (e) => {
@@ -103,6 +103,11 @@
     <div>
         <Button on:click={ () => help_toggle.set(true)}>
             <Icon icon={helpCircleOutline} style="font-size: 2em"/>
+        </Button>
+    </div>
+    <div>
+        <Button on:click={ () => settings_toggle.set(true)}>
+            <Icon icon={cogOutline} style="font-size: 2em"></Icon>
         </Button>
     </div>
 </div>

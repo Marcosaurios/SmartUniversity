@@ -1,15 +1,11 @@
-import { writable } from 'svelte/store';
+import { writable, derived } from 'svelte/store';
+
+export const firstVisit = writable(false);
+
+export const cookiesUse = writable(false);
 
 // Help toggle
-export const help_toggle = writable(
-    false,
-    function start(){
-        // console.log("first one subscribed");
-    },
-    function stop(){
-        // console.log("last one subscribed");
-    }
-);
+export const help_toggle = writable(false);
 
 // Buildings status
 export const buildings_status = writable({value: null});

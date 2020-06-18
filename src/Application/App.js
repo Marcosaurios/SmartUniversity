@@ -134,6 +134,7 @@ export default class THREE_App extends EventEmitter{
             this.scene.add( axesHelper );
         }
 
+        // todo each hour update sky -> interactive events?
         this.loadSky();
     
         this.setCamera();
@@ -266,7 +267,7 @@ export default class THREE_App extends EventEmitter{
 
                 // Update controls
                 this.controls.target = this.SELECTED.position.clone(); // Focus autorotate on selected object
-                this.controls.autoRotate = true;
+                // this.controls.autoRotate = true;
 
                 this.camera.target = this.SELECTED.position.clone();
                 

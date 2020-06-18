@@ -1,14 +1,20 @@
 <script>
+    // Svelte
     import {onMount} from 'svelte';
     import { slide } from "svelte/transition";
     import { help_toggle, settings_toggle } from "./Stores/stores.js";
 
+    // Icons
     import Icon from '@iconify/svelte';
     import webIcon from '@iconify/icons-mdi/web';
     import helpCircleOutline from '@iconify/icons-mdi/help-circle-outline';
     import cogOutline from '@iconify/icons-mdi/cog-outline';
 
+    // Components
     import Button from "./Components/Button.svelte";
+
+    // Locale
+    import { _, isLoaded, locale } from "./Services/internationalization.js";
     
     let language = "esp";
 
@@ -42,6 +48,9 @@
         // hovered = false;
         console.log(lang);
         // TODO: separate language to component 
+        if(typeof lang === 'string'){
+            locale.set(lang);
+        }
     }
 
 </script>
@@ -90,14 +99,16 @@
 
 </style>
 
+{#if isLoaded}
 <div class="overlay center">
     <div bind:this={div} on:mouseenter={trigger} on:mouseleave={trigger}>
         <Button id="lang" on:touched={handleTouch}>
             <Icon icon={webIcon} style="font-size: 2em"/>
         </Button>
         <ul class:visible="{hovered}" in:slide out:slide>
-            <li><Button listItem active="{language=="eng"}" on:click={ () => updateLanguage("eng") }>English</Button></li>
-            <li><Button listItem active="{language=="esp"}" on:click={ () => updateLanguage("esp") }>Español</Button></li>
+            <li><Button listItem active="{$locale=="en"}" on:click={ () => updateLanguage("en") }>{$_('lang.en')}</Button></li>
+            <li><Button listItem active="{$locale=="es"}" on:click={ () => updateLanguage("es") }>{$_('lang.es')}</Button></li>
+            <li><Button listItem active="{$locale=="va"}" on:click={ () => updateLanguage("va") }>{$_('lang.va')}</Button></li>
         </ul>
     </div>
     <div>
@@ -111,3 +122,4 @@
         </Button>
     </div>
 </div>
+{/if}

@@ -36,6 +36,8 @@
         border-color: var(--btn-white);
 
         margin: 5px;
+
+        transition: background-color .5s, border-color .5s;
     }
 
     .btn:hover{
@@ -48,9 +50,12 @@
         border-color: var(--btn-primary);
     }
 
-    /* .secondary{  } */
+    .secondary{ 
+        background-color: var(--btn-secondary);
+        border-color: var(--btn-secondary);
+    }
 
-    .listItem{ 
+    .listItem { 
         width: 100%;
         margin: 0 0 5px 0;
 

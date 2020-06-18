@@ -10,6 +10,10 @@
     import Menu from './Menu.svelte';
     import Help from './Help.svelte';
     import Settings from './Settings.svelte';
+    import Cookies from './Services/Cookies.svelte';
+
+    // internationalization
+    import { _, setupi18n, isLoaded } from './Services/Internationalization.js';
 
     // Stores
     import { buildings_status } from './Stores/stores.js';
@@ -34,7 +38,11 @@
     SmartUniversity_Instance.on('progress', (value) => {
         // loading %
         progress = value;
-    })
+    });
+
+
+    // Init locale
+    setupi18n({withLocale: 'en'});
 
     
     onMount(async () => {
@@ -43,15 +51,13 @@
         
         await SmartUniversity_Instance.init({ canvas: canvasElement, window: { height, width }, doc: document , DEBUG, status: $buildings_status }); 
 
-        // SmartUniversity_Instance.updateStatus($buildings_status);
-
         setInterval(async () => {
             popup.refreshData();
             SmartUniversity_Instance.updateStatus($buildings_status);
-            // TODO check headers
-            // todo when refresh, emit event for smartuniversity update values in 3d
         }, 3600*10); // 15 mins update
         // }, 900000); // 15 mins update
+
+        // todo each hour update light
 
         
         // debug 
@@ -86,7 +92,7 @@
 
 <Popup content={ selected } bind:this={popup}/>
 
-{#await promise}
+{#await promise }
     <Loading {progress}></Loading>
 {:then value}
     <Menu></Menu>
@@ -103,6 +109,9 @@
         in:fade
     ></canvas>
 </div>
+
+<Cookies></Cookies>
+
 
 <style>
     div {

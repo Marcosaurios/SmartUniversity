@@ -4,6 +4,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import replace from '@rollup/plugin-replace';
+import json from '@rollup/plugin-json';
 
 const production = !process.env.ROLLUP_WATCH;
 const NODE_ENV = process.env.NODE_ENV;
@@ -26,6 +27,7 @@ export default {
 				css.write('public/build/bundle.css');
 			}
 		}),
+		json(),
 
 		replace({
 			process: JSON.stringify({        

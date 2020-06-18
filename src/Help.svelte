@@ -1,13 +1,15 @@
 <script>
 import {fade} from 'svelte/transition';
     
-import {setCookie} from './Components/setCookie.svelte';
+import {setCookie } from './Components/setCookie.svelte';
 import Button from './Components/Button.svelte';
 
 
-import { help_toggle } from "./Stores/stores.js";
+import { help_toggle, firstVisit } from "./Stores/stores.js";
 
-help_toggle.set( setCookie("showHelp", "true") );
+// Is first time?
+firstVisit.set( setCookie("firstVisit", "true") );
+help_toggle.set( $firstVisit );
 
 </script>
 

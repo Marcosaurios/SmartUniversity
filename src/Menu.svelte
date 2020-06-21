@@ -47,7 +47,6 @@
     function updateLanguage(lang){
         // hovered = false;
         console.log(lang);
-        // TODO: separate language to component 
         if(typeof lang === 'string'){
             locale.set(lang);
         }
@@ -83,12 +82,7 @@
         visibility: hidden;
         transition: 200ms;
     }
-/* 
-    div:hover ul {
-        opacity: 1;
-        visibility: visible;
-        transition: 200ms;
-    } */
+
 
     .visible{
         opacity: 1;

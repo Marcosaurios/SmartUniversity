@@ -21,7 +21,7 @@
         width: 83%;
         height: 30vh;
 
-        padding: 7px;
+        padding: 0 7px 7px 7px;
         overflow: hidden;
         
 

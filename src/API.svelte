@@ -25,11 +25,15 @@
     let TEMP_MED = 10;
     let TEMP_BOT = 0;
 
-    // Buildings data
+    // INIT Buildings data
     let data = {};
     for(let i=0; i<buildings.length;i++){
         data[buildings[i]] = {};
         data[buildings[i]].name = buildings[i];
+        data[buildings[i]].energia_activa = 0;
+        data[buildings[i]].wifi_down = 0;
+        data[buildings[i]].wifi_up = 0;
+        data[buildings[i]].temperature = 0;
     }
 
     // Error template --> returns always buildings with ENERGIA_ACTIVA and ALIAS values
@@ -45,6 +49,7 @@
             let parsed = await response.json();
 
             parsed.filter(x => {
+                
                 let exists = buildings.indexOf(x._id.alias);
                 if(exists!=-1) {
                     data[buildings[exists]].energia_activa = x.ENERGIA_ACTIVA;
@@ -136,10 +141,14 @@
                 let exist = sondas.indexOf(x._id.alias);
 
                 if(exist != -1) {
-                    data[buildings[exist]]["temperature"] = x.value;
+                    data[buildings[exist]]["temperature"] = x.value ? x.value : 0;
                 }
-                
             });
+
+            //
+
+            // debugger;
+
             return true;
 
         }
@@ -179,6 +188,9 @@
         }
     }
 
+    function normalize(value, min, max) {
+        return (value - min) / (max - min);
+    }
 
     export async function getData(){
         await Promise.all([getElectricity(), getWifi(), getTemperature(), getDescription()]);
@@ -186,83 +198,20 @@
         for (var building in data) {
             if (data.hasOwnProperty(building)) {
 
-                let wifid = data[building].wifi_down;
-                let wifiu = data[building].wifi_up;
-                let energia = data[building].energia_activa;
-                let temp = data[building].temperature;
+                let wifid = data[building].wifi_down ? data[building].wifi_down : 0;
+                let wifiu = data[building].wifi_up ? data[building].wifi_up : 0;
+                let energia = data[building].energia_activa ? data[building].energia_activa : 0;
+                let temp = data[building].temperature ? data[building].temperature : 0;
 
-                // Do things here
-                if(wifid){
-                    if(wifid > WIFI_TOP) {
-                        data[building].wifi_down_status = STATUS_GREEN;
-                    }
-                    else if(wifid > WIFI_MED){
-                        data[building].wifi_down_status = STATUS_YELLOW;
-                    }
-                    else{
-                        data[building].wifi_down_status = STATUS_RED;
-                    }
-                }
-                else{
-                    data[building].wifi_down = "Offline";
-                    data[building].wifi_down_status = STATUS_RED;
+                // TODO normalize values 
 
-                }
+                data[building].wifi_down_status = normalize(wifid, 0, 5);
+                data[building].wifi_up_status = normalize(wifiu, 0, 5);
+                data[building].energia_activa_status = normalize(energia, 0, 20);
+                data[building].temperature_status = normalize(temp, 0, 35);
 
-                if(wifiu){
-                    if(wifiu > WIFI_TOP) {
-                        data[building].wifi_up_status = STATUS_GREEN;
-                    }
-                    else if(wifiu > WIFI_MED){
-                        data[building].wifi_up_status = STATUS_YELLOW;
-                    }
-                    else{
-                        data[building].wifi_up_status = STATUS_RED;
-                    }
-                }
-                else{
-                    data[building].wifi_up = "Offline";
-                    data[building].wifi_up_status = STATUS_RED;
-                }
-
-                if(energia){
-                    if(energia > ENERGIA_TOP) {
-                        data[building].energia_activa_status = STATUS_GREEN;
-                    }
-                    else if(energia > ENERGIA_MED){
-                        data[building].energia_activa_status = STATUS_YELLOW;
-                    }
-                    else{
-                        data[building].energia_activa_status = STATUS_RED;
-                    }
-                }
-                else{
-                    data[building].energia_activa = "Offline";
-                    data[building].energia_activa_status = STATUS_RED;
-                }
-
-                if(temp){
-                    if(temp > TEMP_TOP || temp < TEMP_BOT) {
-                        data[building].temperature_status = STATUS_GREEN;
-                    }
-                    else if(temp > TEMP_MED){
-                        data[building].temperature_status = STATUS_YELLOW;
-                    }
-                    else{
-                        data[building].temperature_status = STATUS_RED;
-                    }
-                }
-                else{
-                    data[building].temperature = "Offline";
-                    data[building].temperature_status = STATUS_RED;
-
-                }
-
-                // data[building].wifi_down ? data[building].wifi_down += " mb/s" : data[building].wifi_down = "Offline";
-                // data[building].wifi_up ? data[building].wifi_up += " mb/s" : data[building].wifi_up = "Offline";
-                // data[building].energia_activa ? data[building].energia_activa += " Kw" : data[building].energia_activa = "Offline";
-                // data[building].temperature ? data[building].temperature += " ºC" : data[building].temperature = "Offline";
-                // console.log("Cleaned building ", building);
+                data[building].status = data[building].wifi_down_status*0.25 + data[building].wifi_up_status*0.25 + data[building].energia_activa_status*0.25 + data[building].temperature_status*0.25;
+                
             }
         }
         

@@ -61,7 +61,7 @@ export default class World extends EventEmitter{
                 // building.receiveShadow = true;
 
                 // debugger;
-                // TODO CHECK building.mesh = building.obj DO IN BUILDING
+                //  CHECK building.mesh = building.obj DO IN BUILDING
                 // let buildingObj = building.container.children[0].children[0];
                 // let geo = buildingObj.geometry;
                 // // Checking geo information (AO, normals)
@@ -71,13 +71,15 @@ export default class World extends EventEmitter{
                 
                 if(building.interactive){
                     // console.log("billboarding building ", building.container.name);
+                    let status = this.options.status[name].status;
+                    building.material.color = new THREE.Color(`hsl( ${Math.min(status * 100, 100)} ,80%, 68%)`);
+
                     this.interactiveObjects.push(building.mesh);
                     this.buildings.push(building);
 
-                    building.setBillboard();
+                    // OPTION
+                    // building.setBillboard();
 
-                    // Create billboards
-                    // this.setBillboard(building.container);
                 }
 
                 this.container.add(building.container);
@@ -124,89 +126,24 @@ export default class World extends EventEmitter{
         this.container.add(plane);
 
     }
-
-    async setBillboard( container, status = [
-            "#ffff00",
-            "#ffff00",
-            "#ffff00",
-            "#ffff00", 
-        ]){
-        
-    }
-
+    
     updateBillboardsStatus(status) {
         for(let i=0; i<this.buildings.length; i++){
             let name = this.buildings[i].container.name;
 
             // debugger
-            // todo update in building
-            this.buildings[i].deleteBillboard();
-            this.buildings[i].setBillboard([
-                status[name].energia_activa_status,
-                status[name].temperature_status,
-                status[name].wifi_down_status,
-                status[name].wifi_up_status,
-            ]);
-            // console.log( this.buildings[i].updateBillboard(status) );
+            // update in building
+            // this.buildings[i].deleteBillboard();
+            // this.buildings[i].setBillboard([
+            //     status[name].energia_activa_status,
+            //     status[name].temperature_status,
+            //     status[name].wifi_down_status,
+            //     status[name].wifi_up_status,
+            // ]);
         }
-        /*if(status){
-
-        }
-        else{
-            // empty
-        }
-        console.log(status);
-        console.log("billboars", this.items.billboards);
-
-        for(let billboardEl=0; billboardEl<this.items.billboards.length; billboardEl++){
-            let building = this.items.billboards[billboardEl];
-            if( status[building.name] ){
-                // delete label, texture and mesh
-                let label = this.items.billboards[billboardEl];
-
-                console.log("inspect",this.items.billboards[billboardEl]);
-
-                let object = this.container.getObjectByName(building.name);
-
-                console.log(this.container);
-                this.container.remove(label);
-                // label.material.dispose();
-                console.log(this.container);
-
-                // create new label
-                let container = {
-                    name: building.name,
-                    children: [
-                        {
-                            children: [
-                                {
-                                    position: {
-                                        x: building.position.x,
-                                        y: building.position.y,
-                                        z: building.position.z
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                }
-
-                console.log("Existe ", status[building.name]);
-            }
-            else{
-                // rojo
-                console.log("No Existe ");
-        
-            }
-            
-        }
-       
-        */
     }
 
-    updateBillboardsScale(){
-
-    }
+   
 
     setLights() {
 

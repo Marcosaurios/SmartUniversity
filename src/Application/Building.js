@@ -112,10 +112,10 @@ export default class Building {
             // to set different material to each part of mesh (diferent mesh, same object)
             if(this.setup.materials[ child.name ]) {
                 // console.log("aplicando hijos");
-
-                // Set material
+                
+                // OPTION
                 this.scene.children[ index ].material = this.setup.materials[ child.name ];
-                    
+                this.material = this.scene.children[ index ].material;                 
             }
             else{
                 console.warn("material for " + child.name + " doesn't exist. Assigned default");

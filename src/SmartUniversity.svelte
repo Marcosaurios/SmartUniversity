@@ -29,7 +29,7 @@
     let SmartUniversity_Instance = new THREE_App();
     let selected = null;
 
-    // TODO subscribe to popup events -> on update, call SmartUniversity update values of building stats
+
     let popup;
 
     let promise = SmartUniversity_Instance.getAllLoadedItems();
@@ -49,11 +49,13 @@
         
         await popup.refreshData();
         
+        // debugger
         await SmartUniversity_Instance.init({ canvas: canvasElement, window: { height, width }, doc: document , DEBUG, status: $buildings_status }); 
 
         setInterval(async () => {
             popup.refreshData();
             SmartUniversity_Instance.updateStatus($buildings_status);
+            console.log($buildings_status);
         }, 3600*10); // 15 mins update
         // }, 900000); // 15 mins update
 
@@ -61,8 +63,8 @@
 
         
         // debug 
-        DEBUG ? document.body.appendChild( SmartUniversity_Instance.stats.domElement ) : 0;
-        DEBUG ? document.body.appendChild( SmartUniversity_Instance.renderstats ) : 0;
+        // DEBUG ? document.body.appendChild( SmartUniversity_Instance.stats.domElement ) : 0;
+        // DEBUG ? document.body.appendChild( SmartUniversity_Instance.renderstats ) : 0;
 
     })
 

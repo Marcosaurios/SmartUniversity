@@ -36,6 +36,15 @@ export default class THREE_App extends EventEmitter{
         this.SELECTED = null;
         this.raycaster = new THREE.Raycaster();
         this.checkInteractive = [];
+
+
+        // todo sizes
+        this.globals = {
+            roation_speed: .5,
+            min_desktop_width: 1200,
+            focus_offset: [0, 437]  // [phone, desktop]
+        }
+        this.isDesktop = 0;
         
         console.log("Resources: ", this.resources);
 
@@ -53,13 +62,12 @@ export default class THREE_App extends EventEmitter{
 
     init(_options) {
 
-        // todo save canvas in init function -> updates reference to new canvas in document?
         this.options = _options;
 
         // Window access: // console.log(this.options.doc.defaultView);
         // Width and height from Window
-        this.width = this.options.doc.defaultView.outerWidth;
-        this.height = this.options.doc.defaultView.outerHeight;
+        this.width = this.options.doc.defaultView.innerWidth;
+        this.height = this.options.doc.defaultView.innerHeight;
 
         this.loader.on('fileFinished', (value) => {
             // Emit % to Svelte
@@ -69,12 +77,10 @@ export default class THREE_App extends EventEmitter{
         })
 
         this.loader.on('loadingFinished', () => {
-            // TODO loading screen + animation
-            const world = new World( { items: this.items, options: this.options } );
 
-            // world.on('ready', () => {
-            // })
-            world.updateBillboardsStatus(this.options.status);
+            // FIXME loading screen + animation
+            const world = new World( { items: this.items, options: this.options } );
+            // world.updateBillboardsStatus(this.options.status);
             
             // Outside reference to objects which we want to raycast
             this.checkInteractive = world.interactiveObjects;
@@ -103,28 +109,28 @@ export default class THREE_App extends EventEmitter{
             var msMin = 100;
             var msMax = 0;
         
-            var container = this.options.doc.createElement( 'div' );
-            container.style.cssText = 'width:80px; opacity:0.9; cursor:pointer; position:absolute; top:0px; right:0px';
+            // var container = this.options.doc.createElement( 'div' );
+            // container.style.cssText = 'width:80px; opacity:0.9; cursor:pointer; position:absolute; top:0px; right:0px';
         
-            var msDiv = this.options.doc.createElement( 'div' );
-            msDiv.style.cssText = 'padding:0 0 3px 3px;text-align:left;background-color:#200;';
-            container.appendChild( msDiv );
+            // var msDiv = this.options.doc.createElement( 'div' );
+            // msDiv.style.cssText = 'padding:0 0 3px 3px;text-align:left;background-color:#200;';
+            // container.appendChild( msDiv );
         
-            var msText = this.options.doc.createElement( 'div' );
-            msText.style.cssText = 'color:#f00;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px';
-            msText.innerHTML= 'WebGLRenderer';
-            msDiv.appendChild( msText );
+            // var msText = this.options.doc.createElement( 'div' );
+            // msText.style.cssText = 'color:#f00;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px';
+            // msText.innerHTML= 'WebGLRenderer';
+            // msDiv.appendChild( msText );
             
-            this.msTexts = [];
-            var nLines	= 9;
-            for(var i = 0; i < nLines; i++){
-                this.msTexts[i]	= this.options.doc.createElement( 'div' );
-                this.msTexts[i].style.cssText = 'color:#f00;background-color:#311;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px';
-                msDiv.appendChild( this.msTexts[i] );		
-                this.msTexts[i].innerHTML= '-';
-            }
+            // this.msTexts = [];
+            // var nLines	= 9;
+            // for(var i = 0; i < nLines; i++){
+            //     this.msTexts[i]	= this.options.doc.createElement( 'div' );
+            //     this.msTexts[i].style.cssText = 'color:#f00;background-color:#311;font-family:Helvetica,Arial,sans-serif;font-size:9px;font-weight:bold;line-height:15px';
+            //     msDiv.appendChild( this.msTexts[i] );		
+            //     this.msTexts[i].innerHTML= '-';
+            // }
 
-            this.renderstats = container;
+            // this.renderstats = container;
 
             // Export variables to window for WebGL inspector plugin
             window.scene = this.scene;
@@ -227,17 +233,39 @@ export default class THREE_App extends EventEmitter{
     
             this.viewportWidth = div.offsetWidth;
             this.viewportHeight = div.offsetHeight;
+
+            // this.height = this.viewportWidth;
+            // this.width = this.viewportWidth;
     
             body.removeChild(div);
     
             this.options.canvas.style.width = this.viewportWidth;
             this.options.canvas.style.height = this.viewportHeight;
+            console.log("width: ", this.viewportWidth);
+            console.log("height: ", this.viewportHeight);
+
+            this.width = this.viewportWidth;
+            this.height = this.viewportHeight;
+
+
+            if(this.viewportWidth > this.globals.min_desktop_width){
+                this.isDesktop = 1;
+                console.log("is desktop");
+            }
+            else{
+                this.isDesktop = 0;
+            }
     
             // console.log("re SIZE: " + this.viewportWidth + " x " + this.viewportHeight);
             // console.log("aspect " + this.viewportWidth / this.viewportHeight);
     
             // Keep same render and camera aspect
             // (first render was took at max width and height, so we don't modify to reescale the entire render, we only crop the canvas size)
+            if(this.status == 1){
+                // card
+                this.camera.setViewOffset(this.width, this.height, this.globals.focus_offset[this.isDesktop], 0, this.width, this.height);   
+            }
+
             this.renderer.setSize(this.viewportWidth, this.viewportHeight);
             
             this.camera.aspect = this.viewportWidth / this.viewportHeight;
@@ -249,11 +277,11 @@ export default class THREE_App extends EventEmitter{
         resize();
 
         // On Scroll - resizing billboards (when zooming)
-        let resizeBillboards = () => {
-            // TO FIX AND THINK
-            console.log("e");
-        }
-        this.options.doc.defaultView.addEventListener('wheel', resizeBillboards, false );
+        // let resizeBillboards = () => {
+        //     // TO FIX AND THINK
+        //     console.log("e");
+        // }
+        // this.options.doc.defaultView.addEventListener('wheel', resizeBillboards, false );
 
         let cameraRotation = () => {
 
@@ -261,29 +289,44 @@ export default class THREE_App extends EventEmitter{
             
             // User in popup
             if(this.SELECTED && this.status != 1){
+
+                console.log("desktop ", this.isDesktop);
+
+
                 // Save previous
                 this.camera.previousPosition = this.camera.position.clone();
                 this.controls.previousTarget = this.controls.target.clone();
 
                 // Update controls
                 this.controls.target = this.SELECTED.position.clone(); // Focus autorotate on selected object
-                // this.controls.autoRotate = true;
+                this.controls.autoRotate = true;
+                // this.controls.autoRotateSpeed = .5; // slow
+                this.controls.autoRotateSpeed = this.globals.roation_speed; // slow
 
                 this.camera.target = this.SELECTED.position.clone();
-                
-                let offset = this.camera.position.clone().normalize().multiplyScalar(1000);
-                
-                // Ease camera position to selected + offset
-                let tween = new TWEEN.Tween( this.camera.position )
+                // this.camera.position.z += 1000;
+
+                // TODO old or actual zoom?
+                // let offset = this.camera.position.clone().normalize().multiplyScalar(1000);
+
+                let offset = new THREE.Vector3( 0, 0, - 1000 );
+                // offset.multiply(new THREE.Vector3(0,0,1000))
+                // offset.applyQuaternion(this.camera.quaternion)
+                // let offset = THREE.Vector3(0,0,0);
+
+                // todo animate offset ?
+                this.camera.setViewOffset(this.width, this.height, 0, 0, this.width, this.height);
+
+                let tween = new TWEEN.Tween( this.camera)
                 .to( {
-                    x: this.SELECTED.position.x + offset.x,
-                    y: this.SELECTED.position.y + offset.y,
-                    z: this.SELECTED.position.z + offset.z
+                    zoom: 8,
                 } )
-                .easing( TWEEN.Easing.Linear.None ).onUpdate( function () {
-            
+                .easing( TWEEN.Easing.Linear.None ).onUpdate( function (obj, elapsed) {
+                    
+                    out.camera.setViewOffset(out.width, out.height, out.globals.focus_offset[out.isDesktop] * elapsed, 0, out.width, out.height);
+
                     out.camera.lookAt( out.camera.target );
-            
+                    out.camera.updateProjectionMatrix();
                 } )
                 .onComplete( function () {
             
@@ -291,57 +334,117 @@ export default class THREE_App extends EventEmitter{
 
                     out.status = 1;
 
-                    console.log("to selected finished", out.status);
+                    // console.log("to selected finished", out.status);
 
-                    out.controls.enabled = false;
-        
-
+                    out.controls.enabled = false;     
+                    
+                    
                 } )
                 .start();
+
+                // Ease camera position to selected + offset
+                // let tween = new TWEEN.Tween( this.camera.position )
+                // .to( {
+                //     x: Math.abs(offset.x),
+                //     y: Math.abs(offset.y),
+                //     z: Math.abs(offset.z)
+                // } )
+                // .easing( TWEEN.Easing.Linear.None ).onUpdate( function () {
+            
+                //     out.camera.lookAt( out.camera.target );
+            
+                // } )
+                // .onComplete( function () {
+            
+                //     // out.camera.lookAt( out.camera.target );
+
+                //     out.status = 1;
+
+                //     // console.log("to selected finished", out.status);
+
+                //     out.controls.enabled = false;        
+
+                // } )
+                // .start();
                 
             }
             else if(this.status == 1){
-                // do normal status
-                // out.controls.enabled = true;    
+                // do normal status  
                 
                 this.SELECTED = null;
+
+                // todo
+                // this.camera.setViewOffset(this.width, this.height, 0, 0, this.width, this.height);
 
                 
                 // Ease camera position to previous 
                 //  AND ease controls target to previous
-                let restoreCamPos = new TWEEN.Tween( this.camera.position )
-                .to( {
-                    x: this.camera.previousPosition.x,
-                    y: this.camera.previousPosition.y,
-                    z: this.camera.previousPosition.z
-                } )
-                .easing( TWEEN.Easing.Linear.None ).onUpdate( function () {
+                // let restoreCamPos = new TWEEN.Tween( this.camera.position )
+                // .to( {
+                //     x: this.camera.previousPosition.x,
+                //     y: this.camera.previousPosition.y,
+                //     z: this.camera.previousPosition.z
+                // } )
+                // .easing( TWEEN.Easing.Linear.None ).onUpdate( function () {
             
-                    out.camera.lookAt( out.camera.target );
+                //     out.camera.lookAt( out.camera.target );
             
-                } )
-                .onStart( function () {
-                    new TWEEN.Tween( out.controls.target ).to({
-                        x: out.controls.previousTarget.x,
-                        y: out.controls.previousTarget.y,
-                        z: out.controls.previousTarget.z,
-                    })
-                    .onComplete( function (){
-                        out.controls.autoRotate = false;
-                        out.controls.enabled = true;
-                            // out.controls.target = out.controls.previousTarget.clone();
+                // } )
+                // .onStart( function () {
+                //     new TWEEN.Tween( out.controls.target ).to({
+                //         x: out.controls.previousTarget.x,
+                //         y: out.controls.previousTarget.y,
+                //         z: out.controls.previousTarget.z,
+                //     })
+                //     .onComplete( function (){
+                //         out.controls.autoRotate = false;
+                //         out.controls.enabled = true;
+                //             // out.controls.target = out.controls.previousTarget.clone();
                         
-                    }).start();
+                //     }).start();
+                // })
+                // .onComplete( function () {
+                //     console.log("finish");
+                    
+                //     out.camera.lookAt( out.camera.target );
+                //     // out.controls.enablePan = true;                
+                //     // out.controls.enableKeys = true;                
+                //     // out.controls.enableZoom = true;   
+                    
+                //     out.status = 0;
+                // } )
+                // .start();
+
+                // TODO fix come back to previous position ????
+                // console.log(this.camera.position);
+   
+                let tween = new TWEEN.Tween( this.camera )
+                .to( {
+                    zoom: 2,
+                    position:
+                    {
+                        x: this.camera.previousPosition.x,
+                        y: this.camera.previousPosition.y,
+                        z: this.camera.previousPosition.z
+                    }
+
                 })
-                .onComplete( function () {
-                    console.log("finish");
+                .easing( TWEEN.Easing.Linear.None ).onUpdate( function (obj, elapsed) {
+                    out.camera.setViewOffset(out.width, out.height, 1 - elapsed, 0, out.width, out.height);
                     
                     out.camera.lookAt( out.camera.target );
-                    // out.controls.enablePan = true;                
-                    // out.controls.enableKeys = true;                
-                    // out.controls.enableZoom = true;   
-                    
+                    out.camera.updateProjectionMatrix();
+                } )
+                .onComplete( function () {
+                    out.controls.autoRotate = false;
+                    out.controls.enabled = true;
+
+                    out.camera.lookAt( out.camera.target );
+
                     out.status = 0;
+
+                    // console.log(out.camera.position);
+     
                 } )
                 .start();
 
@@ -369,13 +472,17 @@ export default class THREE_App extends EventEmitter{
         if(this.options.DEBUG) {
             var buildingFolder = this.options.debugScene.addFolder('Camera');
 
-            const params = {
+            let params = {
                 posX: this.camera.position.x,
                 posY: this.camera.position.y,
                 posZ: this.camera.position.z,
-                rotationX: this.camera.rotation.x,
-                rotationY: this.camera.rotation.y,
-                rotationZ: this.camera.rotation.z,
+                zoom: this.camera.zoom,
+                fullX: this.width,
+                fullY: this.height,
+                offsetX: 0,
+                offsetY: 0,
+                width: this.width,
+                height: this.height
             }
             
             buildingFolder.add(params, 'posX', -3000,3000).onChange( (val) => {
@@ -387,15 +494,38 @@ export default class THREE_App extends EventEmitter{
             buildingFolder.add(params, 'posZ', -3000,3000).onChange( (val) => {
                 this.camera.position.setZ(val);
             })
-            buildingFolder.add(params, 'rotationX', -3000,3000).onChange( (val) => {
-                this.camera.rotateX(val);
+
+            buildingFolder.add(params, 'zoom', -1000,1000).onChange( (val) => {
+                this.camera.zoom = val;
+                this.camera.updateProjectionMatrix();
             })
-            buildingFolder.add(params, 'rotationY', -3000,3000).onChange( (val) => {
-                this.camera.rotateY(val);
+
+
+            buildingFolder.add(params, 'fullX', 0, 3000).onChange( (val) => {
+                params.fullX = val;
+                this.camera.setViewOffset(val, params.fullY, params.offsetX, params.offsetY, params.width, params.height);
             })
-            buildingFolder.add(params, 'rotationZ', -3000,3000).onChange( (val) => {
-                this.camera.rotateZ(val);
+            buildingFolder.add(params, 'fullY', 0, 3000).onChange( (val) => {
+                params.fullY = val;
+                this.camera.setViewOffset(params.fullX, val, params.offsetX, params.offsetY, params.width, params.height);
             })
+            buildingFolder.add(params, 'offsetX', -1000,1000).onChange( (val) => {
+                params.offsetX = val;
+                this.camera.setViewOffset(params.fullX, params.fullY, val, params.offsetY, params.width, params.height);
+            })
+            buildingFolder.add(params, 'offsetY', -1000,1000).onChange( (val) => {
+                params.offsetY = val;
+                this.camera.setViewOffset(params.fullX, params.fullY, params.offsetX, val, params.width, params.height);
+            })
+            buildingFolder.add(params, 'width', 0, 3000).onChange( (val) => {
+                params.width = val;
+                this.camera.setViewOffset(params.fullX, params.fullY, params.offsetX, params.offsetY, params.width, params.height);
+            })
+            buildingFolder.add(params, 'height', 0, 3000).onChange( (val) => {
+                params.height = val;
+                this.camera.setViewOffset(params.fullX, params.fullY, params.offsetX, params.offsetY, params.width, params.height);
+            })
+
         }
 
         this.items.camera = this.camera;
@@ -557,6 +687,7 @@ export default class THREE_App extends EventEmitter{
     // Update render if debug -> one; else another render
     render(){
         // this.options.zoomValue = this.controls.target.distanceTo( this.controls.object.position )
+        
         TWEEN.update(); 
         
         this.controls.update();
@@ -584,18 +715,18 @@ export default class THREE_App extends EventEmitter{
         if(this.options.DEBUG) {
             
             /* ------------------------------ */
-            var i	= 0;
-            this.msTexts[i++].textContent = "== Memory =====";
-            this.msTexts[i++].textContent = "Programs: "	+ this.renderer.info.memory.programs;
-            this.msTexts[i++].textContent = "Geometries: "+this.renderer.info.memory.geometries;
-            this.msTexts[i++].textContent = "Textures: "	+ this.renderer.info.memory.textures;
+            // var i	= 0;
+            // this.msTexts[i++].textContent = "== Memory =====";
+            // this.msTexts[i++].textContent = "Programs: "	+ this.renderer.info.memory.programs;
+            // this.msTexts[i++].textContent = "Geometries: "+this.renderer.info.memory.geometries;
+            // this.msTexts[i++].textContent = "Textures: "	+ this.renderer.info.memory.textures;
     
-            this.msTexts[i++].textContent = "== Render =====";
-            this.msTexts[i++].textContent = "Calls: "	+ this.renderer.info.render.calls;
-            this.msTexts[i++].textContent = "Vertices: "	+ this.renderer.info.render.vertices;
-            this.msTexts[i++].textContent = "Faces: "	+ this.renderer.info.render.faces;
-            this.msTexts[i++].textContent = "Points: "	+ this.renderer.info.render.points;
-            /* ------------------------------ */
+            // this.msTexts[i++].textContent = "== Render =====";
+            // this.msTexts[i++].textContent = "Calls: "	+ this.renderer.info.render.calls;
+            // this.msTexts[i++].textContent = "Vertices: "	+ this.renderer.info.render.vertices;
+            // this.msTexts[i++].textContent = "Faces: "	+ this.renderer.info.render.faces;
+            // this.msTexts[i++].textContent = "Points: "	+ this.renderer.info.render.points;
+            // /* ------------------------------ */
             this.stats.end();
         }
 
@@ -624,6 +755,7 @@ export default class THREE_App extends EventEmitter{
             this.INTERSECTED.currentHex = this.INTERSECTED.material.color.getHex();
 
             // ON HOVER!!
+            this.options.selectedZoom = intersects[0].distance;
             // this.INTERSECTED.material.color.setHex( 0xff0000 );
             // this.INTERSECTED.material.color.setHex( 0x56e1fc );
             this.INTERSECTED.material.color.setHex( 0xbbf3fd );
@@ -660,7 +792,9 @@ export default class THREE_App extends EventEmitter{
     }
 
     updateStatus(status){
-        this.world.updateBillboardsStatus(status);
+        // this.world.updateBillboardsStatus(status);
+
+        // todo update materials
     }
 
 }

@@ -27,6 +27,7 @@
     "@tweenjs/tween.js": "^18.5.0",
     "sirv-cli": "^0.4.4",
     "stats.js": "^0.17.0",
+    "svelma": "^0.3.2",
     "svelte-i18n": "^3.0.4",
     "three": "^0.113.2"
   }

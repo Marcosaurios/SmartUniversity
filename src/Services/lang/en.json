@@ -6,5 +6,33 @@
     },
     "app": {
         "title": "title"
+    },
+    "popup": {
+        "general": {
+            "name": "General",
+            "devices": "Connected devices",
+            "doors": "Doors",
+            "lights": "Lights",
+            "wifi": "Wifi"
+        },
+        "rooms": {
+            "name": "Spaces",
+            "capacity": "Capacity:",
+            "fulloffices": "Full offices:",
+            "offices": "Offices",
+            "meters": "Area:",
+            "classes": "Classes",
+            "eta": "Estimation at ",
+            "students": "Estimated students",
+            "classesFull" : "Full classes"
+        },
+        "alarms": {
+            "name": "Alarms",
+            "greater": "Greater than",
+            "fewer": "Fewer than",
+            "create": "Create alarm",
+            "alarms": "Saved alarms:"
+
+        }
     }
 }

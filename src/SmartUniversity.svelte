@@ -56,7 +56,7 @@
             popup.refreshData();
             SmartUniversity_Instance.updateStatus($buildings_status);
             console.log($buildings_status);
-        }, 3600*10); // 15 mins update
+        }, 15*60*1000); // 15 mins update
         // }, 900000); // 15 mins update
 
         // todo each hour update light

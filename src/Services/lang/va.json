@@ -3,6 +3,33 @@
         "en": "English",
         "es": "Español",
         "va": "Valencià"
+    },
+    "popup": {
+        "general": {
+            "name": "General",
+            "devices": "Dispositius connectats",
+            "doors": "Accessos",
+            "lights": "Llums",
+            "wifi": "Wifi"
+        },
+        "rooms": {
+            "name": "Espaïs",
+            "capacity": "Capacitat:",
+            "fulloffices": "Despatxos ocupats:",
+            "offices": "Despatxos",
+            "meters": "Superficie:",
+            "classes": "Classes",
+            "eta": "Estimació a les ",
+            "students": "Alumns estimats",
+            "classesFull" : "Classes ocupades"
+        },
+        "alarms": {
+            "name": "Alarms",
+            "greater": "Major que",
+            "fewer": "Menor que",
+            "create": "Crear alarma",
+            "alarms": "Alarmes registrades"
+        }
     }
 
 }

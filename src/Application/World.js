@@ -72,7 +72,7 @@ export default class World extends EventEmitter{
                 if(building.interactive){
                     // console.log("billboarding building ", building.container.name);
                     let status = this.options.status[name].status;
-                    building.material.color = new THREE.Color(`hsl( ${Math.min(status * 100, 100)} ,80%, 68%)`);
+                    building.material.color = new THREE.Color(`hsl( ${ status * 100 } ,80%, 68%)`);
 
                     this.interactiveObjects.push(building.mesh);
                     this.buildings.push(building);

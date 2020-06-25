@@ -107,13 +107,13 @@ export default class Loader extends EventEmitter{
             this.items[item.name] = data;
         }
 
-
         this.emit('fileFinished', this.loadedItems/this.loadingItems*100);
         // this.emit('fileFinished', name);
         
         if( this.loadingItems == this.loadedItems) {
             
             // setTimeout(() => {
+                // debugger
                 this.emit('loadingFinished');
             // }, 4000);
 

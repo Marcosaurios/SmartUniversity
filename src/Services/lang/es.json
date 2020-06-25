@@ -6,5 +6,32 @@
     },
     "app": {
         "title": "titulo"
+    },
+    "popup": {
+        "general": {
+            "name": "General",
+            "devices": "Dispositivos conectados",
+            "doors": "Accesos",
+            "lights": "Luces",
+            "wifi": "Wifi"
+        },
+        "rooms": {
+            "name": "Espacios",
+            "capacity": "Aforo:",
+            "fulloffices": "Despachos llenos:",
+            "offices": "Despachos",
+            "meters": "Superfície: ",
+            "classes": "Aulas",
+            "eta": "Estimación a las ",
+            "students": "Alumnos estimados",
+            "classesFull" : "Aulas llenas"
+        },
+        "alarms": {
+            "name": "Alarmas",
+            "greater": "Mayor que",
+            "fewer": "Menor que",
+            "create": "Crear alarma",
+            "alarms": "Alarmas registradas"
+        }
     }
 }

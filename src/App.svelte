@@ -8,7 +8,6 @@
 
 <script>
 	import SmartUniversity from "./SmartUniversity.svelte";
-	// import 'bulma/css/bulma.css'
 </script>
 
 

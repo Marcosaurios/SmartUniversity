@@ -27,7 +27,7 @@ a:visited {
 }
 
 label {
-	display: block;
+	/* display: block; */
 }
 
 input, button, select, textarea {

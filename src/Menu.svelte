@@ -22,14 +22,16 @@
     let hovered = false;
 
     onMount( ()=> {
-        window.addEventListener("touchend", (e) => {
+        div.addEventListener("touchend", (e) => {
         //     console.log(e.target);
-            if(!div.contains(e.target)){
+            // if(!div.contains(e.target)){
                 // console.log("fuera boton");
                 e.preventDefault();
                 e.stopPropagation();
                 hovered = false;
-            }
+
+                console.log("touch");
+            // }
         })
 
     })
@@ -62,7 +64,7 @@
         justify-content: center;
 
         width: 100%;
-        height: 0px;
+        height: min-content;
         margin: auto;
     }
 

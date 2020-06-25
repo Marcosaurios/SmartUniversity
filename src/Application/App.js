@@ -76,6 +76,7 @@ export default class THREE_App extends EventEmitter{
             // console.log(this);
         })
 
+        // debugger
         this.loader.on('loadingFinished', () => {
 
             // FIXME loading screen + animation
@@ -88,6 +89,7 @@ export default class THREE_App extends EventEmitter{
             this.scene.add(world.container);
 
             this.world = world;
+
         });
 
         this.scene = new THREE.Scene();
@@ -584,7 +586,7 @@ export default class THREE_App extends EventEmitter{
             this.renderer.setSize(this.viewportWidth, this.viewportHeight);
             this.renderer.physicallyCorrectLights = true
             this.renderer.outputEncoding = THREE.sRGBEncoding;
-            this.renderer.shadowMap.enabled = true;
+            this.renderer.shadowMap.enabled = false;
         }
 
         createRenderer();

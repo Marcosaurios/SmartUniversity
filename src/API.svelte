@@ -13,27 +13,79 @@
     const sondas = [ 
         ""                  ,""              , "SONDAUA06_EPS2", "SONDA04_EPSIII"          , "SONDAUA19_AUL2", "SONDAUA21_AUL3", "SONDAUA22_DER", "SONDAUA20_GERBER"];
 
-    const STATUS_GREEN = '#6DF099';
-    const STATUS_YELLOW = '#EFEE6B';
-    const STATUS_RED = '#EF6B6B';
+    const inales = [
+        "BIBLIOTECA GENERAL", "EPS I", "EPS II", "EPS III", "AULARIO II", "AULARIO III", "DERECHO", "GERMAN BERNACER"
+    ];
 
-    let WIFI_TOP = 4.5;
-    let WIFI_MED = 2;
-    let ENERGIA_TOP = 8;
-    let ENERGIA_MED = 4; // kw
-    let TEMP_TOP = 30; //ºC
-    let TEMP_MED = 10;
-    let TEMP_BOT = 0;
+    const ids = [ "0033", "0016", "0015", "0014", "0030", "0042" ,"0011", "0036"];
+
+    const capacity = [];
+    for(let i=0;i<ids.length;i++){
+        let cap = Math.random() * (1250 - 600) + 600;
+        capacity.push( cap.toFixed(0) );
+    }
+
+    const students = [];
+    for(let i=0;i<ids.length;i++){
+        let res = Math.random() * (1400 - 30) + 30;
+        students.push( res.toFixed(0) );
+    }
+
+    const classrooms = [];
+    for(let i=0;i<ids.length;i++){
+        let res = Math.random() * (110 - 30) + 30;
+        classrooms.push( res.toFixed(0) );
+    }
+
+    const isClassroom = [true, true, false, false, true, true, true, true];
+    const isOffice = [true, true, true, true, false, false, false, true];
+
+    // let CONSTANTS = new Map();
+    // for(let i=0; i<capacity.length; i++){
+    //    CONSTANTS.set( ids[i], capacity[i]);
+    // }
+
+    /*
+    [
+        {}._id.nombre = inal
+        {}.conexiones
+        {}.umbralAlarma
+    ]
+    AULARIO III
+    AULARIO II
+    DERECHO
+    EPS I
+    EPS II
+    EPS III
+    BIBLIOTECA GENERAL
+    GERMAN BERNACER
+    */
 
     // INIT Buildings data
     let data = {};
-    for(let i=0; i<buildings.length;i++){
-        data[buildings[i]] = {};
-        data[buildings[i]].name = buildings[i];
-        data[buildings[i]].energia_activa = 0;
-        data[buildings[i]].wifi_down = 0;
-        data[buildings[i]].wifi_up = 0;
-        data[buildings[i]].temperature = 0;
+    resetData();
+
+    function resetData(){
+        data = {};
+        for(let i=0; i<buildings.length;i++){
+            data[buildings[i]] = {};
+            data[buildings[i]].name = buildings[i];
+            data[buildings[i]].energia_activa = 0;
+            data[buildings[i]].wifi_down = 0;
+            data[buildings[i]].wifi_up = 0;
+            data[buildings[i]].temperature = 0;
+            //
+            data[buildings[i]].wifi = true;
+            data[buildings[i]].lights = false;
+            data[buildings[i]].doors = true;
+            //
+            data[buildings[i]].conexiones = 0;
+            data[buildings[i]].maxConexiones = 0;
+            data[buildings[i]]["superficie"] = 0;
+            data[buildings[i]]["estancias"] = 0;
+            data[buildings[i]]["ocupantes"] = 0;
+            data[buildings[i]]["estudiantes"] = 0;
+        }
     }
 
     // Error template --> returns always buildings with ENERGIA_ACTIVA and ALIAS values
@@ -52,7 +104,8 @@
                 
                 let exists = buildings.indexOf(x._id.alias);
                 if(exists!=-1) {
-                    data[buildings[exists]].energia_activa = x.ENERGIA_ACTIVA;
+                    let num = x.ENERGIA_ACTIVA;
+                    data[buildings[exists]].energia_activa = num.toFixed(1);
                     // let status = (x.ENERGIA_ACTIVA )
                     // data[buildings[exists]].energia_status = status
                 }
@@ -87,7 +140,8 @@
                 let exist = sondas.indexOf(x._id.alias);
 
                 if(exist != -1) {
-                    data[buildings[exist]]["wifi_down"] = x.value;
+                    let num = x.value;
+                    data[buildings[exist]]["wifi_down"] = num.toFixed(1);
                 }
                 
             });
@@ -106,7 +160,8 @@
                 let exist = sondas.indexOf(x._id.alias);
 
                 if(exist != -1) {
-                    data[buildings[exist]]["wifi_up"] = x.value;
+                    
+                    data[buildings[exist]]["wifi_up"] = x.value.toFixed(1);
                 }
                 
             });
@@ -141,7 +196,7 @@
                 let exist = sondas.indexOf(x._id.alias);
 
                 if(exist != -1) {
-                    data[buildings[exist]]["temperature"] = x.value ? x.value : 0;
+                    data[buildings[exist]]["temperature"] = x.value.toFixed(0);
                 }
             });
 
@@ -188,13 +243,103 @@
         }
     }
 
+    async function getConexiones() {
+        try{
+            let response = await fetch(`https://smartua.dtic.ua.es:8080/apikey/${apikey}/inal/floor/all/last-date`,
+            {
+                method: 'GET',
+                mode: 'cors'
+            });
+            let parsed = await response.json();
+
+            parsed.filter( (x) => {
+                let exist = inales.indexOf(x.edificio);
+
+                if(exist != -1) {
+                    data[buildings[exist]]["conexiones"] += x.conexiones;
+                    data[buildings[exist]]["maxConexiones"] += x.umbralAlarma;
+                }
+            });
+
+            //
+
+            // debugger;
+
+            return true;
+
+        }
+        catch(e){
+            console.error(e);
+
+            // Clean temperature field in data{}
+            for(let i=0; i<buildings.length; i++){
+                data[buildings[i]].conexiones = null;
+                data[buildings[i]].maxConexiones = null;
+            }
+            return false;
+        }
+    }
+
+    async function getEstancias(){
+        try{
+        
+            let response = await fetch(`http://www.sigua.ua.es/api/agregados/seo/edificio/all/items`,
+            {
+                method: 'GET',
+                mode: 'cors'
+            });
+            let parsed = await response.json();
+
+            for(let i=0;i<parsed.length; i++){
+                    // debugger
+                    // console.log(parsed[i]);
+
+                let element = parsed[i];
+
+                let id_building = element.id.substring(
+                    element.id.lastIndexOf("{")+1,
+                    element.id.lastIndexOf(',')
+                )
+                // console.log(id_building);
+
+                let exist = ids.indexOf(id_building);
+
+                if(exist != -1){
+                    data[buildings[exist]].superficie = parseFloat(element.superficie).toFixed(2);
+                    data[buildings[exist]].estancias = element.estancias;
+                    data[buildings[exist]].ocupantes = element.ocupantes;
+
+                }
+
+                
+            }
+
+            return true;
+        }
+        catch(e){
+            console.error(e);
+            
+        }
+    }
+
     function normalize(value, min, max) {
-        return (value - min) / (max - min);
+        let res = (value - min) / (max - min);
+        let out = res.toFixed(2);
+        return out;
     }
 
     export async function getData(){
-        await Promise.all([getElectricity(), getWifi(), getTemperature(), getDescription()]);
+        resetData();
 
+        await Promise.all([
+            getElectricity(),
+            getWifi(),
+            getTemperature(),
+            getConexiones(),
+            getEstancias()
+            ]);
+
+        let index = 0;
         for (var building in data) {
             if (data.hasOwnProperty(building)) {
 
@@ -202,18 +347,44 @@
                 let wifiu = data[building].wifi_up ? data[building].wifi_up : 0;
                 let energia = data[building].energia_activa ? data[building].energia_activa : 0;
                 let temp = data[building].temperature ? data[building].temperature : 0;
+                let conex = data[building].conexiones ? data[building].conexiones : 0;
+                let maxConex = data[building].maxConexiones ? data[building].maxConexiones : 0;
+                let estancias = data[building].estancias ? data[building].estancias : 0;
+                let ocupantes = data[building].ocupantes ? data[building].ocupantes : 0;
 
                 // TODO normalize values 
 
-                data[building].wifi_down_status = normalize(wifid, 0, 5);
-                data[building].wifi_up_status = normalize(wifiu, 0, 5);
-                data[building].energia_activa_status = normalize(energia, 0, 20);
-                data[building].temperature_status = normalize(temp, 0, 35);
+                data[building].wifi_down_status = Math.min( normalize(wifid, 0, 5), 1);
+                data[building].wifi_up_status = Math.min( normalize(wifiu, 0, 5), 1);
+                data[building].energia_activa_status = Math.min( normalize(energia, 0, 20), 1);
+                data[building].temperature_status = Math.min( normalize(temp, 0, 35), 1);
 
+                data[building].conexiones_status = Math.min( normalize(conex, 0, maxConex), 1);
+
+                // SUM
                 data[building].status = data[building].wifi_down_status*0.25 + data[building].wifi_up_status*0.25 + data[building].energia_activa_status*0.25 + data[building].temperature_status*0.25;
+                data[building].status = data[building].status.toFixed(2);
                 
+                // TODO CRAWL VALUES?
+                // add constants
+                    data[building].aforo = capacity[ index ];
+                    data[building].estudiantes = students[ index ];
+                    data[building].estudiantes_status = Math.min( normalize(data[building].estudiantes, 0, data[building].aforo), 1)
+
+                    // estancia
+                    data[building].despachos_status = Math.min( normalize(ocupantes, 0, estancias), 1);
+                    
+                    data[building].isOffice = isOffice[index];
+                    data[building].isClassroom = isClassroom[index];
+
+                    data[building].classroom = classrooms[index];
+                    data[building].classroom_status = Math.min( normalize(classrooms[index], 0, data[building].aforo) );
             }
+            index++;
+
         }
+
+        console.log(data);
         
         return data;
     }

@@ -321,7 +321,7 @@ export default class THREE_App extends EventEmitter{
 
                 let tween = new TWEEN.Tween( this.camera)
                 .to( {
-                    zoom: 8,
+                    zoom: 5,
                 } )
                 .easing( TWEEN.Easing.Linear.None ).onUpdate( function (obj, elapsed) {
                     

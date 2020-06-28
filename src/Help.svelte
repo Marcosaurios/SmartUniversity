@@ -18,12 +18,14 @@ help_toggle.set( $firstVisit );
         width: 100vw;
         height: 100vh;
         background-color: black;
-        opacity: 0.6;
+        opacity: 0.85;
 
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+
+        z-index: 4;
     }
 
 </style>

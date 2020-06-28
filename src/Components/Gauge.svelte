@@ -18,7 +18,7 @@
 
     <div class="wrap">
         <label for="{name}">
-            <slot></slot> <span>{value + '%' }</span>
+            <slot></slot> <span>{value.toFixed(2) + '%' }</span>
         </label>
         <div class="progress">
             <div class="progress-value" style="width: { value }%; background: hsl({ color }, 80%, 68%)">

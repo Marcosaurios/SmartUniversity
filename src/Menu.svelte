@@ -18,33 +18,9 @@
     
     let language = "esp";
 
-    let div;
-    let hovered = false;
-
-    onMount( ()=> {
-        div.addEventListener("touchend", (e) => {
-        //     console.log(e.target);
-            // if(!div.contains(e.target)){
-                // console.log("fuera boton");
-                e.preventDefault();
-                e.stopPropagation();
-                hovered = false;
-
-                console.log("touch");
-            // }
-        })
-
-    })
-
-    function handleTouch(event){
-        hovered = true;
-    }
-    
-    function trigger(e){
-        e.preventDefault();
-        e.stopPropagation();
-        hovered = !hovered;
-    }
+    let ul, div;
+    let displayingDropdown = false;
+ 
 
     function updateLanguage(lang){
         // hovered = false;
@@ -52,13 +28,47 @@
         if(typeof lang === 'string'){
             locale.set(lang);
         }
+        toggles();
     }
+
+    function toggles(){
+        ul.classList.toggle('hidden');
+        ul.classList.toggle('visible');
+    }
+    
 
 </script>
 
+
+
+{#if isLoaded}
+    <div class="overlay center">
+        <div id="dropdown">
+            <Button id="lang" on:click={() => toggles()}>
+                <Icon icon={webIcon} style="font-size: 2em"/>
+            </Button>
+                <ul bind:this={ul} class="hidden" in:slide out:slide>
+                    <li><Button listItem active="{$locale=="en"}" on:click={ () => updateLanguage("en") } >{$_('lang.en')}</Button></li>
+                    <li><Button listItem active="{$locale=="es"}" on:click={ () => updateLanguage("es") } >{$_('lang.es')}</Button></li>
+                    <li><Button listItem active="{$locale=="va"}" on:click={ () => updateLanguage("va") } >{$_('lang.va')}</Button></li>
+                </ul>
+        </div>
+        <div>
+            <Button on:click={ () => help_toggle.set(true)}>
+                <Icon icon={helpCircleOutline} style="font-size: 2em"/>
+            </Button>
+        </div>
+        <div>
+            <Button on:click={ () => settings_toggle.set(true)}>
+                <Icon icon={cogOutline} style="font-size: 2em"></Icon>
+            </Button>
+        </div>
+    </div>
+{/if}
+
 <style>
     .center{
-        position: absolute;
+        position: fixed;
         z-index: 1;
         display: flex;
         justify-content: center;
@@ -79,14 +89,23 @@
         margin: 0px;
         list-style: none;
         padding: 0px;
-        opacity: 0;
-        /* display: none; */
-        visibility: hidden;
         transition: 200ms;
     }
 
+    /* #dropdown:hover ul {
+        opacity: 1;
+        visibility: visible;
+        transition: 200ms;    
+    } */
 
-    .visible{
+
+    :global(.hidden){
+        opacity: 0;
+        /* display: none; */
+        visibility: hidden;
+    }
+
+    :global(.visible){
         opacity: 1;
         visibility: visible;
         transition: 200ms;
@@ -94,28 +113,3 @@
 
 
 </style>
-
-{#if isLoaded}
-<div class="overlay center">
-    <div bind:this={div} on:mouseenter={trigger} on:mouseleave={trigger}>
-        <Button id="lang" on:touched={handleTouch}>
-            <Icon icon={webIcon} style="font-size: 2em"/>
-        </Button>
-        <ul class:visible="{hovered}" in:slide out:slide>
-            <li><Button listItem active="{$locale=="en"}" on:click={ () => updateLanguage("en") }>{$_('lang.en')}</Button></li>
-            <li><Button listItem active="{$locale=="es"}" on:click={ () => updateLanguage("es") }>{$_('lang.es')}</Button></li>
-            <li><Button listItem active="{$locale=="va"}" on:click={ () => updateLanguage("va") }>{$_('lang.va')}</Button></li>
-        </ul>
-    </div>
-    <div>
-        <Button on:click={ () => help_toggle.set(true)}>
-            <Icon icon={helpCircleOutline} style="font-size: 2em"/>
-        </Button>
-    </div>
-    <div>
-        <Button on:click={ () => settings_toggle.set(true)}>
-            <Icon icon={cogOutline} style="font-size: 2em"></Icon>
-        </Button>
-    </div>
-</div>
-{/if}

@@ -12,4 +12,7 @@ export const buildings_status = writable({value: null});
 
 // Settings
 export const settings_toggle = writable(false);
+
+// Phone or desktop
+export const isMobile = writable(false);
     

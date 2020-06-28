@@ -85,6 +85,9 @@
             data[buildings[i]]["estancias"] = 0;
             data[buildings[i]]["ocupantes"] = 0;
             data[buildings[i]]["estudiantes"] = 0;
+
+
+            data[buildings[i]]["alarms"] = [];
         }
     }
 

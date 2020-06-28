@@ -1,15 +1,18 @@
 <script>
   import { onMount } from "svelte";
+  import { slide } from 'svelte/transition';
   import Card from "./Components/Card.svelte";
   import Status from "./Components/Status.svelte";
   import Gauge from "./Components/Gauge.svelte";
   import Switch from "./Components/Switch.svelte";
+  import Dropdown from "./Components/Dropdown.svelte";
+  import Button from "./Components/Button.svelte";
   import { CONSTANTS } from "./Components/Icons.js";
   
   import { _, isLoaded, locale } from "./Services/internationalization.js";
   
 
-  import { buildings_status } from "./Stores/stores.js";
+  import { buildings_status, isMobile } from "./Stores/stores.js";
 
   import API, { getData, buildings } from "./API.svelte";
 
@@ -38,20 +41,43 @@
   let data = {};
   let building = {};
 
-  let time='14:00';
+  // General
   let temp_icon;
   let energy_icon;
   let wifid_icon;
   let wifiu_icon;
 
+  // Rooms
+  let time='14:00';
+
+  // Alarms
+  let alarm_type = 'ENERGY';
+  let alarm_operator = 'fewer';
+  let alarm_value = 0;
+  let alarm_id = 0;
+  let map = new Map();
+  map.set('ENERGY', 'Kj');
+  map.set('WIFIUP', 'mb/s');
+  map.set('WIFIDOWN', 'mb/s');
+  map.set('WEATHER', 'ºC');
+
+  const saveAlarm = function() {
+    
+    building.alarms.push({
+      "id": alarm_id++,
+      "type": alarm_type,
+      "value": alarm_value,
+      "operator": alarm_operator
+    })
+    
+    updateStores();
+  }
+
   $: {
     if (content) {
       // console.log("content is", content);
-      // let index = buildings3D.indexOf(content);
       building = data[buildings[ buildings3D.indexOf(content) ]];
-
       // console.log(building);
-
       visible = true;
     } else {
       visible = false;
@@ -71,13 +97,18 @@
   }
 
   const updateValues = function(param){
-    
     building[param] = !building[param];
-    data[building.name] = building;
-    
-    buildings_status.set(data);
+    updateStores();
   }
 
+  const updateStores = function() {
+    data[building.name] = building;
+    buildings_status.set(data);
+  }
+   
+  const deleteAlarm = function(alarmId){ 
+    building.alarms = building.alarms.filter( (el) => el.id != alarmId);
+  }
 </script>
 
 <style>
@@ -171,15 +202,22 @@
     flex-direction: column;
     justify-items: center;
     margin: 10px;
+    padding: 8px;
+  }
+
+  span.information{
+    margin-left: 6px;
   }
 
   span.icon,
   span.icon + span {
     text-align: center;
+    display: inline-block;
   }
 
   div.container{
     padding: 10px;
+    margin-bottom: 8px;
   }
 
   div.container.toggles{
@@ -207,6 +245,79 @@
 
   p.time span:hover{
     cursor: pointer;
+  }
+
+  .selections div{
+    border-radius: 8px;
+    transition: all .3s;
+  }
+
+  .selections div:hover{
+    cursor: pointer;
+    background: grey;
+  }
+
+  .active {
+    background: grey;
+  }
+
+  .horizontal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+
+    width: 73%;
+    margin: 0 auto;
+  }
+
+  select{
+    display: block;
+    font-size: 16px;
+    font-family: sans-serif;
+    font-weight: 700;
+    color: white;
+    background: grey;
+    line-height: 1.3;
+    padding: .6em 1.4em .5em .8em;
+    width: 100%;
+    margin-right: 5px;
+    max-width: 50%;
+    box-sizing: border-box;
+    /* margin: 0; */
+    border: 1px solid #aaa;
+    box-shadow: 0px 0px 0px black; /*1px 0 1px rgba(0,0,0,.04);*/
+    border-radius: .5em;
+    transition: all .3s;
+  }
+  select:hover{
+    border-color: grey;
+    box-shadow: 0px 0px 15px grey;
+    cursor: pointer;
+  }
+
+  input {
+    padding: .6em 0.4em .5em .8em;
+    border-radius: 6px;
+    width: 35%;
+    transition: all .3s;
+  }
+
+  input:hover{
+    border-color: grey;
+    box-shadow: 0px 0px 15px grey;
+  }
+  
+  #uds{
+    margin-left: 5px;
+  }
+
+  .close{
+    margin-left:20px;
+  }
+
+  .close:hover svg path{
+    fill: red;
   }
 
 </style>
@@ -282,8 +393,56 @@
 
       </div>
       <div class="panel" id="three-panel">
-        <div class="panel-title">Note on Prerequisites</div>
-        <p>We recommend that you complete Learn HTML before learning CSS.</p>
+        <div class="container bg">
+          <div class="status selections">
+              <div 
+                on:click={()=> alarm_type = 'ENERGY'}
+                class:active={alarm_type == 'ENERGY'}>
+                <span class="icon">
+                  {@html CONSTANTS.ENERGY('#ccc', '#f00')}
+                </span></div>
+              <div
+                on:click={()=> alarm_type = 'WIFIDOWN'}
+                class:active={alarm_type == 'WIFIDOWN'}>
+                <span class="icon">
+                  {@html CONSTANTS.WIFIDOWN('#ccc')}
+                </span></div>
+              <div
+                on:click={()=> alarm_type = 'WIFIUP'}
+                class:active={alarm_type == 'WIFIUP'}>
+                <span class="icon">
+                  {@html CONSTANTS.WIFIUP('#ccc')}
+                </span>        </div>
+              <div
+                on:click={()=> alarm_type = 'WEATHER'}
+                class:active={alarm_type == 'WEATHER'}>
+                <span class="icon">
+                  {@html CONSTANTS.WEATHER('#ccc')}
+                </span>        </div>
+          </div>
+
+          <div class="horizontal"> 
+            <select name="rule" id="rule" bind:value={alarm_operator}>
+              <option value="greater" selected={alarm_operator == 'greater'}>{$_('popup.alarms.greater')}</option>
+              <option value="fewer" selected={alarm_operator == 'fewer'}>{$_('popup.alarms.fewer')}</option>
+            </select>
+            <input type="number" id="alarm_value" bind:value={alarm_value}>  
+            <span id="uds">{map.get(alarm_type)}</span>        
+          </div>
+          <div class="horizontal">
+            <Button primary on:click={ () => saveAlarm() }>{$_('popup.alarms.create')}</Button>        
+          </div>
+
+        </div>
+        <h2>{$_('popup.alarms.alarms')}</h2>
+        {#each building.alarms as alarm (alarm.id)}
+          <div transition:slide class="container bg horizontal">
+            <span class="icon">{@html CONSTANTS[alarm.type]('#ccc')}</span> 
+            <span>{$_(`popup.alarms.${alarm.operator}`)}</span>
+            <span class="information">{alarm.value} {map.get(alarm.type)}</span>
+            <span class="icon close" on:click={deleteAlarm(alarm.id)}>{@html CONSTANTS.CROSS('#ccc','#f00')}</span>
+          </div>
+        {/each}
       </div>
     </div>
   </div>

@@ -32,7 +32,9 @@
             "fewer": "Fewer than",
             "create": "Create alarm",
             "alarms": "Saved alarms:"
-
+        },
+        "settings": {
+            "title": "Settings"
         }
     }
 }

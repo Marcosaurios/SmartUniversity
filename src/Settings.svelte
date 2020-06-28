@@ -12,7 +12,7 @@ function saveAndExit(){
 </script>
 
 {#if $settings_toggle}
-    <div class="overlay" transition:fade>
+    <div class="overlay settings" transition:fade>
         <p>Esto son los ajustes</p>
         <div>
             <Button on:click={ () => { saveAndExit(); settings_toggle.set(false); }}>Guardar y salir</Button>
@@ -23,15 +23,17 @@ function saveAndExit(){
 
 
 <style>
-    div{
+    div.settings{
         width: 100vw;
         height: 100vh;
         background-color: black;
-        opacity: 0.6;
+        opacity: 0.85;
 
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
+
+        z-index: 5;
     }
 </style>

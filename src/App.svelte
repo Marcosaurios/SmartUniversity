@@ -44,8 +44,17 @@
 
 	:global(.overlay) {
 		position: absolute;
-		z-index: 1;
+		z-index: 4;
 		height: 0px;
+	}
+
+	:global(span.icon.close:hover svg path) {
+		fill: #f00;
+		transition: fill .3s;
+	}
+
+	:global(span.icon.close:hover) {
+		cursor: pointer;
 	}
 
 

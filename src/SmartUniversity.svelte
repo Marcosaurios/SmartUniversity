@@ -13,7 +13,7 @@
     import Cookies from './Services/Cookies.svelte';
 
     // internationalization
-    import { _, setupi18n, isLoaded } from './Services/internationalization.js';
+    import { _, setupi18n, isLoaded } from './Services/Internationalization.js';
 
     // Stores
     import { buildings_status } from './Stores/stores.js';

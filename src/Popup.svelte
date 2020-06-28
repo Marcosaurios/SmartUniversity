@@ -9,7 +9,7 @@
   import Button from "./Components/Button.svelte";
   import { CONSTANTS } from "./Components/Icons.js";
   
-  import { _, isLoaded, locale } from "./Services/internationalization.js";
+  import { _, isLoaded, locale } from "./Services/Internationalization.js";
   
 
   import { buildings_status, isMobile } from "./Stores/stores.js";

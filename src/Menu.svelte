@@ -14,7 +14,7 @@
     import Button from "./Components/Button.svelte";
 
     // Locale
-    import { _, isLoaded, locale } from "./Services/internationalization.js";
+    import { _, isLoaded, locale } from "./Services/Internationalization.js";
     
     let language = "esp";
 

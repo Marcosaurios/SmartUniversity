@@ -12,17 +12,22 @@
   import { _, isLoaded, locale } from "./Services/Internationalization.js";
   
 
-  import { buildings_status, isMobile } from "./Stores/stores.js";
+  import { buildings_status, isMobile, weights } from "./Stores/stores.js";
 
-  import API, { getData, buildings } from "./API.svelte";
+  import API, {getData, buildings} from "./API.svelte";
+  let api;
 
   // For building selected check (raycasting)
   export let content;
 
   export async function refreshData() {
-    data = await getData();
-    // debugger
-    buildings_status.set(data);
+
+    // onMount(async () => {
+      data = await getData($weights);
+      // debugger
+      buildings_status.set(data);
+
+    // })
   }
 
   // 3D models name (in same order as API.svelte)

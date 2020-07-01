@@ -16,7 +16,7 @@
     import { _, setupi18n, isLoaded } from './Services/Internationalization.js';
 
     // Stores
-    import { buildings_status } from './Stores/stores.js';
+    import { buildings_status, weights } from './Stores/stores.js';
  
     import THREE_App from './Application/App.js';
 
@@ -53,13 +53,10 @@
         await SmartUniversity_Instance.init({ canvas: canvasElement, window: { height, width }, doc: document , DEBUG, status: $buildings_status }); 
 
         setInterval(async () => {
-            popup.refreshData();
-            SmartUniversity_Instance.updateStatus($buildings_status);
-            console.log($buildings_status);
+            await popup.refreshData($weights);
+            await SmartUniversity_Instance.updateStatus($buildings_status);
         }, 15*60*1000); // 15 mins update
-        // }, 900000); // 15 mins update
-
-        // todo each hour update light
+        // }, 15000); // 15 s update
 
         
         // debug 
@@ -99,7 +96,7 @@
 {:then value}
     <Menu></Menu>
     <Help></Help>
-    <Settings></Settings>
+    <Settings smartUniversityInstance = {SmartUniversity_Instance} ></Settings>
 {/await}
 
 <div transition:fade>

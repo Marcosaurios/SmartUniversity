@@ -24,12 +24,24 @@
             "classesFull" : "Classes ocupades"
         },
         "alarms": {
-            "name": "Alarms",
+            "name": "Alarmes",
             "greater": "Major que",
             "fewer": "Menor que",
             "create": "Crear alarma",
             "alarms": "Alarmes registrades"
         }
+    },
+    "settings": {
+        "name": "Configuració",
+        "wifiup": "Tolerancia pujada del wifi",
+        "wifidown": "Tolerancia descarrega del wifi",
+        "energy": "Tolerancia energía",
+        "weather": "Tolerancia de la temperatura",
+        "description": "Ajustant els paràmetres es modificará l'estat de l'edifici respectivament.",
+        "save": "Grabar",
+        "exit": "Eixir sense grabar",
+        "cookies": "Util·litzar cookies per emmagatzemar les teves preferències"
+
     }
 
 }

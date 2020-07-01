@@ -35,7 +35,7 @@
         ul.classList.toggle('hidden');
         ul.classList.toggle('visible');
     }
-    
+
 
 </script>
 
@@ -54,12 +54,12 @@
                 </ul>
         </div>
         <div>
-            <Button on:click={ () => help_toggle.set(true)}>
+            <Button on:click={ () => { $help_toggle ? help_toggle.set(false) : (settings_toggle.set(false), help_toggle.set(true)) }}>
                 <Icon icon={helpCircleOutline} style="font-size: 2em"/>
             </Button>
         </div>
         <div>
-            <Button on:click={ () => settings_toggle.set(true)}>
+            <Button on:click={ () => { $settings_toggle ? settings_toggle.set(false) : (help_toggle.set(false), settings_toggle.set(true)) }}>
                 <Icon icon={cogOutline} style="font-size: 2em"></Icon>
             </Button>
         </div>
@@ -69,12 +69,13 @@
 <style>
     .center{
         position: fixed;
-        z-index: 1;
+        z-index: 9999;
         display: flex;
         justify-content: center;
 
         width: 100%;
-        height: min-content;
+        /* height: min-content; */
+        height: 46.78px;
         margin: auto;
     }
 
@@ -82,7 +83,7 @@
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        height: 46.78px;
+        /* height: 46.78px; */
     }
 
     ul {

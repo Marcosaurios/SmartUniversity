@@ -8,20 +8,9 @@
     export let secondary = false;
     export let listItem = false;
     export let active = false;
+    export let big = false;
 
     const dispatch = createEventDispatcher();
-    // let button;
-
-    function addEvent(node){
-        // if(node.id == "lang"){
-        //     // Only emit event if button is language button
-        //     node.addEventListener("touchend", (e) => {
-        //         // e.preventDefault();
-        //         // e.stopPropagation();
-        //         // dispatch("touched", true );
-        //     });   
-        // }
-    }
 
 </script>
 
@@ -83,12 +72,16 @@
 
     }
 
+    .big {
+        font-size: 1.5em;
+    }
+
 
 </style>
 
-<button use:addEvent
+<button
     on:click={ () => dispatch('click')}
     id="{id}"
-    class="btn" class:primary class:secondary class:listItem class:active>
+    class="btn" class:primary class:secondary class:listItem class:active class:big>
         <slot></slot>
 </button>

@@ -6,9 +6,10 @@
 
   export let name;
   export let checked = false;
+  export let horizontal = false;
 </script>
 
-<div>
+<div class:horizontal>
   <label class="switch" for="{name}">
     <input id="{name}" type="checkbox" {checked} on:change={ () => dispatch('change')}>
     <span class="slider"></span>  
@@ -18,7 +19,20 @@
   </label>
 </div>
 
+
 <style>
+.horizontal {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+.horizontal label p{
+  color: white;
+}
+.horizontal .switch{
+  margin: 3px 8px;
+}
 label:hover{
   cursor: pointer;
 }

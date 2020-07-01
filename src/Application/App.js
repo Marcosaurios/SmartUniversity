@@ -795,6 +795,7 @@ export default class THREE_App extends EventEmitter{
 
     updateStatus(status){
         // this.world.updateBillboardsStatus(status);
+        this.world.updateStatus(status);
 
         // todo update materials
     }

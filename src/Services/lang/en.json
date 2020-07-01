@@ -32,9 +32,18 @@
             "fewer": "Fewer than",
             "create": "Create alarm",
             "alarms": "Saved alarms:"
-        },
-        "settings": {
-            "title": "Settings"
         }
+    },
+    "settings": {
+        "name": "Settings",
+        "wifiup": "Wifi Upload priority",
+        "wifidown": "Wifi Download priority",
+        "energy": "Energy priority",
+        "weather": "Temperature priority",
+        "description": "The variables will impact on the building status, according to your preferences.",
+        "save": "Save",
+        "exit": "Exit without saving",
+        "cookies": "Use cookies to store my preferences and settings"
+
     }
 }

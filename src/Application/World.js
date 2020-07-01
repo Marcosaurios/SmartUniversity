@@ -71,10 +71,12 @@ export default class World extends EventEmitter{
                 
                 if(building.interactive){
                     // console.log("billboarding building ", building.container.name);
+                    
                     let status = this.options.status[name].status;
                     building.material.color = new THREE.Color(`hsl( ${ status * 100 } ,80%, 68%)`);
 
                     this.interactiveObjects.push(building.mesh);
+                    
                     this.buildings.push(building);
 
                     // OPTION
@@ -125,6 +127,17 @@ export default class World extends EventEmitter{
     
         this.container.add(plane);
 
+    }
+
+    updateStatus(_status){
+
+        
+        for(let i=0; i<this.buildings.length; i++){
+            let mesh = this.buildings[i];
+            let name = mesh.container.name;
+            let status = _status[name].status;
+            mesh.material.color = new THREE.Color(`hsl( ${ Math.min(status * 100, 100) } ,80%, 68%)`);
+        }
     }
     
     updateBillboardsStatus(status) {

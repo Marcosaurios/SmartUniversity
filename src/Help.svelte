@@ -26,6 +26,8 @@ help_toggle.set( $firstVisit );
         align-items: center;
 
         z-index: 4;
+        padding-top: 70px;
+
     }
 
 </style>
@@ -33,6 +35,6 @@ help_toggle.set( $firstVisit );
 {#if $help_toggle}
 <div class="overlay" transition:fade>
     <p>esta es la ayuda</p>
-    <Button on:click={ () => help_toggle.set(false)}>SALIR DE AQUI PORFA</Button>
+    <Button on:click={ () => help_toggle.set(false)}>SALIR</Button>
 </div>
 {/if}

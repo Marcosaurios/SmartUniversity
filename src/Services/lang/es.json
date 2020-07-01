@@ -33,5 +33,17 @@
             "create": "Crear alarma",
             "alarms": "Alarmas registradas"
         }
+    },
+    "settings": {
+        "name": "Ajustes",
+        "wifiup": "Relevancia descarga wifi",
+        "wifidown": "Relevancia subida wifi",
+        "energy": "Relevancia energía",
+        "weather": "Relevancia temperatura",
+        "description": "Las variables adaptarán el estado del edificio en función de la importancia que les asignes.",
+        "save": "Guardar",
+        "exit": "Salir sin guardar",
+        "cookies": "Usar cookies para guardar mis datos"
     }
+    
 }

@@ -101,7 +101,7 @@
         
         }
         catch(e){
-            console.error(e);
+            console.error("ERROR getting energia activa", e);
 
             // Clean energia_activa field in data{}
             for(let i=0; i<buildings.length; i++){
@@ -158,14 +158,14 @@
 
         }
         catch(e){
-            console.error(e);
+            console.error("ERROR getting wifi down + up" ,e);
 
             // Clean wifi field in data{}
             for(let i=0; i<buildings.length; i++){
                 data[buildings[i]].wifi_down = 0;
                 data[buildings[i]].wifi_up = 0;
             }
-            return false;
+            return true;
         }
     }
 
@@ -194,7 +194,7 @@
 
         }
         catch(e){
-            console.error(e);
+            console.error("ERROR getting temperature", e);
 
             // Clean temperature field in data{}
             for(let i=0; i<buildings.length; i++){
@@ -225,7 +225,7 @@
             // console.log(data);
         }
         catch(e){
-
+            console.error("ERROR getting ")
         }
     }
 
@@ -255,7 +255,7 @@
 
         }
         catch(e){
-            console.error(e);
+            console.error("ERROR getting conexiones", e);
 
             // Clean temperature field in data{}
             for(let i=0; i<buildings.length; i++){
@@ -293,7 +293,6 @@
                     data[buildings[exist]].superficie = parseFloat(element.superficie).toFixed(2);
                     data[buildings[exist]].estancias = element.estancias;
                     data[buildings[exist]].ocupantes = element.ocupantes;
-
                 }
 
                 
@@ -302,7 +301,14 @@
             return true;
         }
         catch(e){
-            console.error(e);
+            console.error("ERROR getting estancias", e);
+
+            // Clean temperature field in data{}
+            for(let i=0; i<buildings.length; i++){
+                data[buildings[i]].superficie = 0;
+                data[buildings[i]].estancias = 0;
+                data[buildings[i]].ocupantes = 0;
+            }
             
         }
     }

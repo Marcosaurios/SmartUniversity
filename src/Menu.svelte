@@ -2,7 +2,7 @@
     // Svelte
     import {onMount} from 'svelte';
     import { slide } from "svelte/transition";
-    import { help_toggle, settings_toggle } from "./Stores/stores.js";
+    import { help_toggle, settings_toggle, cookiesUse } from "./Stores/stores.js";
 
     // Icons
     import Icon from '@iconify/svelte';
@@ -12,12 +12,11 @@
 
     // Components
     import Button from "./Components/Button.svelte";
+    import {setCookie} from "./Components/setCookie.svelte";
 
     // Locale
     import { _, isLoaded, locale } from "./Services/Internationalization.js";
     
-    let language = "esp";
-
     let ul, div;
     let displayingDropdown = false;
  
@@ -27,6 +26,9 @@
         console.log(lang);
         if(typeof lang === 'string'){
             locale.set(lang);
+            if($cookiesUse){
+                setCookie("lang", lang);
+            }
         }
         toggles();
     }
@@ -73,17 +75,19 @@
         display: flex;
         justify-content: center;
 
-        width: 100%;
-        /* height: min-content; */
-        height: 46.78px;
+        width: fit-content;
+        /* height: 46.78px; */
         margin: auto;
+        left: 50%;
+        transform: translateX(-50%);
     }
 
     .center div{
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        /* height: 46.78px; */
+        /* -------->>> height: 46.78px; */
+        height: 200px;
     }
 
     ul {

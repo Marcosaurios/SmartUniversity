@@ -37,12 +37,12 @@ export default class THREE_App extends EventEmitter{
         this.raycaster = new THREE.Raycaster();
         this.checkInteractive = [];
 
+        this.help = false;
 
-        // todo sizes
         this.globals = {
             roation_speed: .5,
             min_desktop_width: 1200,
-            focus_offset: [0, 437]  // [phone, desktop]
+            focus_offset: [0, 300]  // [phone, desktop] // 437
         }
         this.isDesktop = 0;
         
@@ -289,8 +289,11 @@ export default class THREE_App extends EventEmitter{
 
             let out = this;
             
-            // User in popup
+            // if(this.help || this.helpSteps != 1){
+            //     return;
+            // }
             if(this.SELECTED && this.status != 1){
+                // User in popup
 
                 console.log("desktop ", this.isDesktop);
 
@@ -306,15 +309,11 @@ export default class THREE_App extends EventEmitter{
                 this.controls.autoRotateSpeed = this.globals.roation_speed; // slow
 
                 this.camera.target = this.SELECTED.position.clone();
-                // this.camera.position.z += 1000;
 
                 // TODO old or actual zoom?
                 // let offset = this.camera.position.clone().normalize().multiplyScalar(1000);
 
                 let offset = new THREE.Vector3( 0, 0, - 1000 );
-                // offset.multiply(new THREE.Vector3(0,0,1000))
-                // offset.applyQuaternion(this.camera.quaternion)
-                // let offset = THREE.Vector3(0,0,0);
 
                 // todo animate offset ?
                 this.camera.setViewOffset(this.width, this.height, 0, 0, this.width, this.height);
@@ -374,51 +373,6 @@ export default class THREE_App extends EventEmitter{
                 // do normal status  
                 
                 this.SELECTED = null;
-
-                // todo
-                // this.camera.setViewOffset(this.width, this.height, 0, 0, this.width, this.height);
-
-                
-                // Ease camera position to previous 
-                //  AND ease controls target to previous
-                // let restoreCamPos = new TWEEN.Tween( this.camera.position )
-                // .to( {
-                //     x: this.camera.previousPosition.x,
-                //     y: this.camera.previousPosition.y,
-                //     z: this.camera.previousPosition.z
-                // } )
-                // .easing( TWEEN.Easing.Linear.None ).onUpdate( function () {
-            
-                //     out.camera.lookAt( out.camera.target );
-            
-                // } )
-                // .onStart( function () {
-                //     new TWEEN.Tween( out.controls.target ).to({
-                //         x: out.controls.previousTarget.x,
-                //         y: out.controls.previousTarget.y,
-                //         z: out.controls.previousTarget.z,
-                //     })
-                //     .onComplete( function (){
-                //         out.controls.autoRotate = false;
-                //         out.controls.enabled = true;
-                //             // out.controls.target = out.controls.previousTarget.clone();
-                        
-                //     }).start();
-                // })
-                // .onComplete( function () {
-                //     console.log("finish");
-                    
-                //     out.camera.lookAt( out.camera.target );
-                //     // out.controls.enablePan = true;                
-                //     // out.controls.enableKeys = true;                
-                //     // out.controls.enableZoom = true;   
-                    
-                //     out.status = 0;
-                // } )
-                // .start();
-
-                // TODO fix come back to previous position ????
-                // console.log(this.camera.position);
    
                 let tween = new TWEEN.Tween( this.camera )
                 .to( {
@@ -558,19 +512,19 @@ export default class THREE_App extends EventEmitter{
         this.controls.maxPolarAngle = 0.37 * Math.PI;   // 66 deg limit
 
         // Controls limits
-        let value = 300;
-        var minPan = new THREE.Vector3( - value, -value, -value );
-		var maxPan = new THREE.Vector3( value, value, value );
-		var _v = new THREE.Vector3();
+        // let value = 300;
+        // var minPan = new THREE.Vector3( - value, -value, -value );
+		// var maxPan = new THREE.Vector3( value, value, value );
+		// var _v = new THREE.Vector3();
     
-        let _controls = this.controls;
-        let _camera = this.camera;
-        this.controls.addEventListener("change", function() {
-            _v.copy(_controls.target);
-            _controls.target.clamp(minPan, maxPan);
-            _v.sub(_controls.target);
-            _camera.position.sub(_v);
-        })
+        // let _controls = this.controls;
+        // let _camera = this.camera;
+        // this.controls.addEventListener("change", function() {
+        //     _v.copy(_controls.target);
+        //     _controls.target.clamp(minPan, maxPan);
+        //     _v.sub(_controls.target);
+        //     _camera.position.sub(_v);
+        // })
 
     }
 
@@ -798,6 +752,14 @@ export default class THREE_App extends EventEmitter{
         this.world.updateStatus(status);
 
         // todo update materials
+    }
+
+    startHelp() {
+        this.help = true;
+    }
+
+    exitHelp() {
+        this.help = false;
     }
 
 }

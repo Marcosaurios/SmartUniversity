@@ -157,7 +157,7 @@ export function loadSetup( options, textureItems ) {
                 location: [0,0,0],
                 rotation: [0,0,0],
                 materials: {
-                    EPS1: materials.eps1
+                    eps1: materials.eps1
                 },
                 interactive: true,
             }
@@ -167,7 +167,7 @@ export function loadSetup( options, textureItems ) {
                 location: [0,0,0],
                 rotation: [0,0,0],
                 materials: {
-                    EPS2: materials.eps2
+                    eps2: materials.eps2
                 },
                 interactive: true,
             }
@@ -177,7 +177,7 @@ export function loadSetup( options, textureItems ) {
                 location: [0,0,0],
                 rotation: [0,0,0],
                 materials: {
-                    EPS3: materials.eps3
+                    eps3: materials.eps3
                 },
                 interactive: true,
             }
@@ -187,7 +187,7 @@ export function loadSetup( options, textureItems ) {
                 location: [0,0,0],
                 rotation: [0,0,0],
                 materials: {
-                    GerBernacer: materials.gerbernacer
+                    gerbernacer: materials.gerbernacer
                 },
                 interactive: true,
             }

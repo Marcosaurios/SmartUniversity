@@ -31,7 +31,9 @@
             "greater": "Mayor que",
             "fewer": "Menor que",
             "create": "Crear alarma",
-            "alarms": "Alarmas registradas"
+            "alarms": "Alarmas registradas",
+            "empty": "No hay alarmas registradas."
+
         }
     },
     "settings": {
@@ -44,6 +46,23 @@
         "save": "Guardar",
         "exit": "Salir sin guardar",
         "cookies": "Usar cookies para guardar mis datos"
+    },
+    "help": {
+        "name": "Ayuda",
+        "explore": "Cerrar",
+        "controls": "Controles",
+        "moveName": "Movimiento",
+        "move": "Click y arrastrar",
+        "orbitName": "Orbitar",
+        "orbit": "Mantener CTRL or CMD + click",
+        "buildingName": "Edificios",
+        "building": "Seleccionando cualquier edificio mostrará más información detallada, como estimaciones de capacidad, si tiene departamentos o clases entre otros.",
+        "colorEnergy": "Estado del elemento energía.",
+        "colorWifidown": "Estado del elemento descarga del wifi.",
+        "colorWifiUp": "Estado del elemento subida del wifi.",
+        "colorWeather": "Estado del elemento temperatura.",
+        "variables": "Desde ajustes puedes asignar pesos a cada uno de los elementos anteriores, priorizando en el estado general del edificio los parámetros que prefieras.",
+        "alarms": "Las alarmas pueden ser creadas seleccionando un edificio, y se mostrarán en forma de popup cuando se cumpla la condición programada."
     }
     
 }

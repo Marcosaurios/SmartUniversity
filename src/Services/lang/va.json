@@ -28,7 +28,9 @@
             "greater": "Major que",
             "fewer": "Menor que",
             "create": "Crear alarma",
-            "alarms": "Alarmes registrades"
+            "alarms": "Alarmes registrades",
+            "empty": "Cap alarma registrada."
+
         }
     },
     "settings": {
@@ -41,7 +43,23 @@
         "save": "Grabar",
         "exit": "Eixir sense grabar",
         "cookies": "Util·litzar cookies per emmagatzemar les teves preferències"
-
+    },
+    "help": {
+        "name": "Ajuda",
+        "explore": "Tancar",
+        "controls": "Controlss",
+        "moveName": "Moviment",
+        "move": "Click y arrossegar",
+        "orbitName": "Orbitar",
+        "orbit": "Mantenir CTRL or CMD + click",
+        "buildingName": "Edificis",
+        "building": "Seleccionant qualsevol edifici es mostrarà més informació al respecte, com si compta amb aules únicament, amb despatxos o estimacions de capacitat.",
+        "colorEnergy": "Estat de l'element energia.",
+        "colorWifidown": "Estat de l'element descarrega del wifi.",
+        "colorWifiUp": "Estat de l'element pujada del wifi.",
+        "colorWeather": "Estat de l'element temperatura.",
+        "variables": "En la configuració es pot asignar pesos a cadascun dels previs elements, prioritzant a l'estat general de l'edifici el paràmetre preferit.",
+        "alarms": "Les alarmes poden ser creades seleccionant un edifici, i es mostrarán en forma de popup quan es cumpla la condició programada."
     }
 
 }

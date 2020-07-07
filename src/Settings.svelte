@@ -5,34 +5,48 @@ import { settings_toggle, weights, buildings_status, cookiesUse } from "./Stores
 import Button from './Components/Button.svelte';
 import Slider from './Components/Slider.svelte';
 import Switch from './Components/Switch.svelte';
+import {setCookie, removeCookie} from './Components/setCookie.svelte';
 import API, {getData} from "./API.svelte";
 
 import { _, isLoaded, locale } from "./Services/Internationalization.js";
 
-let wifiDownSettings = 0.25;
-let wifiUpSettings = 0.25;
-let energySettings = 0.25;
-let weatherSettings = 0.25;
+let wifiDownSettings = $weights.wifid;
+let wifiUpSettings = $weights.wifiu;
+let energySettings = $weights.energy;
+let weatherSettings = $weights.weather;
+let cookies = $cookiesUse;
+
+// $: cookies = $cookiesUse; // initialise to store
+$: console.log("checked value", cookies);
+$: if($cookiesUse) cookies = $cookiesUse;
 
 export let smartUniversityInstance = null;
 
-
 async function saveAndExit(){
 
-    console.log("actualizado");
     weights.set({
         wifid: wifiDownSettings,
         wifiu: wifiUpSettings,
         energy: energySettings,
         weather: weatherSettings
     })
+
+    cookiesUse.set(cookies);
+    setCookie("cookiesUse", $cookiesUse);
+
+    if(cookies){
+        setCookie("data", JSON.stringify($weights));
+        setCookie("lang", $locale);
+    }
+    else{
+        removeCookie("data");
+        removeCookie("lang");
+    }
+
     let data = await getData($weights);
     buildings_status.set(data);
+
     smartUniversityInstance.updateStatus($buildings_status);
-}
-
-function calcValues() {
-
 }
 
 
@@ -77,7 +91,7 @@ function calcValues() {
             
             <div class="align">
                 <div class="value">
-                    <Switch checked={$cookiesUse} name={$_('settings.cookies')} horizontal={true} on:change={() => {cookiesUse.set(true)}}></Switch>
+                    <Switch bind:checked={cookies} name={$_('settings.cookies')} horizontal={true}></Switch>
                 </div>
             </div>                 
 
@@ -85,7 +99,7 @@ function calcValues() {
         </div>
         <div class="value">
             <Button big on:click={ () => { saveAndExit(); settings_toggle.set(false); }}>{$_('settings.save')}</Button>
-            <Button big on:click={ () => { settings_toggle.set(false) }} secondary>{$_('settings.exit')}</Button>
+            <Button big on:click={ () => { settings_toggle.set(false); removeCookie("data") }} secondary>{$_('settings.exit')}</Button>
         </div>
     </div>
 {/if}

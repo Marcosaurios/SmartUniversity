@@ -16,12 +16,11 @@ async function setupi18n( {withLocale: _locale} = {withLocale: 'en'} ) {
     addMessages('es', es);
     addMessages('va', va);
 
-    console.log("Web lang: ", getLocaleFromNavigator() );
+    // console.log("Web lang: ", getLocaleFromNavigator() );
 
-    locale.set('en');
-
+    locale.set(_locale);
 }
 
 const isLoaded = derived( locale, $locale=> typeof $locale === 'string');
 
-export {_, setupi18n, isLoaded, locale};
+export {_, setupi18n, isLoaded, locale, getLocaleFromNavigator};

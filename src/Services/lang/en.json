@@ -31,7 +31,8 @@
             "greater": "Greater than",
             "fewer": "Fewer than",
             "create": "Create alarm",
-            "alarms": "Saved alarms:"
+            "alarms": "Saved alarms:",
+            "empty": "No alarms registered yet."
         }
     },
     "settings": {
@@ -44,6 +45,23 @@
         "save": "Save",
         "exit": "Exit without saving",
         "cookies": "Use cookies to store my preferences and settings"
-
+    },
+    "help": {
+        "name": "Help",
+        "explore": "Close",
+        "controls": "Controls",
+        "moveName": "Panning",
+        "move": "Click and drag",
+        "orbitName": "Orbit",
+        "orbit": "Hold CTRL or CMD + click",
+        "buildingName": "Building",
+        "building": "Clicking on any building will display more detailed information, like if it owns departments, classrooms and predictions about the capacity.",
+        "colorEnergy": "Status of the element energy.",
+        "colorWifidown": "Status of the element wifi download.",
+        "colorWifiUp": "Status of the element wifi upload.",
+        "colorWeather": "Status of the element weather.",
+        "variables": "You can weight each element in settings, affecting in higher or lower percentage to the general building status.",
+        "alarms": "Alarms can be created from the detailed information selecting a building, and will popup whenever it gets triggered."
     }
+
 }

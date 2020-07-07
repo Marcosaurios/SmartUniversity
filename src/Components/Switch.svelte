@@ -7,11 +7,13 @@
   export let name;
   export let checked = false;
   export let horizontal = false;
+
+  $: console.log("switch component", checked);
 </script>
 
 <div class:horizontal>
   <label class="switch" for="{name}">
-    <input id="{name}" type="checkbox" {checked} on:change={ () => dispatch('change')}>
+    <input id="{name}" type="checkbox" bind:checked={checked} on:change={ () => dispatch('change')}>
     <span class="slider"></span>  
   </label>
   <label for="{name}">

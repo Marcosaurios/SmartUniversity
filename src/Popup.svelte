@@ -33,13 +33,13 @@
   // 3D models name (in same order as API.svelte)
   const buildings3D = [
     "BUA",
-    "EPS1",
-    "EPS2",
-    "EPS3",
+    "eps1",
+    "eps2",
+    "eps3",
     "Aulario2",
     "Aulario3",
     "Derecho",
-    "GerBernacer"
+    "gerbernacer"
   ];
 
   let visible = false;
@@ -80,7 +80,7 @@
 
   $: {
     if (content) {
-      // console.log("content is", content);
+      console.log("content is", content);
       building = data[buildings[ buildings3D.indexOf(content) ]];
       // console.log(building);
       visible = true;
@@ -118,6 +118,7 @@
 
 <style>
   p{
+    text-align: center;
     font-size: 1em;
   }
 
@@ -284,7 +285,7 @@
     color: white;
     background: grey;
     line-height: 1.3;
-    padding: .6em 1.4em .5em .8em;
+    /* padding: .6em 1.4em .5em .8em; */
     width: 100%;
     margin-right: 5px;
     max-width: 50%;
@@ -440,14 +441,18 @@
 
         </div>
         <h2>{$_('popup.alarms.alarms')}</h2>
-        {#each building.alarms as alarm (alarm.id)}
-          <div transition:slide class="container bg horizontal">
-            <span class="icon">{@html CONSTANTS[alarm.type]('#ccc')}</span> 
-            <span>{$_(`popup.alarms.${alarm.operator}`)}</span>
-            <span class="information">{alarm.value} {map.get(alarm.type)}</span>
-            <span class="icon close" on:click={deleteAlarm(alarm.id)}>{@html CONSTANTS.CROSS('#ccc','#f00')}</span>
-          </div>
-        {/each}
+        {#if building.alarms.length == 0}
+          <p>{$_('popup.alarms.empty')}</p>
+        {:else}
+          {#each building.alarms as alarm (alarm.id)}
+            <div transition:slide class="container bg horizontal">
+              <span class="icon">{@html CONSTANTS[alarm.type]('#ccc')}</span> 
+              <span>{$_(`popup.alarms.${alarm.operator}`)}</span>
+              <span class="information">{alarm.value} {map.get(alarm.type)}</span>
+              <span class="icon close" on:click={deleteAlarm(alarm.id)}>{@html CONSTANTS.CROSS('#ccc','#f00')}</span>
+            </div>
+          {/each}
+        {/if}
       </div>
     </div>
   </div>

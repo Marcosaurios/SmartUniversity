@@ -11,12 +11,13 @@
     import Help from './Help.svelte';
     import Settings from './Settings.svelte';
     import Cookies from './Services/Cookies.svelte';
+    import {setCookie, getCookie} from "./Components/setCookie.svelte";
 
     // internationalization
-    import { _, setupi18n, isLoaded } from './Services/Internationalization.js';
+    import { _, setupi18n, isLoaded, locale, getLocaleFromNavigator } from './Services/Internationalization.js';
 
     // Stores
-    import { buildings_status, weights } from './Stores/stores.js';
+    import { buildings_status, weights, firstVisit, help_toggle, cookiesUse } from './Stores/stores.js';
  
     import THREE_App from './Application/App.js';
 
@@ -36,13 +37,59 @@
     let progress = 0;
 
     SmartUniversity_Instance.on('progress', (value) => {
-        // loading %
         progress = value;
     });
 
+    function cookieCheck(){
+        
+        // first time only
+        let _firstVisit = getCookie('firstVisit');
+        if( _firstVisit ){
+            // read data if available
+            let storedData = getCookie('data');
+            if(storedData){
+                let _weights = JSON.parse( storedData.split('=')[1] );
+                weights.set(_weights);
+            }
+        }
+        else{
+            setCookie("firstVisit", "false");
+            firstVisit.set( true );
+        }
+        help_toggle.set( $firstVisit );
 
-    // Init locale
-    setupi18n({withLocale: 'en'});
+        // lang
+        setupi18n({withLocale: 'en'});
+        let savedLang_cookie = getCookie("lang");
+        if(savedLang_cookie){
+            let savedLang = savedLang_cookie.split('=')[1]
+            locale.set(savedLang);
+        }
+        else{
+            let nav_locale = getLocaleFromNavigator()+"";
+            if(nav_locale.indexOf('en') != -1){
+                locale.set('en');
+            }
+            else if(nav_locale.indexOf('es') != -1){
+                locale.set('es');
+            }
+            else if(nav_locale.indexOf('ca') != -1 ){
+                locale.set('va');
+            }
+        }
+
+        // cookies
+        let cookiesUse_cookie = getCookie("cookiesUse");
+        if(cookiesUse_cookie){
+            let cookiesUse_value = cookiesUse_cookie.split('=')[1];
+            console.log(cookiesUse_value);
+            cookiesUse.set( cookiesUse_cookie.split('=')[1] );
+        }
+
+    }
+    cookieCheck();
+
+
 
     
     onMount(async () => {

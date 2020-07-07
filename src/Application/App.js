@@ -274,7 +274,7 @@ export default class THREE_App extends EventEmitter{
             this.camera.updateProjectionMatrix();
         }
 
-        this.options.doc.defaultView.addEventListener('resize', resize );
+        this.options.doc.defaultView.addEventListener('resize', resize, {passive: true} );
 
         resize();
 
@@ -408,8 +408,8 @@ export default class THREE_App extends EventEmitter{
             }
         }
 
-        this.options.canvas.addEventListener('click', cameraRotation, false );
-        this.options.canvas.addEventListener('touchstart', cameraRotation, false );
+        this.options.canvas.addEventListener('click', cameraRotation, {passive: true} );
+        this.options.canvas.addEventListener('touchstart', cameraRotation, {passive: true} );
 
     }
 

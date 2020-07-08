@@ -4,7 +4,7 @@
     export let reverse = false;
     export let data;
 
-    console.log(name, " has ", data);
+    // console.log(name, " has ", data);
 
     let value = Math.min(progress, 1)*100;
     let color = value;

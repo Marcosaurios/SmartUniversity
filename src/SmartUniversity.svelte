@@ -1,4 +1,17 @@
 
+<svelte:head>
+	<!-- elements go here -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-K2WCDTGRPC"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-K2WCDTGRPC');
+    </script>
+</svelte:head>
+
 <script>
     // Svelte 
     import {onMount} from 'svelte';
@@ -82,7 +95,7 @@
         let cookiesUse_cookie = getCookie("cookiesUse");
         if(cookiesUse_cookie){
             let cookiesUse_value = cookiesUse_cookie.split('=')[1];
-            console.log(cookiesUse_value);
+            // console.log(cookiesUse_value);
             cookiesUse.set( cookiesUse_cookie.split('=')[1] );
         }
 

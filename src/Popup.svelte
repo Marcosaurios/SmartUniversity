@@ -2,10 +2,8 @@
   import { onMount } from "svelte";
   import { slide } from 'svelte/transition';
   import Card from "./Components/Card.svelte";
-  import Status from "./Components/Status.svelte";
   import Gauge from "./Components/Gauge.svelte";
   import Switch from "./Components/Switch.svelte";
-  import Dropdown from "./Components/Dropdown.svelte";
   import Button from "./Components/Button.svelte";
   import { CONSTANTS } from "./Components/Icons.js";
   
@@ -80,7 +78,7 @@
 
   $: {
     if (content) {
-      console.log("content is", content);
+      // console.log("content is", content);
       building = data[buildings[ buildings3D.indexOf(content) ]];
       // console.log(building);
       visible = true;

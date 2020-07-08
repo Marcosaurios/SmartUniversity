@@ -17,7 +17,7 @@ let weatherSettings = $weights.weather;
 let cookies = $cookiesUse;
 
 // $: cookies = $cookiesUse; // initialise to store
-$: console.log("checked value", cookies);
+// $: console.log("checked value", cookies);
 $: if($cookiesUse) cookies = $cookiesUse;
 
 export let smartUniversityInstance = null;

@@ -128,7 +128,7 @@ export default class Building {
     }
 
     loadTextures() {
-        console.log("extra uv?", this.mesh);
+        // console.log("extra uv?", this.mesh);
         if(this.mesh.geometry.attributes.uv){
             this.mesh.geometry.setAttribute('uv2', new THREE.BufferAttribute( this.mesh.geometry.attributes.uv.array, 2 ));
         }

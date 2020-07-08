@@ -243,8 +243,8 @@ export default class THREE_App extends EventEmitter{
     
             this.options.canvas.style.width = this.viewportWidth;
             this.options.canvas.style.height = this.viewportHeight;
-            console.log("width: ", this.viewportWidth);
-            console.log("height: ", this.viewportHeight);
+            // console.log("width: ", this.viewportWidth);
+            // console.log("height: ", this.viewportHeight);
 
             this.width = this.viewportWidth;
             this.height = this.viewportHeight;
@@ -252,7 +252,7 @@ export default class THREE_App extends EventEmitter{
 
             if(this.viewportWidth > this.globals.min_desktop_width){
                 this.isDesktop = 1;
-                console.log("is desktop");
+                // console.log("is desktop");
             }
             else{
                 this.isDesktop = 0;
@@ -274,7 +274,7 @@ export default class THREE_App extends EventEmitter{
             this.camera.updateProjectionMatrix();
         }
 
-        this.options.doc.defaultView.addEventListener('resize', resize, {passive: true} );
+        this.options.doc.defaultView.addEventListener('resize', resize, false );
 
         resize();
 
@@ -295,7 +295,7 @@ export default class THREE_App extends EventEmitter{
             if(this.SELECTED && this.status != 1){
                 // User in popup
 
-                console.log("desktop ", this.isDesktop);
+                // console.log("desktop ", this.isDesktop);
 
 
                 // Save previous
@@ -408,8 +408,8 @@ export default class THREE_App extends EventEmitter{
             }
         }
 
-        this.options.canvas.addEventListener('click', cameraRotation, {passive: true} );
-        this.options.canvas.addEventListener('touchstart', cameraRotation, {passive: true} );
+        this.options.canvas.addEventListener('click', cameraRotation );
+        this.options.canvas.addEventListener('touchstart', cameraRotation );
 
     }
 

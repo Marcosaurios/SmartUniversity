@@ -26,7 +26,7 @@ export default class Resources {
             {name: "German Bernacer", path: "assets/models/germanbernacer.glb"},
             {name: "resto", path: "assets/models/simples/resto.glb", type: "draco"},
             // Textures
-            {name: "UA", path: "assets/sigua_mod_v0.png", type: "png"},
+            {name: "UA", path: "assets/sigua_mod_v1.png", type: "png"},
             {name: "Au3_AO", path: "assets/models/Au3_AO.png", type: "png"},
             {name: "Au2_AO", path: "assets/models/Au2_AO.png", type: "png"},
             {name: "Bernacer_AO", path: "assets/models/Bernacer_AO.png", type: "png"},

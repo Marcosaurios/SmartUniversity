@@ -8,7 +8,7 @@
   export let checked = false;
   export let horizontal = false;
 
-  $: console.log("switch component", checked);
+  // $: console.log("switch component", checked);
 </script>
 
 <div class:horizontal>

@@ -21,8 +21,8 @@ export default class World extends EventEmitter{
         this.interactiveObjects = [];
         this.buildings = [];
 
-        console.log("Items in APP:");
-        console.log(this.items);
+        // console.log("Items in APP:");
+        // console.log(this.items);
 
         this.setup = loadSetup( this.options, this.items.textures );
 

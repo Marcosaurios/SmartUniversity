@@ -36,6 +36,7 @@ export default class THREE_App extends EventEmitter{
         this.SELECTED = null;
         this.raycaster = new THREE.Raycaster();
         this.checkInteractive = [];
+        const defaultMaterial = new THREE.MeshStandardMaterial();
 
         this.help = false;
 
@@ -688,7 +689,6 @@ export default class THREE_App extends EventEmitter{
 
         requestAnimationFrame(this.debugRender.bind(this));
     }
-
     calculateIntersections() {
 
         
@@ -715,7 +715,7 @@ export default class THREE_App extends EventEmitter{
             // this.INTERSECTED.material.color.setHex( 0xff0000 );
             // this.INTERSECTED.material.color.setHex( 0x56e1fc );
             this.INTERSECTED.material.color.setHex( 0xbbf3fd );
-            this.INTERSECTED.material.setValues({opacity: 1});
+            // this.INTERSECTED.material.setValues({opacity: 1});
             
             if(this.status != 1){
                 this.SELECTED = this.INTERSECTED;
@@ -730,7 +730,7 @@ export default class THREE_App extends EventEmitter{
         } else if ( this.INTERSECTED ) {
 
                 this.INTERSECTED.material.color.setHex( this.INTERSECTED.currentHex );
-                this.INTERSECTED.material.setValues({opacity: 0.75});
+                // this.INTERSECTED.material.setValues({opacity: 0.75});
 
                 // applying original colors
     

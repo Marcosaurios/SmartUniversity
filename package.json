@@ -9,6 +9,7 @@
     "start": "HOST=0.0.0.0 sirv public"
   },
   "devDependencies": {
+    "@beyonk/svelte-notifications": "^2.0.3",
     "@iconify/icons-mdi": "^1.0.105",
     "@iconify/svelte": "^1.0.0-beta.3",
     "@rollup/plugin-commonjs": "^11.0.0",

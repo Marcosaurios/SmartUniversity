@@ -141,7 +141,7 @@ import cogOutline from '@iconify/icons-mdi/cog-outline';
                 <path class="color_animation tmp1" d="M4.60001 12.5L11.8 21.5L15.3 17.1V14.5C15.3 13.2 15.8 12 16.7 11.1C15.4 10.5 13.8 10 11.8 10C7.70001 10 5.00001 12.2 4.60001 12.5Z"/>
                 <path class="color_animation tmp1" d="M19.3 18.5063V11H18.3V18.5063H16.8L18.8 21L20.8 18.5063H19.3Z"/>
                 </svg>
-            </div><div class="item">{$_('help.colorWifiDown')}</div>
+            </div><div class="item">{$_('help.colorWifidown')}</div>
 
             <div class="item">
                 <svg width="34" height="34" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">

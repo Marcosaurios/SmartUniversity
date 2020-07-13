@@ -28,11 +28,16 @@
         },
         "alarms": {
             "name": "Alarms",
-            "greater": "Greater than",
-            "fewer": "Fewer than",
+            "greater": "greater than",
+            "fewer": "fewer than",
             "create": "Create alarm",
             "alarms": "Saved alarms:",
-            "empty": "No alarms registered yet."
+            "empty": "No alarms registered yet.",
+            "energia_activa": "Energy",
+            "wifi_up": "Wifi upload",
+            "wifi_down": "Wifi download",
+            "temperature": "Temperature",
+            "is": "is"
         }
     },
     "settings": {

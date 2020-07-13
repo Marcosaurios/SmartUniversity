@@ -6,7 +6,8 @@
   import Switch from "./Components/Switch.svelte";
   import Button from "./Components/Button.svelte";
   import { CONSTANTS } from "./Components/Icons.js";
-  
+  import { NotificationDisplay, notifier } from '@beyonk/svelte-notifications'
+
   import { _, isLoaded, locale } from "./Services/Internationalization.js";
   
 
@@ -20,12 +21,54 @@
 
   export async function refreshData() {
 
-    // onMount(async () => {
-      data = await getData($weights);
-      // debugger
-      buildings_status.set(data);
+      let previous_data = [];
 
-    // })
+      // save alarms
+      if( Object.keys(data).length != 0) {
+        // console.log("data no esta vacio");
+        previous_data = Object.assign({}, data);
+      }
+
+      // get new data
+      data = await getData($weights);
+
+      // add previous alarms
+
+      if( previous_data.length != 0){
+        // console.log("entrando");
+        for( const [key, value] of Object.entries(data)){
+          // console.log(data[key]);
+          data[key].alarms = previous_data[key].alarms;
+
+          checkBuildingAlarm(data[key]);
+
+        }
+      }
+      buildings_status.set(data);
+  }
+
+  function checkBuildingAlarm(building) {
+    let param;
+    console.log(building);
+    for(let i = 0; i<building.alarms.length; i++){
+      let alarm = building.alarms[i];
+      console.log(alarm);
+      if(alarm.type == 'ENERGY') { param = 'energia_activa'}
+      if(alarm.type == 'WIFIUP') { param = 'wifi_up'}
+      if(alarm.type == 'WIFIDOWN') { param = 'wifi_down'}
+      if(alarm.type == 'TEMPERATURE') { param = 'temperature'}
+
+    console.log( parseFloat(building[param]) > alarm.value );
+    console.log( 'greater' == alarm.operator);
+
+      if( (alarm.operator == 'fewer' && parseFloat(building[param]) < alarm.value) || (alarm.operator == 'greater' && parseFloat(building[param]) > alarm.value) ){
+        // emit alarm
+        let str = `${ $_('popup.alarms.'+param) + ' ' + $_('popup.alarms.is') + ' ' + $_(`popup.alarms.${alarm.operator}`) + ' ' + building[param] + ' ' + map.get(alarm.type)} `
+        console.log("triggering ", alarm);
+        notifier.danger(str, 7000);
+
+      }
+    }
   }
 
   // 3D models name (in same order as API.svelte)
@@ -105,6 +148,7 @@
   }
 
   const updateStores = function() {
+    console.log("updated alarms:", building);
     data[building.name] = building;
     buildings_status.set(data);
   }
@@ -326,6 +370,7 @@
 
 </style>
 
+
 <Card {visible}>
   <div class="wrapper">
     <input class="radio" id="one" name="group" type="radio" checked />
@@ -456,3 +501,6 @@
   </div>
 
 </Card>
+
+<NotificationDisplay />
+

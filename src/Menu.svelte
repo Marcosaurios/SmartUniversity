@@ -71,7 +71,7 @@
 <style>
     .center{
         position: fixed;
-        z-index: 9999;
+        z-index: 99;
         display: flex;
         justify-content: center;
 

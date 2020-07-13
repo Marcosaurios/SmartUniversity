@@ -28,11 +28,17 @@
         },
         "alarms": {
             "name": "Alarmas",
-            "greater": "Mayor que",
-            "fewer": "Menor que",
+            "greater": "mayor que",
+            "fewer": "menor que",
             "create": "Crear alarma",
             "alarms": "Alarmas registradas",
-            "empty": "No hay alarmas registradas."
+            "empty": "No hay alarmas registradas.",
+            "energia_activa": "Energía",
+            "wifi_up": "Subida wifi",
+            "wifi_down": "Descarga wifi",
+            "temperature": "Temperatura",
+            "is": "es"
+
 
         }
     },

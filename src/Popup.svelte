@@ -58,7 +58,7 @@
 
       if( (alarm.operator == 'fewer' && parseFloat(building[param]) < alarm.value) || (alarm.operator == 'greater' && parseFloat(building[param]) > alarm.value) ){
         // emit alarm
-        let str = `${building.name + ': ' + $_('popup.alarms.'+param) + ' ' + $_('popup.alarms.is') + ' ' + $_(`popup.alarms.${alarm.operator}`) + ' ' + building[param] + ' ' + map.get(alarm.type)} `;
+        let str = `${building.name + ': ' + $_('popup.alarms.'+param) + ' ' + $_('popup.alarms.is') + ' ' + $_(`popup.alarms.${alarm.operator}`) + ' ' + alarm.value + ' ' + map.get(alarm.type)} `;
         notifier.danger(str, 7000);
 
       }

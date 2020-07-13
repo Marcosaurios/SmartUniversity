@@ -133,7 +133,7 @@ import cogOutline from '@iconify/icons-mdi/cog-outline';
                 <path class="color_animation" d="M4.40001 12.5L11.6 21.5L15.1 17.1V14.5C15.1 13.2 15.6 12 16.5 11.1C15.2 10.5 13.6 10 11.6 10C7.50001 10 4.80001 12.2 4.40001 12.5Z"/>
                 <path class="color_animation" d="M18.1 13.4937V21H19.1V13.4937H20.6L18.6 11L16.6 13.4937H18.1Z"/>
                 </svg>
-            </div><div class="item">{$_('help.colorWifidown')}</div>
+            </div><div class="item">{$_('help.colorWifiUp')}</div>
 
             <div class="item">
                 <svg width="34" height="34" viewBox="0 0 24 23" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -141,7 +141,7 @@ import cogOutline from '@iconify/icons-mdi/cog-outline';
                 <path class="color_animation tmp1" d="M4.60001 12.5L11.8 21.5L15.3 17.1V14.5C15.3 13.2 15.8 12 16.7 11.1C15.4 10.5 13.8 10 11.8 10C7.70001 10 5.00001 12.2 4.60001 12.5Z"/>
                 <path class="color_animation tmp1" d="M19.3 18.5063V11H18.3V18.5063H16.8L18.8 21L20.8 18.5063H19.3Z"/>
                 </svg>
-            </div><div class="item">{$_('help.colorWifiUp')}</div>
+            </div><div class="item">{$_('help.colorWifiDown')}</div>
 
             <div class="item">
                 <svg width="34" height="34" viewBox="0 0 23 23" fill="none" xmlns="http://www.w3.org/2000/svg">

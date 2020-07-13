@@ -116,7 +116,7 @@
             await popup.refreshData($weights);
             await SmartUniversity_Instance.updateStatus($buildings_status);
         // }, 15*60*1000); // 15 mins update
-        }, 15000); // 15 s update
+        }, 30000); // 15 s update
 
         
         // debug 

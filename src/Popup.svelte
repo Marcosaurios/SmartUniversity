@@ -49,22 +49,16 @@
 
   function checkBuildingAlarm(building) {
     let param;
-    console.log(building);
     for(let i = 0; i<building.alarms.length; i++){
       let alarm = building.alarms[i];
-      console.log(alarm);
       if(alarm.type == 'ENERGY') { param = 'energia_activa'}
       if(alarm.type == 'WIFIUP') { param = 'wifi_up'}
       if(alarm.type == 'WIFIDOWN') { param = 'wifi_down'}
       if(alarm.type == 'TEMPERATURE') { param = 'temperature'}
 
-    console.log( parseFloat(building[param]) > alarm.value );
-    console.log( 'greater' == alarm.operator);
-
       if( (alarm.operator == 'fewer' && parseFloat(building[param]) < alarm.value) || (alarm.operator == 'greater' && parseFloat(building[param]) > alarm.value) ){
         // emit alarm
-        let str = `${ $_('popup.alarms.'+param) + ' ' + $_('popup.alarms.is') + ' ' + $_(`popup.alarms.${alarm.operator}`) + ' ' + building[param] + ' ' + map.get(alarm.type)} `
-        console.log("triggering ", alarm);
+        let str = `${building.name + ': ' + $_('popup.alarms.'+param) + ' ' + $_('popup.alarms.is') + ' ' + $_(`popup.alarms.${alarm.operator}`) + ' ' + building[param] + ' ' + map.get(alarm.type)} `;
         notifier.danger(str, 7000);
 
       }
@@ -148,7 +142,6 @@
   }
 
   const updateStores = function() {
-    console.log("updated alarms:", building);
     data[building.name] = building;
     buildings_status.set(data);
   }

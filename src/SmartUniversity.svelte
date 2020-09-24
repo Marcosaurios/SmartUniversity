@@ -17,18 +17,21 @@
     <meta name="description" content="Multimedia Engineering final degree project. 3D dashboard to visualize, filter and check University of Alicante buildings' status.">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://smartuniversity.netlify.app/">
-    <meta property="og:title" content="TFG - Marcos Urios Gómez">
-    <meta property="og:description" content="Multimedia Engineering final degree project. 3D dashboard to visualize, filter and check University of Alicante buildings' status.">
-    <meta property="og:image" content="https://smartuniversity.netlify.app/assets/preview.jpg">
+    <meta name="og:type" content="website">
+    <meta name="og:url" content="https://smartuniversity.netlify.app/">
+    <meta name="og:title" content="TFG - Marcos Urios Gómez">
+    <meta name="og:description" content="Multimedia Engineering final degree project. 3D dashboard to visualize, filter and check University of Alicante buildings' status.">
+    <meta name="og:image" content="https://smartuniversity.netlify.app/assets/preview.jpg">
+    <meta name="og:locale" content="en_GB" />
+    <meta name="og:locale:alternate" content="es_ES" />
 
     <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="http://smartuniversity.netlify.app/">
-    <meta property="twitter:title" content="TFG - Marcos Urios Gómez">
-    <meta property="twitter:description" content="Multimedia Engineering final degree project. 3D dashboard to visualize, filter and check University of Alicante buildings' status.">
-    <meta property="twitter:image" content="https://smartuniversity.netlify.app/assets/preview.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:creator" content="@Marcosaurios" />
+    <meta name="twitter:url" content="http://smartuniversity.netlify.app/">
+    <meta name="twitter:title" content="TFG - Marcos Urios Gómez">
+    <meta name="twitter:description" content="Multimedia Engineering final degree project. 3D dashboard to visualize, filter and check University of Alicante buildings' status.">
+    <meta name="twitter:image" content="https://smartuniversity.netlify.app/assets/preview.jpg">
 
 </svelte:head>
 

@@ -38,10 +38,6 @@ import cogOutline from '@iconify/icons-mdi/cog-outline';
 
     }
 
-    div.help div:last-child{
-        padding-bottom: 50px;
-    }
-
     h2, h3{
         color: white;
         margin-bottom: 0;
@@ -63,6 +59,10 @@ import cogOutline from '@iconify/icons-mdi/cog-outline';
         row-gap: 10px;
         padding: 0 15px;
         margin-bottom: 30px;
+    }
+
+    .container:last-child{
+        padding-bottom: 50px;
     }
 
     .container div{
@@ -182,7 +182,7 @@ import cogOutline from '@iconify/icons-mdi/cog-outline';
                 <p>{$_('help.alarms')}</p>
             </div>
             <div class="header">
-                <p>By <a href="https://wwww.marcosurios.com">marcosurios.com</a></p>
+                <p>By <a href="https://www.marcosurios.com">marcosurios.com</a></p>
             </div>
             <div class="header">
                 <Button big on:click={ () => { help_toggle.set(false); }}>{$_('help.explore')}</Button>

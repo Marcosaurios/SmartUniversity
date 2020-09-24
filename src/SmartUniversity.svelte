@@ -4,12 +4,32 @@
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-K2WCDTGRPC"></script>
     <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
 
-    gtag('config', 'G-K2WCDTGRPC');
+        gtag('config', 'G-K2WCDTGRPC');
     </script>
+
+    <!-- Primary Meta Tags -->
+    <title>TFG - Marcos Urios Gómez</title>
+    <meta name="title" content="TFG - Marcos Urios Gómez">
+    <meta name="description" content="Multimedia Engineering final degree project. 3D dashboard to visualize, filter and check University of Alicante buildings' status.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://smartuniversity.netlify.app/">
+    <meta property="og:title" content="TFG - Marcos Urios Gómez">
+    <meta property="og:description" content="Multimedia Engineering final degree project. 3D dashboard to visualize, filter and check University of Alicante buildings' status.">
+    <meta property="og:image" content="https://smartuniversity.netlify.app/assets/preview.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="http://smartuniversity.netlify.app/">
+    <meta property="twitter:title" content="TFG - Marcos Urios Gómez">
+    <meta property="twitter:description" content="Multimedia Engineering final degree project. 3D dashboard to visualize, filter and check University of Alicante buildings' status.">
+    <meta property="twitter:image" content="https://smartuniversity.netlify.app/assets/preview.jpg">
+
 </svelte:head>
 
 <script>

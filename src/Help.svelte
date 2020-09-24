@@ -19,9 +19,12 @@ import cogOutline from '@iconify/icons-mdi/cog-outline';
 <style>
     div.help{
         width: 100vw;
-        height: -webkit-fill-available;
+        height: 100%;
         background-color: black;
         opacity: 0.85;
+
+        position: fixed;
+        overflow: scroll;
 
         z-index: 4;
 
@@ -33,6 +36,10 @@ import cogOutline from '@iconify/icons-mdi/cog-outline';
         /* justify-content: center; */
         align-items: center;
 
+    }
+
+    div.help div:last-child{
+        padding-bottom: 50px;
     }
 
     h2, h3{
@@ -68,10 +75,16 @@ import cogOutline from '@iconify/icons-mdi/cog-outline';
         grid-column-start: 1;
         grid-column-end: 3;
         /* padding: 15px 15px 15px 0; */
+
+        margin: 0 auto;
     }
 
     .item{
         align-self: center;
+    }
+
+    .item:nth-child(even){
+        justify-self: center;
     }
 
     .color_animation {
@@ -168,7 +181,12 @@ import cogOutline from '@iconify/icons-mdi/cog-outline';
             <div class="header">
                 <p>{$_('help.alarms')}</p>
             </div>
+            <div class="header">
+                <p>By <a href="https://wwww.marcosurios.com">marcosurios.com</a></p>
+            </div>
+            <div class="header">
+                <Button big on:click={ () => { help_toggle.set(false); }}>{$_('help.explore')}</Button>
+            </div>
         </div>
-        <Button big on:click={ () => { help_toggle.set(false); }}>{$_('help.explore')}</Button>
     </div>
 {/if}

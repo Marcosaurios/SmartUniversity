@@ -11,28 +11,6 @@
         gtag('config', 'G-K2WCDTGRPC');
     </script>
 
-    <!-- Primary Meta Tags -->
-    <title>TFG - Marcos Urios Gómez</title>
-    <meta name="title" content="TFG - Marcos Urios Gómez">
-    <meta name="description" content="Multimedia Engineering final degree project. 3D dashboard to visualize, filter and check University of Alicante buildings' status.">
-
-    <!-- Open Graph / Facebook -->
-    <meta name="og:type" content="website">
-    <meta name="og:url" content="https://smartuniversity.netlify.app/">
-    <meta name="og:title" content="TFG - Marcos Urios Gómez">
-    <meta name="og:description" content="Multimedia Engineering final degree project. 3D dashboard to visualize, filter and check University of Alicante buildings' status.">
-    <meta name="og:image" content="https://smartuniversity.netlify.app/assets/preview.jpg">
-    <meta name="og:locale" content="en_GB" />
-    <meta name="og:locale:alternate" content="es_ES" />
-
-    <!-- Twitter -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:creator" content="@Marcosaurios" />
-    <meta name="twitter:url" content="http://smartuniversity.netlify.app/">
-    <meta name="twitter:title" content="TFG - Marcos Urios Gómez">
-    <meta name="twitter:description" content="Multimedia Engineering final degree project. 3D dashboard to visualize, filter and check University of Alicante buildings' status.">
-    <meta name="twitter:image" content="https://smartuniversity.netlify.app/assets/preview.jpg">
-
 </svelte:head>
 
 <script>

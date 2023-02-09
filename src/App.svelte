@@ -4,6 +4,7 @@
 	<!-- <link rel="stylesheet" href="assets/normalize.css"> -->
 	<!-- <script src='assets/threex.rendererstats.js'></script> -->
 	<!-- TODO SEO -->
+	<meta name="facebook-domain-verification" content="8qnqs7ve6gp8a7dwibu1z1r7ki6t0q"/>
 </svelte:head>
 
 <script>

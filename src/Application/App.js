@@ -65,7 +65,6 @@ export default class THREE_App extends EventEmitter{
 
         this.options = _options;
 
-        // Window access: // console.log(this.options.doc.defaultView);
         // Width and height from Window
         this.width = this.options.doc.defaultView.innerWidth;
         this.height = this.options.doc.defaultView.innerHeight;
@@ -73,8 +72,8 @@ export default class THREE_App extends EventEmitter{
         this.loader.on('fileFinished', (value) => {
             // Emit % to Svelte
             this.emit('progress', Math.floor(value) );
-            // console.log("this is");
-            // console.log(this);
+            
+            
         })
 
         // debugger
@@ -244,8 +243,8 @@ export default class THREE_App extends EventEmitter{
     
             this.options.canvas.style.width = this.viewportWidth;
             this.options.canvas.style.height = this.viewportHeight;
-            // console.log("width: ", this.viewportWidth);
-            // console.log("height: ", this.viewportHeight);
+            
+            
 
             this.width = this.viewportWidth;
             this.height = this.viewportHeight;
@@ -253,14 +252,14 @@ export default class THREE_App extends EventEmitter{
 
             if(this.viewportWidth > this.globals.min_desktop_width){
                 this.isDesktop = 1;
-                // console.log("is desktop");
+                
             }
             else{
                 this.isDesktop = 0;
             }
     
-            // console.log("re SIZE: " + this.viewportWidth + " x " + this.viewportHeight);
-            // console.log("aspect " + this.viewportWidth / this.viewportHeight);
+            
+            
     
             // Keep same render and camera aspect
             // (first render was took at max width and height, so we don't modify to reescale the entire render, we only crop the canvas size)
@@ -296,7 +295,7 @@ export default class THREE_App extends EventEmitter{
             if(this.SELECTED && this.status != 1){
                 // User in popup
 
-                // console.log("desktop ", this.isDesktop);
+                
 
 
                 // Save previous
@@ -336,7 +335,7 @@ export default class THREE_App extends EventEmitter{
 
                     out.status = 1;
 
-                    // console.log("to selected finished", out.status);
+                    
 
                     out.controls.enabled = false;     
                     
@@ -361,8 +360,6 @@ export default class THREE_App extends EventEmitter{
                 //     // out.camera.lookAt( out.camera.target );
 
                 //     out.status = 1;
-
-                //     // console.log("to selected finished", out.status);
 
                 //     out.controls.enabled = false;        
 
@@ -400,7 +397,7 @@ export default class THREE_App extends EventEmitter{
 
                     out.status = 0;
 
-                    // console.log(out.camera.position);
+                    
      
                 } )
                 .start();
@@ -706,7 +703,7 @@ export default class THREE_App extends EventEmitter{
 
             } 
 
-            // console.log(intersects[0]);
+            
             this.INTERSECTED = intersects[ 0 ].object;
             this.INTERSECTED.currentHex = this.INTERSECTED.material.color.getHex();
 
@@ -725,7 +722,7 @@ export default class THREE_App extends EventEmitter{
             }
 
 
-            // console.log(object);
+            
         
         } else if ( this.INTERSECTED ) {
 

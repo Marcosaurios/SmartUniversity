@@ -53,10 +53,10 @@
         for(let i=0; i<buildings.length;i++){
             data[buildings[i]] = {};
             data[buildings[i]].name = buildings[i];
-            data[buildings[i]].energia_activa = 0;
-            data[buildings[i]].wifi_down = 0;
-            data[buildings[i]].wifi_up = 0;
-            data[buildings[i]].temperature = 0;
+            data[buildings[i]].energia_activa = Math.random().toFixed(2); // 0 to 1
+            data[buildings[i]].wifi_down = Math.random().toFixed(2);
+            data[buildings[i]].wifi_up = Math.random().toFixed(2);
+            data[buildings[i]].temperature = Math.random().toFixed(2);
             //
             data[buildings[i]].wifi = true;
             data[buildings[i]].lights = false;
@@ -76,195 +76,195 @@
 
     // Error template --> returns always buildings with ENERGIA_ACTIVA and ALIAS values
 
-    async function getElectricity() {
-        try{
-            let response = await fetch( `https://smartua.dtic.ua.es:8080/apikey/${apikey}/e-meter/floor/all/last-date/period/15-m`, 
-                {
-                    method: 'GET',
-                    mode: 'cors'
-                });
-            
-            let parsed = await response.json();
+    // async function getElectricity() {
+    //     try{
+    //         let response = await fetch( `https://smartua.dtic.ua.es:8080/apikey/${apikey}/e-meter/floor/all/last-date/period/15-m`, 
+    //             {
+    //                 method: 'GET',
+    //                 mode: 'cors'
+    //             });
 
-            parsed.filter(x => {
-                
-                let exists = buildings.indexOf(x._id.alias);
-                if(exists!=-1) {
-                    let num = x.ENERGIA_ACTIVA;
-                    data[buildings[exists]].energia_activa = num.toFixed(1);
-                    // let status = (x.ENERGIA_ACTIVA )
-                    // data[buildings[exists]].energia_status = status
-                }
-            })
             
-            return true;
+    //         let parsed = await response.json();
+
+    //         parsed.filter(x => {
+                
+    //             let exists = buildings.indexOf(x._id.alias);
+    //             if(exists!=-1) {
+    //                 let num = x.ENERGIA_ACTIVA;
+    //                 data[buildings[exists]].energia_activa = num.toFixed(1);
+    //                 // data[buildings[exists]].energia_status = status
+    //             }
+    //         })
+            
+    //         return true;
         
-        }
-        catch(e){
-            console.error("ERROR getting energia activa", e);
+    //     }
+    //     catch(e){
+    //         console.error("ERROR getting energia activa", e);
 
-            // Clean energia_activa field in data{}
-            for(let i=0; i<buildings.length; i++){
-                data[buildings[i]].energia_activa = 0;
-            }
+    //         // Clean energia_activa field in data{}
+    //         for(let i=0; i<buildings.length; i++){
+    //             data[buildings[i]].energia_activa = 0;
+    //         }
 
-            return false;
-        }
-    }
+    //         return false;
+    //     }
+    // }
 
-    async function getWifi() {
-        try{
-            // Wifi Down
-            let response = await fetch(`https://smartua.dtic.ua.es:8080/apikey/${apikey}/sensor/model/WIFI_DOWN/structure/mapa_basico/date/2019-10-26-11-00-00/period/15`,
-            {
-                method: 'GET',
-                mode: 'cors'
-            });
-            let parsed = await response.json();
+    // async function getWifi() {
+    //     try{
+    //         // Wifi Down
+    //         let response = await fetch(`https://smartua.dtic.ua.es:8080/apikey/${apikey}/sensor/model/WIFI_DOWN/structure/mapa_basico/date/2019-10-26-11-00-00/period/15`,
+    //         {
+    //             method: 'GET',
+    //             mode: 'cors'
+    //         });
+    //         let parsed = await response.json();
 
-            parsed.filter( (x) => {
-                let exist = sondas.indexOf(x._id.alias);
+    //         parsed.filter( (x) => {
+    //             let exist = sondas.indexOf(x._id.alias);
 
-                if(exist != -1) {
-                    let num = x.value;
-                    data[buildings[exist]]["wifi_down"] = num.toFixed(1);
-                }
+    //             if(exist != -1) {
+    //                 let num = x.value;
+    //                 data[buildings[exist]]["wifi_down"] = num.toFixed(1);
+    //             }
                 
-            });
+    //         });
 
-            // Wifi Up
+    //         // Wifi Up
 
-            response = await fetch(`https://smartua.dtic.ua.es:8080/apikey/${apikey}/sensor/model/WIFI_UP/structure/mapa_basico/date/2019-10-26-11-00-00/period/15`,
-            {
-                method: 'GET',
-                mode: 'cors'
-            });
-            parsed = await response.json();
+    //         response = await fetch(`https://smartua.dtic.ua.es:8080/apikey/${apikey}/sensor/model/WIFI_UP/structure/mapa_basico/date/2019-10-26-11-00-00/period/15`,
+    //         {
+    //             method: 'GET',
+    //             mode: 'cors'
+    //         });
+    //         parsed = await response.json();
 
-            parsed.filter( (x) => {
-                // console.log(x._id.alias);
-                let exist = sondas.indexOf(x._id.alias);
+    //         parsed.filter( (x) => {
+    //             // console.log(x._id.alias);
+    //             let exist = sondas.indexOf(x._id.alias);
 
-                if(exist != -1) {
+    //             if(exist != -1) {
                     
-                    data[buildings[exist]]["wifi_up"] = x.value.toFixed(1);
-                }
+    //                 data[buildings[exist]]["wifi_up"] = x.value.toFixed(1);
+    //             }
                 
-            });
+    //         });
 
-            // console.log(parsed);
+    //         // console.log(parsed);
 
-            return true;
+    //         return true;
 
-        }
-        catch(e){
-            console.error("ERROR getting wifi down + up" ,e);
+    //     }
+    //     catch(e){
+    //         console.error("ERROR getting wifi down + up" ,e);
 
-            // Clean wifi field in data{}
-            for(let i=0; i<buildings.length; i++){
-                data[buildings[i]].wifi_down = 0;
-                data[buildings[i]].wifi_up = 0;
-            }
-            return true;
-        }
-    }
+    //         // Clean wifi field in data{}
+    //         for(let i=0; i<buildings.length; i++){
+    //             data[buildings[i]].wifi_down = 0;
+    //             data[buildings[i]].wifi_up = 0;
+    //         }
+    //         return true;
+    //     }
+    // }
 
-    async function getTemperature() {
-        try{
-            let response = await fetch(`https://smartua.dtic.ua.es:8080/apikey/${apikey}/sensor/model/TEMPERATURA/structure/mapa_basico/date/2019-10-26-11-00-00/period/15`,
-            {
-                method: 'GET',
-                mode: 'cors'
-            });
-            let parsed = await response.json();
+    // async function getTemperature() {
+    //     try{
+    //         let response = await fetch(`https://smartua.dtic.ua.es:8080/apikey/${apikey}/sensor/model/TEMPERATURA/structure/mapa_basico/date/2019-10-26-11-00-00/period/15`,
+    //         {
+    //             method: 'GET',
+    //             mode: 'cors'
+    //         });
+    //         let parsed = await response.json();
 
-            parsed.filter( (x) => {
-                let exist = sondas.indexOf(x._id.alias);
+    //         parsed.filter( (x) => {
+    //             let exist = sondas.indexOf(x._id.alias);
 
-                if(exist != -1) {
-                    data[buildings[exist]]["temperature"] = x.value.toFixed(0);
-                }
-            });
+    //             if(exist != -1) {
+    //                 data[buildings[exist]]["temperature"] = x.value.toFixed(0);
+    //             }
+    //         });
 
-            //
+    //         //
 
-            // debugger;
+    //         // debugger;
 
-            return true;
+    //         return true;
 
-        }
-        catch(e){
-            console.error("ERROR getting temperature", e);
+    //     }
+    //     catch(e){
+    //         console.error("ERROR getting temperature", e);
 
-            // Clean temperature field in data{}
-            for(let i=0; i<buildings.length; i++){
-                data[buildings[i]].temperature = 0;
-            }
-            return false;
-        }
-    }
+    //         // Clean temperature field in data{}
+    //         for(let i=0; i<buildings.length; i++){
+    //             data[buildings[i]].temperature = 0;
+    //         }
+    //         return false;
+    //     }
+    // }
 
-    async function getDescription() {
-        try{
-            let response = await fetch('/assets/descriptions.json',
-            {
-                method: 'GET',
-                mode: 'cors'
-            });
+    // async function getDescription() {
+    //     try{
+    //         let response = await fetch('/assets/descriptions.json',
+    //         {
+    //             method: 'GET',
+    //             mode: 'cors'
+    //         });
 
-            let parsed = await response.json();
+    //         let parsed = await response.json();
             
-            for(let i=0; i<parsed.length; i++){
-                let exist = buildings.indexOf(parsed[i].name);
+    //         for(let i=0; i<parsed.length; i++){
+    //             let exist = buildings.indexOf(parsed[i].name);
 
-                data[buildings[exist]].description = {
-                    eng: parsed[i].eng,
-                    esp: parsed[i].esp
-                };
-            }
-            // console.log(data);
-        }
-        catch(e){
-            console.error("ERROR getting ")
-        }
-    }
+    //             data[buildings[exist]].description = {
+    //                 eng: parsed[i].eng,
+    //                 esp: parsed[i].esp
+    //             };
+    //         }
+    //         // console.log(data);
+    //     }
+    //     catch(e){
+    //         console.error("ERROR getting ")
+    //     }
+    // }
 
-    async function getConexiones() {
-        try{
-            let response = await fetch(`https://smartua.dtic.ua.es:8080/apikey/${apikey}/inal/floor/all/last-date`,
-            {
-                method: 'GET',
-                mode: 'cors'
-            });
-            let parsed = await response.json();
+    // async function getConexiones() {
+    //     try{
+    //         let response = await fetch(`https://smartua.dtic.ua.es:8080/apikey/${apikey}/inal/floor/all/last-date`,
+    //         {
+    //             method: 'GET',
+    //             mode: 'cors'
+    //         });
+    //         let parsed = await response.json();
 
-            parsed.filter( (x) => {
-                let exist = inales.indexOf(x.edificio);
+    //         parsed.filter( (x) => {
+    //             let exist = inales.indexOf(x.edificio);
 
-                if(exist != -1) {
-                    data[buildings[exist]]["conexiones"] += x.conexiones;
-                    data[buildings[exist]]["maxConexiones"] += x.umbralAlarma;
-                }
-            });
+    //             if(exist != -1) {
+    //                 data[buildings[exist]]["conexiones"] += x.conexiones;
+    //                 data[buildings[exist]]["maxConexiones"] += x.umbralAlarma;
+    //             }
+    //         });
 
-            //
+    //         //
 
-            // debugger;
+    //         // debugger;
 
-            return true;
+    //         return true;
 
-        }
-        catch(e){
-            console.error("ERROR getting conexiones", e);
+    //     }
+    //     catch(e){
+    //         console.error("ERROR getting conexiones", e);
 
-            // Clean temperature field in data{}
-            for(let i=0; i<buildings.length; i++){
-                data[buildings[i]].conexiones = null;
-                data[buildings[i]].maxConexiones = null;
-            }
-            return false;
-        }
-    }
+    //         // Clean temperature field in data{}
+    //         for(let i=0; i<buildings.length; i++){
+    //             data[buildings[i]].conexiones = null;
+    //             data[buildings[i]].maxConexiones = null;
+    //         }
+    //         return false;
+    //     }
+    // }
 
     async function getEstancias(){
         try{
@@ -323,40 +323,34 @@
         resetData();
 
         await Promise.all([
-            getElectricity(),
-            getWifi(),
-            getTemperature(),
-            getConexiones(),
+            // getElectricity(),
+            // getWifi(),
+            // getTemperature(),
+            // getConexiones(),
             getEstancias()
             ]);
 
         let index = 0;
         for (var building in data) {
             if (data.hasOwnProperty(building)) {
-
-                let wifid = data[building].wifi_down ? data[building].wifi_down : 0;
-                let wifiu = data[building].wifi_up ? data[building].wifi_up : 0;
-                let energia = data[building].energia_activa ? data[building].energia_activa : 0;
-                let temp = data[building].temperature ? data[building].temperature : 0;
-                let conex = data[building].conexiones ? data[building].conexiones : 0;
-                let maxConex = data[building].maxConexiones ? data[building].maxConexiones : 0;
                 let estancias = data[building].estancias ? data[building].estancias : 0;
                 let ocupantes = data[building].ocupantes ? data[building].ocupantes : 0;
 
-                // TODO normalize values 
+                // normalize values 
 
-                data[building].wifi_down_status = Math.min( normalize(wifid, 0, 5), 1);
-                data[building].wifi_up_status = Math.min( normalize(wifiu, 0, 5), 1);
-                data[building].energia_activa_status = Math.min( normalize(energia, 0, 20), 1);
-                data[building].temperature_status = Math.min( normalize(temp, 0, 35), 1);
+                data[building].wifi_down_status = Math.min( normalize(Math.trunc(Math.random() * 5), 0, 5), 1).toFixed(2);
+                data[building].wifi_up_status = Math.min( normalize(Math.trunc(Math.random() * 5), 0, 5), 1).toFixed(2);
+                console.log(data[building].wifi_up_status);
+                data[building].energia_activa_status = Math.min( normalize(Math.trunc(Math.random() * 20), 0, 20), 1);
+                data[building].temperature_status = Math.min( normalize(Math.trunc(Math.random() * 35), 0, 35), 1);
 
-                data[building].conexiones_status = Math.min( normalize(conex, 0, maxConex), 1);
+                data[building].conexiones_status = Math.min( normalize(Math.trunc(Math.random() * 100), 0, 100), 1);
 
                 // SUM
                 data[building].status = data[building].wifi_down_status*weights.wifid + data[building].wifi_up_status*weights.wifiu + data[building].energia_activa_status*weights.energy + data[building].temperature_status*weights.weather;
                 data[building].status = data[building].status.toFixed(2);
                 
-                // TODO CRAWL VALUES?
+                // CRAWL VALUES?
                 // add constants
                     data[building].aforo = capacity[ index ];
                     data[building].estudiantes = students[ index ];
@@ -375,7 +369,8 @@
 
         }
 
-        // console.log(data);
+        console.log("returning data", data);
+
         
         return data;
     }

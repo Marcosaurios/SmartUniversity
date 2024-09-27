@@ -16,7 +16,7 @@ async function setupi18n( {withLocale: _locale} = {withLocale: 'en'} ) {
     addMessages('es', es);
     addMessages('va', va);
 
-    // console.log("Web lang: ", getLocaleFromNavigator() );
+    
 
     locale.set(_locale);
 }

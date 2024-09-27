@@ -21,8 +21,8 @@ export default class World extends EventEmitter{
         this.interactiveObjects = [];
         this.buildings = [];
 
-        // console.log("Items in APP:");
-        // console.log(this.items);
+        
+        
 
         this.setup = loadSetup( this.options, this.items.textures );
 
@@ -53,7 +53,7 @@ export default class World extends EventEmitter{
                     "#ffff00", 
                 ] } );
                 
-                // console.log(name);
+                
                 
                 building.container.name = name;
                 // debugger
@@ -70,7 +70,7 @@ export default class World extends EventEmitter{
                 // }
                 
                 if(building.interactive){
-                    // console.log("billboarding building ", building.container.name);
+                    
                     
                     let status = this.options.status[name].status;
                     building.material.color = new THREE.Color(`hsl( ${ status * 100 } ,80%, 68%)`);

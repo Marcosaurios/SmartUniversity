@@ -23,7 +23,7 @@
 
     function updateLanguage(lang){
         // hovered = false;
-        // console.log(lang);
+        
         if(typeof lang === 'string'){
             locale.set(lang);
             if($cookiesUse){

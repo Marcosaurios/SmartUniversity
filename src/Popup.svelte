@@ -25,7 +25,7 @@
 
       // save alarms
       if( Object.keys(data).length != 0) {
-        // console.log("data no esta vacio");
+        
         previous_data = Object.assign({}, data);
       }
 
@@ -35,9 +35,9 @@
       // add previous alarms
 
       if( previous_data.length != 0){
-        // console.log("entrando");
+        
         for( const [key, value] of Object.entries(data)){
-          // console.log(data[key]);
+          
           data[key].alarms = previous_data[key].alarms;
 
           checkBuildingAlarm(data[key]);
@@ -60,7 +60,6 @@
         // emit alarm
         let str = `${building.name + ': ' + $_('popup.alarms.'+param) + ' ' + $_('popup.alarms.is') + ' ' + $_(`popup.alarms.${alarm.operator}`) + ' ' + alarm.value + ' ' + map.get(alarm.type)} `;
         notifier.danger(str, 7000);
-
       }
     }
   }
@@ -115,9 +114,7 @@
 
   $: {
     if (content) {
-      // console.log("content is", content);
       building = data[buildings[ buildings3D.indexOf(content) ]];
-      // console.log(building);
       visible = true;
     } else {
       visible = false;
@@ -143,6 +140,7 @@
 
   const updateStores = function() {
     data[building.name] = building;
+    console.log("store updated", data);
     buildings_status.set(data);
   }
    

@@ -106,15 +106,15 @@ export default class Building {
 
     loadMaterials() {
 
-        // console.log("entro en building");
+        
         // 1 material per mesh children
         for( let [index, child] of this.scene.children.entries() ) {
             
             
-            // console.log(child.name);
+            
             // to set different material to each part of mesh (diferent mesh, same object)
             if(this.setup.materials[ child.name ]) {
-                // console.log("aplicando hijos");
+                
                 
                 // OPTION
                 this.scene.children[ index ].material = this.setup.materials[ child.name ];
@@ -128,7 +128,7 @@ export default class Building {
     }
 
     loadTextures() {
-        // console.log("extra uv?", this.mesh);
+        
         if(this.mesh.geometry.attributes.uv){
             this.mesh.geometry.setAttribute('uv2', new THREE.BufferAttribute( this.mesh.geometry.attributes.uv.array, 2 ));
         }

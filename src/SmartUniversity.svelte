@@ -96,7 +96,7 @@
         let cookiesUse_cookie = getCookie("cookiesUse");
         if(cookiesUse_cookie){
             let cookiesUse_value = cookiesUse_cookie.split('=')[1];
-            // console.log(cookiesUse_value);
+            
             cookiesUse.set( cookiesUse_cookie.split('=')[1] );
         }
 
@@ -113,11 +113,11 @@
         // debugger
         await SmartUniversity_Instance.init({ canvas: canvasElement, window: { height, width }, doc: document , DEBUG, status: $buildings_status }); 
 
-        setInterval(async () => {
-            await popup.refreshData($weights);
-            await SmartUniversity_Instance.updateStatus($buildings_status);
-        // }, 15*60*1000); // 15 mins update
-        }, 30000); // 15 s update
+        // setInterval(async () => {
+        //     await popup.refreshData($weights);
+        //     await SmartUniversity_Instance.updateStatus($buildings_status);
+        // // }, 15*60*1000); // 15 mins update
+        // }, 30000); // 15 s update
 
         
         // debug 
@@ -133,7 +133,7 @@
         SmartUniversity_Instance.calculateIntersections();
         selected = SmartUniversity_Instance.getSelected();
 
-        // console.log("Svelte selected ", selected);
+        
     }
 
     function touched(event) {
@@ -143,7 +143,7 @@
         SmartUniversity_Instance.calculateIntersections();
         selected = SmartUniversity_Instance.getSelected();
 
-        // console.log("Svelte selected ", selected);
+        
     }
 
 </script>

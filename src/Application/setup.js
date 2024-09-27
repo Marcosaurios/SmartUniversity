@@ -87,7 +87,7 @@ export function loadSetup( options, textureItems ) {
 
 
         mtlFolder.addColor(params, 'specular').onChange( () => {
-            // console.log(params.color);
+            
             params.mtl_picked.specular.setHex( params.color );
             THREE.Color
             params.mtl_picked.needsUpdate = true;
@@ -229,7 +229,7 @@ export async function getIconAsImage(icon, status) {
             }
             img.src = url;
             
-            // console.log(func);
+            
             
             // return img;
         }
